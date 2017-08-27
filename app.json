@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Phrases",
+    "description": "Learn any language. Phrase by phrase.",
+    "slug": "phrases",
+    "privacy": "unlisted",
+    "sdkVersion": "18.0.0",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "primaryColor": "#03A9F4",
+    "icon": "./assets/icons/app.png",
+    "loading": {
+      "icon": "./assets/icons/loading.png",
+      "hideExponentText": false
+    },
+    "packagerOpts": {
+      "assetExts": ["ttf", "mp4"]
+    },
+    "ios": {
+      "bundleIdentifier": "com.phrases.app",
+      "supportsTablet": true
+    }
+  }
+}
