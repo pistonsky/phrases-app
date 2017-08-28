@@ -62,6 +62,7 @@ class AddNewForm extends Component {
                   y: 0,
                   animated: true
                 });
+                this._textInput2.focus();
               }}
             />
             <Button
@@ -93,6 +94,7 @@ class AddNewForm extends Component {
                   animated: true
                 });
               }}
+              ref={e => {this._textInput2 = e;}}
             />
             <Button
               backgroundColor="#fa4"
