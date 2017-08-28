@@ -7,7 +7,8 @@ import {
   TextInput,
   Dimensions,
   ScrollView,
-  TouchableHighlight
+  TouchableHighlight,
+  Animated
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Permissions, Audio } from 'expo';
@@ -28,6 +29,15 @@ class AddNewForm extends Component {
       isRecording: false,
       recordingDuration: 0
     };
+    this.animated = {
+      recordButtonScale: new Animated.Value(1),
+      recordDuration: new Animated.Value(0)
+    };
+    this.animated.recordDuration.addListener(({ value }) => {
+      const text = value.toFixed(1);
+      if (text !== this.state.recordingDuration)
+        this.setState({ recordingDuration: text });
+    });
   }
 
   _askForPermissions = async () => {
@@ -37,6 +47,30 @@ class AddNewForm extends Component {
     } else {
       store.dispatch({ type: RECORDING_PERMISSIONS_DENIED });
     }
+  };
+
+  _startRecording = () => {
+    this.setState({ isRecording: true });
+    Animated.timing(this.animated.recordButtonScale, {
+      toValue: 1.5,
+      duration: 200,
+      useNativeDriver: true
+    }).start();
+    Animated.timing(this.animated.recordDuration, {
+      toValue: 10,
+      duration: 10000,
+      useNativeDriver: true
+    }).start();
+  };
+
+  _stopRecording = () => {
+    this.setState({ isRecording: false });
+    Animated.timing(this.animated.recordButtonScale, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true
+    }).start();
+    this.animated.recordDuration.stopAnimation();
   };
 
   render() {
@@ -89,12 +123,14 @@ class AddNewForm extends Component {
               style={styles.textInput}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
-                  x: SCREEN_WIDTH*2,
+                  x: SCREEN_WIDTH * 2,
                   y: 0,
                   animated: true
                 });
               }}
-              ref={e => {this._textInput2 = e;}}
+              ref={e => {
+                this._textInput2 = e;
+              }}
             />
             <Button
               backgroundColor="#fa4"
@@ -131,14 +167,23 @@ class AddNewForm extends Component {
                 />
               </View>
             : <KeyboardAvoidingView behavior="padding" style={styles.slide}>
-                <Text style={styles.header}>Диктуйте!</Text>
-                <TouchableHighlight
-                  activeOpacity={0.5}
-                  underlayColor="#f00"
-                  onPress={this._stopPlaybackAndBeginRecording}
-                >
-                  <View style={styles.recordButton} />
-                </TouchableHighlight>
+                <Animated.Text style={styles.header}>
+                  {this.state.recordingDuration === '0'
+                    ? 'Диктуй, ёбта!'
+                    : this.state.recordingDuration}
+                </Animated.Text>
+                <Animated.View
+                  style={{
+                    ...styles.recordButton,
+                    transform: [{ scale: this.animated.recordButtonScale }]
+                  }}
+                  onTouchStart={() => {
+                    this._startRecording();
+                  }}
+                  onTouchEnd={() => {
+                    this._stopRecording();
+                  }}
+                />
                 <Button
                   backgroundColor="#fa4"
                   raised
@@ -185,7 +230,7 @@ const styles = {
     height: 100,
     borderRadius: 50,
     margin: 50,
-    backgroundColor: '#a00'
+    backgroundColor: '#f00'
   },
   noPermissionsText: {
     fontSize: 40,
