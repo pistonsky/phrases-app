@@ -11,7 +11,7 @@ import {
   Animated
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Permissions, Audio } from 'expo';
+import { Permissions, Audio, FileSystem } from 'expo';
 import { getRecordingPermissions } from '../reducers/selectors';
 import {
   RECORDING_PERMISSIONS_DENIED,
@@ -30,14 +30,8 @@ class AddNewForm extends Component {
       recordingDuration: 0
     };
     this.animated = {
-      recordButtonScale: new Animated.Value(1),
-      recordDuration: new Animated.Value(0)
+      recordButtonScale: new Animated.Value(1)
     };
-    this.animated.recordDuration.addListener(({ value }) => {
-      const text = value.toFixed(1);
-      if (text !== this.state.recordingDuration)
-        this.setState({ recordingDuration: text });
-    });
   }
 
   _askForPermissions = async () => {
@@ -49,28 +43,50 @@ class AddNewForm extends Component {
     }
   };
 
-  _startRecording = () => {
+  _startRecording = async () => {
+    try {
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+        allowsRecordingIOS: true,
+        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_MIX_WITH_OTHERS,
+        shouldDuckAndroid: true,
+        interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
+      });
+      this.recording = new Audio.Recording();
+      await this.recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await this.recording.startAsync();
+      this._interval = setInterval(async () => {
+        const status = await this.recording.getStatusAsync();
+        if (status.durationMillis)
+          this.setState({ recordingDuration: status.durationMillis / 1000 });
+      }, 50);
+    } catch (e) {
+      console.log(e);
+    }
+
     this.setState({ isRecording: true });
+
     Animated.timing(this.animated.recordButtonScale, {
       toValue: 1.5,
       duration: 200,
       useNativeDriver: true
     }).start();
-    Animated.timing(this.animated.recordDuration, {
-      toValue: 10,
-      duration: 10000,
-      useNativeDriver: true
-    }).start();
   };
 
-  _stopRecording = () => {
+  _stopRecording = async () => {
+    await this.recording.stopAndUnloadAsync();
+    const uri = this.recording.getURI();
     this.setState({ isRecording: false });
     Animated.timing(this.animated.recordButtonScale, {
       toValue: 1,
       duration: 200,
       useNativeDriver: true
     }).start();
-    this.animated.recordDuration.stopAnimation();
+    clearInterval(this._interval);
+    const { sound, status } = await this.recording.createNewLoadedSound();
+    await sound.playAsync();
   };
 
   render() {
@@ -168,9 +184,9 @@ class AddNewForm extends Component {
               </View>
             : <KeyboardAvoidingView behavior="padding" style={styles.slide}>
                 <Animated.Text style={styles.header}>
-                  {this.state.recordingDuration === '0'
-                    ? 'Диктуй, ёбта!'
-                    : this.state.recordingDuration}
+                  {this.state.recordingDuration === 0
+                    ? 'Диктуй!'
+                    : this.state.recordingDuration.toFixed(2)}
                 </Animated.Text>
                 <Animated.View
                   style={{
