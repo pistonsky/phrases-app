@@ -18,6 +18,8 @@ import {
   RECORDING_PERMISSIONS_GRANTED
 } from '../actions/types';
 import store from '../store';
+import * as config from '../utils/config';
+import axios from 'axios';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -34,16 +36,16 @@ class AddNewForm extends Component {
     };
   }
 
-  _askForPermissions = async () => {
+  async _askForPermissions() {
     const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
     if (status === 'granted') {
       store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED });
     } else {
       store.dispatch({ type: RECORDING_PERMISSIONS_DENIED });
     }
-  };
+  }
 
-  _startRecording = async () => {
+  async _startRecording() {
     try {
       await Audio.setAudioModeAsync({
         playsInSilentModeIOS: true,
@@ -73,12 +75,13 @@ class AddNewForm extends Component {
       duration: 200,
       useNativeDriver: true
     }).start();
-  };
+  }
 
-  _stopRecording = async () => {
+  async _stopRecording() {
     await this.recording.stopAndUnloadAsync();
     const uri = this.recording.getURI();
     this.setState({ isRecording: false });
+    this._uploadRecordingAsync(uri);
     Animated.timing(this.animated.recordButtonScale, {
       toValue: 1,
       duration: 200,
@@ -87,7 +90,26 @@ class AddNewForm extends Component {
     clearInterval(this._interval);
     const { sound, status } = await this.recording.createNewLoadedSound();
     await sound.playAsync();
-  };
+  }
+
+  async _uploadRecordingAsync(uri) {
+    console.log(uri);
+    try {
+      this.setState({ isUploading: true });
+      let formData = new FormData();
+      formData.append('file', { uri });
+      await axios.put(config.UPLOAD_URL, formData, {
+        onUploadProgress: progressEvent => {
+          console.log(progressEvent);
+          this.setState({ progressEvent });
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.setState({ isUploading: false });
+    }
+  }
 
   render() {
     return (
