@@ -4,7 +4,7 @@
     "description": "Learn any language. Phrase by phrase.",
     "slug": "phrases",
     "privacy": "unlisted",
-    "sdkVersion": "18.0.0",
+    "sdkVersion": "20.0.0",
     "version": "0.1.0",
     "orientation": "portrait",
     "primaryColor": "#03A9F4",
