@@ -97,13 +97,13 @@ class AddNewForm extends Component {
     try {
       this.setState({ isUploading: true });
       let formData = new FormData();
-      formData.append('file', { uri });
-      await axios.put(config.UPLOAD_URL, formData, {
+      formData.append('file', { uri, name: 'audio.caf', type: 'audio/x-caf' });
+      const { data } = await axios.post(config.UPLOAD_URL, formData, {
         onUploadProgress: progressEvent => {
-          console.log(progressEvent);
           this.setState({ progressEvent });
         }
       });
+      console.log(data[0].filename);
     } catch (e) {
       console.error(e);
     } finally {
@@ -188,50 +188,54 @@ class AddNewForm extends Component {
             />
           </KeyboardAvoidingView>
 
-          {!this.props.haveRecordingPermissions
-            ? <View style={styles.slide}>
-                <Text style={styles.noPermissionsText}>
-                  Чувак, разреши сначала доступ к диктофону, ну ё-моё!
-                </Text>
-                <Button
-                  backgroundColor="#fa4"
-                  raised
-                  large
-                  buttonStyle={styles.button}
-                  fontWeight="bold"
-                  borderRadius={30}
-                  onPress={this._askForPermissions}
-                  title="Разрешаю!"
-                />
-              </View>
-            : <KeyboardAvoidingView behavior="padding" style={styles.slide}>
-                <Animated.Text style={styles.header}>
-                  {this.state.recordingDuration === 0
-                    ? 'Диктуй!'
-                    : this.state.recordingDuration.toFixed(2)}
-                </Animated.Text>
-                <Animated.View
-                  style={{
-                    ...styles.recordButton,
-                    transform: [{ scale: this.animated.recordButtonScale }]
-                  }}
-                  onTouchStart={() => {
-                    this._startRecording();
-                  }}
-                  onTouchEnd={() => {
-                    this._stopRecording();
-                  }}
-                />
-                <Button
-                  backgroundColor="#fa4"
-                  raised
-                  large
-                  buttonStyle={styles.button}
-                  fontWeight="bold"
-                  borderRadius={30}
-                  title="Готово!"
-                />
-              </KeyboardAvoidingView>}
+          {!this.props.haveRecordingPermissions ? (
+            <View style={styles.slide}>
+              <Text style={styles.noPermissionsText}>
+                Чувак, разреши сначала доступ к диктофону, ну ё-моё!
+              </Text>
+              <Button
+                backgroundColor="#fa4"
+                raised
+                large
+                buttonStyle={styles.button}
+                fontWeight="bold"
+                borderRadius={30}
+                onPress={this._askForPermissions}
+                title="Разрешаю!"
+              />
+            </View>
+          ) : (
+            <KeyboardAvoidingView behavior="padding" style={styles.slide}>
+              <Animated.Text style={styles.header}>
+                {this.state.recordingDuration === 0 ? (
+                  'Диктуй!'
+                ) : (
+                  this.state.recordingDuration.toFixed(2)
+                )}
+              </Animated.Text>
+              <Animated.View
+                style={{
+                  ...styles.recordButton,
+                  transform: [{ scale: this.animated.recordButtonScale }]
+                }}
+                onTouchStart={() => {
+                  this._startRecording();
+                }}
+                onTouchEnd={() => {
+                  this._stopRecording();
+                }}
+              />
+              <Button
+                backgroundColor="#fa4"
+                raised
+                large
+                buttonStyle={styles.button}
+                fontWeight="bold"
+                borderRadius={30}
+                title="Готово!"
+              />
+            </KeyboardAvoidingView>
+          )}
         </ScrollView>
       </View>
     );
