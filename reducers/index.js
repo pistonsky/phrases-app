@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import main from './main_reducer';
 import item_screen from './item_screen_reducer';
+import form from './form_reducer';
 
 export default combineReducers({
   main,
-  item_screen
+  item_screen,
+  form
 });

@@ -12,11 +12,17 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Permissions, Audio, FileSystem } from 'expo';
-import { getRecordingPermissions } from '../reducers/selectors';
+import {
+  getRecordingPermissions,
+  getOriginalPhrase,
+  getTranslatedPhrase
+} from '../reducers/selectors';
 import {
   RECORDING_PERMISSIONS_DENIED,
   RECORDING_PERMISSIONS_GRANTED,
-  CLOSE_ADD_NEW_MODAL
+  ADD_NEW_PHRASE,
+  FORM_ORIGINAL_CHANGED,
+  FORM_TRANSLATED_CHANGED
 } from '../actions/types';
 import store from '../store';
 import * as config from '../utils/config';
@@ -53,14 +59,37 @@ class AddNewForm extends Component {
       await Audio.setAudioModeAsync({
         playsInSilentModeIOS: true,
         allowsRecordingIOS: true,
-        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_MIX_WITH_OTHERS,
+        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
         shouldDuckAndroid: true,
         interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
       });
       this.recording = new Audio.Recording();
-      await this.recording.prepareToRecordAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
+      try {
+        const status = await this.recording.prepareToRecordAsync({
+          android: {
+            extension: '.3gp',
+            outputFormat:
+              Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_THREE_GPP,
+            audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AMR_NB,
+            sampleRate: 44100,
+            numberOfChannels: 2,
+            bitRate: 128000
+          },
+          ios: {
+            extension: '.caf',
+            audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MIN,
+            sampleRate: 44100,
+            numberOfChannels: 2,
+            bitRate: 128000,
+            linearPCMBitDepth: 16,
+            linearPCMIsBigEndian: false,
+            linearPCMIsFloat: false
+          }
+        });
+        console.log('prepareToRecordAsync: ', status);
+      } catch (e) {
+        console.log(e);
+      }
       await this.recording.startAsync();
       this._interval = setInterval(async () => {
         const status = await this.recording.getStatusAsync();
@@ -82,6 +111,13 @@ class AddNewForm extends Component {
 
   async _stopRecording() {
     await this.recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      allowsRecordingIOS: false,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_MIX_WITH_OTHERS,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
+    });
     const uri = this.recording.getURI();
     this.setState({ isRecording: false });
     this._uploadRecordingAsync(uri);
@@ -114,7 +150,7 @@ class AddNewForm extends Component {
           });
         }
       });
-      console.log(data[0].filename);
+      this.sound_uri = data[0].filename;
     } catch (e) {
       console.error(e);
     } finally {
@@ -138,6 +174,9 @@ class AddNewForm extends Component {
             <Text style={styles.header}>Фраза:</Text>
             <TextInput
               style={styles.textInput}
+              value={this.props.originalPhrase}
+              onChangeText={text =>
+                store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
               autoFocus
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
@@ -169,6 +208,12 @@ class AddNewForm extends Component {
           <KeyboardAvoidingView behavior="padding" style={styles.slide}>
             <Text style={styles.header}>Перевод:</Text>
             <TextInput
+              value={this.props.translatedPhrase}
+              onChangeText={text =>
+                store.dispatch({
+                  type: FORM_TRANSLATED_CHANGED,
+                  payload: text
+                })}
               style={styles.textInput}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
@@ -311,7 +356,14 @@ class AddNewForm extends Component {
                 borderRadius={30}
                 title="Готово!"
                 onPress={() => {
-                  store.dispatch({ type: CLOSE_ADD_NEW_MODAL });
+                  store.dispatch({
+                    type: ADD_NEW_PHRASE,
+                    original: this.props.originalPhrase,
+                    translated: this.props.translatedPhrase,
+                    recording: this.recording,
+                    localUri: this.recording.getURI(),
+                    uri: this.sound_uri
+                  });
                 }}
               />
             </KeyboardAvoidingView>
@@ -337,8 +389,9 @@ const styles = {
   },
   textInput: {
     height: 100,
+    width: SCREEN_WIDTH,
     margin: 50,
-    backgroundColor: 'transparent',
+    backgroundColor: 'red',
     color: '#eee',
     fontSize: 70,
     textAlign: 'center'
@@ -381,7 +434,9 @@ const styles = {
 
 function mapStateToProps(state) {
   return {
-    haveRecordingPermissions: getRecordingPermissions(state)
+    haveRecordingPermissions: getRecordingPermissions(state),
+    originalPhrase: getOriginalPhrase(state),
+    translatedPhrase: getTranslatedPhrase(state)
   };
 }
 

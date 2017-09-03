@@ -2,7 +2,8 @@ import {
   OPEN_ADD_NEW_MODAL,
   CLOSE_ADD_NEW_MODAL,
   RECORDING_PERMISSIONS_GRANTED,
-  RECORDING_PERMISSIONS_DENIED
+  RECORDING_PERMISSIONS_DENIED,
+  ADD_NEW_PHRASE
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -24,6 +25,22 @@ export default function(state = INITIAL_STATE, action) {
 
     case CLOSE_ADD_NEW_MODAL:
       return { ...state, add_new_modal_shown: false };
+
+    case ADD_NEW_PHRASE:
+      return {
+        ...state,
+        add_new_modal_shown: false,
+        data: [
+          ...state.data,
+          {
+            original: action.original,
+            translated: action.translated,
+            uri: action.uri,
+            localUri: action.localUri,
+            recording: action.recording
+          }
+        ]
+      };
 
     default:
       return state;

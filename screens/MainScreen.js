@@ -9,7 +9,7 @@ import {
   FlatList
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Permissions } from 'expo';
+import { Permissions, Audio, Asset } from 'expo';
 import { ListItem, Separator, Item, AddNewForm } from '../components';
 import { getData, getAddNewModalShown } from '../reducers/selectors';
 import store from '../store';
@@ -19,6 +19,7 @@ import {
   RECORDING_PERMISSIONS_GRANTED,
   RECORDING_PERMISSIONS_DENIED
 } from '../actions/types';
+import * as config from '../utils/config';
 
 class MainScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -27,7 +28,6 @@ class MainScreen extends Component {
   });
 
   componentDidMount() {
-    store.dispatch({ type: OPEN_ADD_NEW_MODAL });
     this._askForPermissions();
   }
 
@@ -57,13 +57,33 @@ class MainScreen extends Component {
         <FlatList
           style={{ width: '100%', flex: 1 }}
           data={this.props.data}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) =>
+          keyExtractor={item => {
+            console.log(item);
+            return item.uri;
+          }}
+          renderItem={({ item }) => (
             <ListItem
-              key={item.id}
+              key={item.uri}
               item={item}
-              onPress={() => {}}
-            />}
+              onPress={async item => {
+                // const uri = config.BASE_URL + '/phrase/' + item.uri;
+                // await Audio.setIsEnabledAsync(true);
+                // const sound = new Audio.Sound();
+                // await sound.loadAsync({ uri });
+                // await sound.playAsync();
+
+                console.log(item.localUri);
+
+                const {
+                  soundObject,
+                  status
+                } = await Audio.Sound.create(
+                  { uri: item.localUri },
+                  { shouldPlay: true }
+                );
+              }}
+            />
+          )}
           ItemSeparatorComponent={Separator}
           ListEmptyComponent={
             <View

@@ -1,17 +1,27 @@
 import React, { PureComponent } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default class ListItem extends PureComponent {
   render() {
+    const { original, translated, recording, uri } = this.props.item;
+
     return (
       <TouchableHighlight
         style={styles.container}
         activeOpacity={1}
         underlayColor="#ddd"
-        onPress={this.props.onPress}
+        onPress={() => this.props.onPress(this.props.item)}
       >
-        <View>
-          <Text>{this.props.item}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{original}</Text>
+          <FontAwesome
+            name="long-arrow-right"
+            size={20}
+            color="#4af"
+            style={{ backgroundColor: 'transparent' }}
+          />
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{translated}</Text>
         </View>
       </TouchableHighlight>
     );
