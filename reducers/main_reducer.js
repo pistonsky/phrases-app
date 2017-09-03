@@ -7,7 +7,8 @@ import {
 
 const INITIAL_STATE = {
   add_new_modal_shown: false,
-  recording_permissions: false
+  recording_permissions: false,
+  data: []
 };
 
 export default function(state = INITIAL_STATE, action) {

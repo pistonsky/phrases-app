@@ -15,11 +15,14 @@ import { Permissions, Audio, FileSystem } from 'expo';
 import { getRecordingPermissions } from '../reducers/selectors';
 import {
   RECORDING_PERMISSIONS_DENIED,
-  RECORDING_PERMISSIONS_GRANTED
+  RECORDING_PERMISSIONS_GRANTED,
+  CLOSE_ADD_NEW_MODAL
 } from '../actions/types';
 import store from '../store';
 import * as config from '../utils/config';
 import axios from 'axios';
+import { Circle as Progress } from 'react-native-progress';
+import { FontAwesome } from '@expo/vector-icons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -89,25 +92,33 @@ class AddNewForm extends Component {
     }).start();
     clearInterval(this._interval);
     const { sound, status } = await this.recording.createNewLoadedSound();
-    await sound.playAsync();
+    this.sound = sound;
+    this.sound.setOnPlaybackStatusUpdate(async playbackStatus => {
+      if (playbackStatus.didJustFinish) {
+        await this.sound.unloadAsync();
+      }
+    });
+    await this.sound.playAsync();
   }
 
   async _uploadRecordingAsync(uri) {
     console.log(uri);
     try {
-      this.setState({ isUploading: true });
+      this.setState({ isUploading: true, uploadProgress: undefined });
       let formData = new FormData();
       formData.append('file', { uri, name: 'audio.caf', type: 'audio/x-caf' });
       const { data } = await axios.post(config.UPLOAD_URL, formData, {
         onUploadProgress: progressEvent => {
-          this.setState({ progressEvent });
+          this.setState({
+            uploadProgress: progressEvent.loaded / progressEvent.total
+          });
         }
       });
       console.log(data[0].filename);
     } catch (e) {
       console.error(e);
     } finally {
-      this.setState({ isUploading: false });
+      this.setState({ isUploading: false, uploaded: true });
     }
   }
 
@@ -213,18 +224,84 @@ class AddNewForm extends Component {
                   this.state.recordingDuration.toFixed(2)
                 )}
               </Animated.Text>
-              <Animated.View
-                style={{
-                  ...styles.recordButton,
-                  transform: [{ scale: this.animated.recordButtonScale }]
-                }}
-                onTouchStart={() => {
-                  this._startRecording();
-                }}
-                onTouchEnd={() => {
-                  this._stopRecording();
-                }}
-              />
+              <View style={styles.recordButtonContainer}>
+                {(this.state.isUploading || this.state.uploaded) && (
+                  <Progress
+                    style={styles.progress}
+                    size={120}
+                    thickness={6}
+                    color={this.state.uploaded ? '#fa4' : '#f00'}
+                    animated={false}
+                    unfilledColor="#4af"
+                    borderWidth={0}
+                    progress={
+                      this.state.isUploading ? (
+                        this.state.uploadProgress
+                      ) : (
+                        this.state.playbackProgress
+                      )
+                    }
+                    indeterminate={this.state.uploadProgress === undefined}
+                  />
+                )}
+                <Animated.View
+                  style={{
+                    ...styles.recordButton,
+                    backgroundColor: this.state.uploaded ? '#fa4' : '#f00',
+                    transform: [{ scale: this.animated.recordButtonScale }]
+                  }}
+                  onTouchStart={async () => {
+                    if (this.state.uploaded) {
+                      this.setState({ isPlaying: true });
+                      const {
+                        sound,
+                        status
+                      } = await this.recording.createNewLoadedSound();
+                      this.sound = sound;
+                      this.sound.setOnPlaybackStatusUpdate(
+                        async playbackStatus => {
+                          const {
+                            positionMillis,
+                            durationMillis
+                          } = playbackStatus;
+                          const progress = positionMillis / durationMillis;
+                          console.log(progress);
+                          this.setState({
+                            playbackProgress: progress
+                          });
+                          if (playbackStatus.didJustFinish) {
+                            await this.sound.unloadAsync();
+                            this.setState({ isPlaying: false });
+                          }
+                        }
+                      );
+                      await this.sound.playAsync();
+                    } else {
+                      this._startRecording();
+                    }
+                  }}
+                  onTouchEnd={() => {
+                    this.state.isRecording && this._stopRecording();
+                  }}
+                >
+                  {this.state.uploaded &&
+                    (this.state.isPlaying ? (
+                      <FontAwesome
+                        name="play-circle"
+                        size={100}
+                        color="red"
+                        style={{ backgroundColor: 'transparent' }}
+                      />
+                    ) : (
+                      <FontAwesome
+                        name="play-circle-o"
+                        size={100}
+                        color="red"
+                        style={{ backgroundColor: 'transparent' }}
+                      />
+                    ))}
+                </Animated.View>
+              </View>
               <Button
                 backgroundColor="#fa4"
                 raised
@@ -233,6 +310,9 @@ class AddNewForm extends Component {
                 fontWeight="bold"
                 borderRadius={30}
                 title="Готово!"
+                onPress={() => {
+                  store.dispatch({ type: CLOSE_ADD_NEW_MODAL });
+                }}
               />
             </KeyboardAvoidingView>
           )}
@@ -267,12 +347,29 @@ const styles = {
     width: 200,
     height: 50
   },
+  recordButtonContainer: {
+    width: SCREEN_WIDTH,
+    height: 200
+  },
+  progress: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    marginLeft: -60,
+    marginTop: -60
+  },
   recordButton: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
     width: 100,
     height: 100,
+    marginLeft: -50,
+    marginTop: -50,
     borderRadius: 50,
-    margin: 50,
-    backgroundColor: '#f00'
+    backgroundColor: '#f00',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   noPermissionsText: {
     fontSize: 40,
