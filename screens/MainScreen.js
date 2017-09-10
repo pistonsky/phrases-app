@@ -17,7 +17,8 @@ import {
   OPEN_ADD_NEW_MODAL,
   CLOSE_ADD_NEW_MODAL,
   RECORDING_PERMISSIONS_GRANTED,
-  RECORDING_PERMISSIONS_DENIED
+  RECORDING_PERMISSIONS_DENIED,
+  DELETE_PHRASE
 } from '../actions/types';
 import * as config from '../utils/config';
 
@@ -82,6 +83,7 @@ class MainScreen extends Component {
                   { shouldPlay: true }
                 );
               }}
+              onDelete={item => store.dispatch({ type: DELETE_PHRASE, payload: item })}
             />
           )}
           ItemSeparatorComponent={Separator}

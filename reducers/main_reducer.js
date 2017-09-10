@@ -3,7 +3,8 @@ import {
   CLOSE_ADD_NEW_MODAL,
   RECORDING_PERMISSIONS_GRANTED,
   RECORDING_PERMISSIONS_DENIED,
-  ADD_NEW_PHRASE
+  ADD_NEW_PHRASE,
+  DELETE_PHRASE
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -41,6 +42,10 @@ export default function(state = INITIAL_STATE, action) {
           }
         ]
       };
+
+    case DELETE_PHRASE:
+      let data = state.data.filter(e => e.localUri !== action.payload.localUri);
+      return { ...state, data };
 
     default:
       return state;
