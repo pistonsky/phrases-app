@@ -37,6 +37,15 @@ class MainScreen extends Component {
     back: false
   });
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      loaded: {} // loaded audios
+    };
+  }
+
+  cache = {};
+
   componentDidMount() {
     this._askForPermissions();
     Linking.getInitialURL().then(url => {
@@ -45,6 +54,32 @@ class MainScreen extends Component {
     Linking.addEventListener('url', ({ url }) => {
       this._handleDeepLink(url);
     });
+  }
+
+  async componentWillReceiveProps(newProps) {
+    for (let item of newProps.data) {
+      if (!(item.uri in this.cache)) {
+        await this._cacheAudio(item.uri);
+      }
+    }
+  }
+
+  async _cacheAudio(uri) {
+    let localUri;
+    // check if already exists
+    const fileUri = FileSystem.documentDirectory + uri + '.caf';
+    const { exists } = FileSystem.getInfoAsync(fileUri);
+    if (exists) {
+      localUri = fileUri;
+    } else {
+      const remote_uri = config.BASE_URL + '/phrase/' + uri;
+      StatusBar.setNetworkActivityIndicatorVisible(true);
+      const result = await FileSystem.downloadAsync(remote_uri, fileUri);
+      StatusBar.setNetworkActivityIndicatorVisible(false);
+      localUri = result.uri;
+    }
+    this.cache[uri] = localUri;
+    this.setState({ loaded: { ...this.state.loaded, [uri]: localUri } });
   }
 
   _handleDeepLink(url) {
@@ -96,12 +131,16 @@ class MainScreen extends Component {
             <ListItem
               key={item.uri + item.original}
               item={item}
+              loaded={item.uri in this.state.loaded}
               onPress={async item => {
-                const uri = config.BASE_URL + '/phrase/' + item.uri;
-                const { uri: localUri } = await FileSystem.downloadAsync(
-                  uri,
-                  FileSystem.documentDirectory + 'sound.caf'
-                );
+                let localUri;
+                // check cache
+                if (!(this.cache && item.uri in this.cache)) {
+                  await this._cacheAudio(item.uri);
+                }
+
+                localUri = this.cache[item.uri];
+
                 try {
                   const { soundObject, status } = await Audio.Sound.create(
                     { uri: localUri },
@@ -135,15 +174,15 @@ class MainScreen extends Component {
           )}
           ItemSeparatorComponent={Separator}
           ListEmptyComponent={
-            <View
-              style={styles.flatlistEmpty}
-            >
+            <View style={styles.flatlistEmpty}>
               <Text
                 style={styles.flatlistPlaceholder}
                 onTouchStart={() => {
                   store.dispatch({ type: OPEN_ADD_NEW_MODAL });
                 }}
-              >Add your first phrase!</Text>
+              >
+                Add your first phrase!
+              </Text>
             </View>
           }
         />

@@ -26,7 +26,7 @@ export default class ListItem extends PureComponent {
         ]}
       >
         <TouchableHighlight
-          style={styles.container}
+          style={[styles.container, { opacity: this.props.loaded ? 1 : 0.1 }]}
           activeOpacity={1}
           underlayColor="#ddd"
           onPress={() => this.props.onPress(this.props.item)}
