@@ -25,6 +25,6 @@ if (module.hot) {
   });
 }
 
-saga.run(startupSaga);
+// saga.run(startupSaga);
 
 export default store;
