@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+  Alert,
   View,
   Text,
   ActivityIndicator,
   StatusBar,
   Modal,
-  FlatList
+  FlatList,
+  Share,
+  Linking
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { Permissions, Audio, Asset } from 'expo';
+import { Permissions, Audio, Asset, FileSystem, Constants } from 'expo';
+import qs from 'qs';
 import { ListItem, Separator, Item, AddNewForm } from '../components';
 import { getData, getAddNewModalShown } from '../reducers/selectors';
 import store from '../store';
@@ -18,18 +22,44 @@ import {
   CLOSE_ADD_NEW_MODAL,
   RECORDING_PERMISSIONS_GRANTED,
   RECORDING_PERMISSIONS_DENIED,
-  DELETE_PHRASE
+  DELETE_PHRASE,
+  ADD_SHARED_PHRASE
 } from '../actions/types';
 import * as config from '../utils/config';
+import styles from '../styles';
+import colors from '../styles/colors';
 
 class MainScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: `Phrases`,
+    headerStyle: styles.navBarStyle,
+    headerTintColor: colors.white,
     back: false
   });
 
   componentDidMount() {
     this._askForPermissions();
+    Linking.getInitialURL().then(url => {
+      this._handleDeepLink(url);
+    });
+    Linking.addEventListener('url', ({ url }) => {
+      this._handleDeepLink(url);
+    });
+  }
+
+  _handleDeepLink(url) {
+    let queryString = url.replace(Constants.linkingUri, '');
+    if (queryString) {
+      let data = qs.parse(queryString);
+      if (data.uri) {
+        store.dispatch({
+          type: ADD_SHARED_PHRASE,
+          original: data.original,
+          translated: data.translated,
+          uri: data.uri
+        });
+      }
+    }
   }
 
   _askForPermissions = async () => {
@@ -60,31 +90,47 @@ class MainScreen extends Component {
           contentContainerStyle={styles.flatlistContent}
           data={this.props.data}
           keyExtractor={item => {
-            console.log(item);
-            return item.uri;
+            return item.uri ? item.uri : item.original;
           }}
           renderItem={({ item }) => (
             <ListItem
-              key={item.uri}
+              key={item.uri + item.original}
               item={item}
               onPress={async item => {
-                // const uri = config.BASE_URL + '/phrase/' + item.uri;
-                // await Audio.setIsEnabledAsync(true);
-                // const sound = new Audio.Sound();
-                // await sound.loadAsync({ uri });
-                // await sound.playAsync();
-
-                console.log(item.localUri);
-
-                const {
-                  soundObject,
-                  status
-                } = await Audio.Sound.create(
-                  { uri: item.localUri },
-                  { shouldPlay: true }
+                const uri = config.BASE_URL + '/phrase/' + item.uri;
+                const { uri: localUri } = await FileSystem.downloadAsync(
+                  uri,
+                  FileSystem.documentDirectory + 'sound.caf'
                 );
+                try {
+                  const { soundObject, status } = await Audio.Sound.create(
+                    { uri: localUri },
+                    { shouldPlay: true }
+                  );
+                } catch (e) {
+                  Alert.alert(
+                    'No Sound',
+                    'The pronounciation for this phrase is missing.'
+                  );
+                }
               }}
-              onDelete={item => store.dispatch({ type: DELETE_PHRASE, payload: item })}
+              onDelete={item =>
+                store.dispatch({ type: DELETE_PHRASE, payload: item })}
+              onShare={item => {
+                const url =
+                  config.BASE_URL +
+                  '/share?' +
+                  qs.stringify({
+                    original: item.original,
+                    translated: item.translated,
+                    uri: item.uri
+                  });
+                Share.share({
+                  message: `Зацени фразу! "${item.original}" => "${item.translated}"`,
+                  title: 'Share',
+                  url
+                });
+              }}
             />
           )}
           ItemSeparatorComponent={Separator}
@@ -105,23 +151,6 @@ class MainScreen extends Component {
     );
   }
 }
-
-const styles = {
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  modal: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#4af'
-  },
-  placeholder: {
-    color: '#888'
-  }
-};
 
 function mapStateToProps(state) {
   return {

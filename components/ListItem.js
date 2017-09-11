@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 import { FontAwesome } from '@expo/vector-icons';
+import colors from '../styles/colors';
 
 export default class ListItem extends PureComponent {
   render() {
@@ -10,11 +11,19 @@ export default class ListItem extends PureComponent {
     return (
       <Swipeout
         key={localUri}
-        right={[{ 
-          text: 'Delete',
-          backgroundColor: '#f00',
-          onPress: () => this.props.onDelete(this.props.item)
-        }]}
+        autoClose
+        right={[
+          {
+            text: 'Share',
+            backgroundColor: colors.primary_dark,
+            onPress: () => this.props.onShare(this.props.item)
+          },
+          {
+            text: 'Delete',
+            backgroundColor: '#f00',
+            onPress: () => this.props.onDelete(this.props.item)
+          }
+        ]}
       >
         <TouchableHighlight
           style={styles.container}
@@ -22,7 +31,9 @@ export default class ListItem extends PureComponent {
           underlayColor="#ddd"
           onPress={() => this.props.onPress(this.props.item)}
         >
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{original}</Text>
             <FontAwesome
               name="long-arrow-right"
@@ -30,7 +41,9 @@ export default class ListItem extends PureComponent {
               color="#4af"
               style={{ backgroundColor: 'transparent' }}
             />
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{translated}</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+              {translated}
+            </Text>
           </View>
         </TouchableHighlight>
       </Swipeout>

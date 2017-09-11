@@ -4,6 +4,7 @@ import {
   RECORDING_PERMISSIONS_GRANTED,
   RECORDING_PERMISSIONS_DENIED,
   ADD_NEW_PHRASE,
+  ADD_SHARED_PHRASE,
   DELETE_PHRASE
 } from '../actions/types';
 
@@ -39,6 +40,19 @@ export default function(state = INITIAL_STATE, action) {
             uri: action.uri,
             localUri: action.localUri,
             recording: action.recording
+          }
+        ]
+      };
+
+    case ADD_SHARED_PHRASE:
+      return {
+        ...state,
+        data: [
+          ...state.data,
+          {
+            original: action.original,
+            translated: action.translated,
+            uri: action.uri
           }
         ]
       };
