@@ -56,7 +56,8 @@ class MainScreen extends Component {
         </Modal>
         <StatusBar barStyle="dark-content" translucent={true} />
         <FlatList
-          style={{ width: '100%', flex: 1 }}
+          style={styles.flatlist}
+          contentContainerStyle={styles.flatlistContent}
           data={this.props.data}
           keyExtractor={item => {
             console.log(item);
@@ -89,13 +90,14 @@ class MainScreen extends Component {
           ItemSeparatorComponent={Separator}
           ListEmptyComponent={
             <View
-              style={{
-                height: 500,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
+              style={styles.flatlistEmpty}
             >
-              <Text style={styles.placeholder}>Add your first phrase!</Text>
+              <Text
+                style={styles.flatlistPlaceholder}
+                onTouchStart={() => {
+                  store.dispatch({ type: OPEN_ADD_NEW_MODAL });
+                }}
+              >Add your first phrase!</Text>
             </View>
           }
         />

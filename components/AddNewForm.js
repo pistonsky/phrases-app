@@ -29,6 +29,8 @@ import * as config from '../utils/config';
 import axios from 'axios';
 import { Circle as Progress } from 'react-native-progress';
 import { FontAwesome } from '@expo/vector-icons';
+import styles from '../styles';
+import colors from '../styles/colors';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -170,10 +172,10 @@ class AddNewForm extends Component {
             this.scrollView = e;
           }}
         >
-          <KeyboardAvoidingView behavior="padding" style={styles.slide}>
-            <Text style={styles.header}>Фраза:</Text>
+          <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
+            <Text style={styles.formHeader}>Фраза:</Text>
             <TextInput
-              style={styles.textInput}
+              style={styles.formTextInput}
               value={this.props.originalPhrase}
               onChangeText={text =>
                 store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
@@ -188,7 +190,7 @@ class AddNewForm extends Component {
               }}
             />
             <Button
-              backgroundColor="#fa4"
+              backgroundColor={colors.secondary}
               raised
               large
               buttonStyle={styles.button}
@@ -205,8 +207,8 @@ class AddNewForm extends Component {
             />
           </KeyboardAvoidingView>
 
-          <KeyboardAvoidingView behavior="padding" style={styles.slide}>
-            <Text style={styles.header}>Перевод:</Text>
+          <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
+            <Text style={styles.formHeader}>Перевод:</Text>
             <TextInput
               value={this.props.translatedPhrase}
               onChangeText={text =>
@@ -214,7 +216,7 @@ class AddNewForm extends Component {
                   type: FORM_TRANSLATED_CHANGED,
                   payload: text
                 })}
-              style={styles.textInput}
+              style={styles.formTextInput}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH * 2,
@@ -227,7 +229,7 @@ class AddNewForm extends Component {
               }}
             />
             <Button
-              backgroundColor="#fa4"
+              backgroundColor={colors.secondary}
               raised
               large
               buttonStyle={styles.button}
@@ -245,12 +247,12 @@ class AddNewForm extends Component {
           </KeyboardAvoidingView>
 
           {!this.props.haveRecordingPermissions ? (
-            <View style={styles.slide}>
+            <View style={styles.formSlide}>
               <Text style={styles.noPermissionsText}>
                 Чувак, разреши сначала доступ к диктофону, ну ё-моё!
               </Text>
               <Button
-                backgroundColor="#fa4"
+                backgroundColor={colors.secondary}
                 raised
                 large
                 buttonStyle={styles.button}
@@ -261,18 +263,18 @@ class AddNewForm extends Component {
               />
             </View>
           ) : (
-            <KeyboardAvoidingView behavior="padding" style={styles.slide}>
-              <Animated.Text style={styles.header}>
+            <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
+              <Animated.Text style={styles.formHeader}>
                 {this.state.recordingDuration === 0 ? (
                   'Диктуй!'
                 ) : (
                   this.state.recordingDuration.toFixed(2)
                 )}
               </Animated.Text>
-              <View style={styles.recordButtonContainer}>
+              <View style={styles.formRecordButtonContainer}>
                 {(this.state.isUploading || this.state.uploaded) && (
                   <Progress
-                    style={styles.progress}
+                    style={styles.formCircleProgress}
                     size={120}
                     thickness={6}
                     color={this.state.uploaded ? '#fa4' : '#f00'}
@@ -348,7 +350,7 @@ class AddNewForm extends Component {
                 </Animated.View>
               </View>
               <Button
-                backgroundColor="#fa4"
+                backgroundColor={colors.secondary}
                 raised
                 large
                 buttonStyle={styles.button}
@@ -373,64 +375,6 @@ class AddNewForm extends Component {
     );
   }
 }
-
-const styles = {
-  slide: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: SCREEN_WIDTH,
-    backgroundColor: '#4af'
-  },
-  header: {
-    textAlign: 'center',
-    fontSize: 50,
-    color: '#adf'
-  },
-  textInput: {
-    height: 100,
-    width: SCREEN_WIDTH,
-    margin: 50,
-    backgroundColor: 'red',
-    color: '#eee',
-    fontSize: 70,
-    textAlign: 'center'
-  },
-  button: {
-    width: 200,
-    height: 50
-  },
-  recordButtonContainer: {
-    width: SCREEN_WIDTH,
-    height: 200
-  },
-  progress: {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    marginLeft: -60,
-    marginTop: -60
-  },
-  recordButton: {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    width: 100,
-    height: 100,
-    marginLeft: -50,
-    marginTop: -50,
-    borderRadius: 50,
-    backgroundColor: '#f00',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  noPermissionsText: {
-    fontSize: 40,
-    color: '#fff',
-    textAlign: 'center',
-    margin: 20
-  }
-};
 
 function mapStateToProps(state) {
   return {
