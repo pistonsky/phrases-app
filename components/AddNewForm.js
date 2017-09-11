@@ -180,6 +180,7 @@ class AddNewForm extends Component {
               onChangeText={text =>
                 store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
               autoFocus
+              autoCorrect={false}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH,
@@ -224,6 +225,7 @@ class AddNewForm extends Component {
                   animated: true
                 });
               }}
+              autoCorrect={false}
               ref={e => {
                 this._textInput2 = e;
               }}
