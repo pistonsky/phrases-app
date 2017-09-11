@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Permissions, Audio, FileSystem } from 'expo';
+import { RNS3 } from 'react-native-aws3';
 import {
   getRecordingPermissions,
   getOriginalPhrase,
@@ -140,23 +141,34 @@ class AddNewForm extends Component {
   }
 
   async _uploadRecordingAsync(uri) {
-    console.log(uri);
     try {
       this.setState({ isUploading: true, uploadProgress: undefined });
-      let formData = new FormData();
-      formData.append('file', { uri, name: 'audio.caf', type: 'audio/x-caf' });
-      const { data } = await axios.post(config.UPLOAD_URL, formData, {
-        onUploadProgress: progressEvent => {
-          this.setState({
-            uploadProgress: progressEvent.loaded / progressEvent.total
-          });
-        }
-      });
-      this.sound_uri = data[0].filename;
+      this.sound_uri = Math.random().toString(36).slice(2);
+      const file = {
+        uri,
+        name: this.sound_uri + '.caf',
+        type: 'audio/x-caf'
+      }
+      const options = {
+        keyPrefix: '',
+        bucket: config.S3_BUCKET,
+        region: config.S3_REGION,
+        accessKey: config.S3_ACCESS_KEY,
+        secretKey: config.S3_SECRET_KEY,
+        successActionStatus: 201
+      }
+      RNS3.put(file, options)
+        .progress(e => this.setState({ uploadProgress: e.loaded / e.total }))
+        .then(response => {
+          if (response.status !== 201) {
+            this.setState({ isUploading: false, uploaded: false });
+          } else {
+            this.setState({ isUploading: false, uploaded: true });
+            console.log(response.body.postResponse.location);
+          }
+        });
     } catch (e) {
       console.error(e);
-    } finally {
-      this.setState({ isUploading: false, uploaded: true });
     }
   }
 
@@ -356,9 +368,11 @@ class AddNewForm extends Component {
                 raised
                 large
                 buttonStyle={styles.button}
+                disabledStyle={styles.buttonDisabled}
                 fontWeight="bold"
                 borderRadius={30}
                 title="Готово!"
+                disabled={!this.state.uploaded}
                 onPress={() => {
                   store.dispatch({
                     type: ADD_NEW_PHRASE,

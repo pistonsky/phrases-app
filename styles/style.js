@@ -69,6 +69,10 @@ export const button = {
   height: 50
 };
 
+export const buttonDisabled = {
+  opacity: 0.3
+};
+
 export const formRecordButtonContainer = {
   width: SCREEN_WIDTH,
   height: 200

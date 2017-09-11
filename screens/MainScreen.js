@@ -72,7 +72,7 @@ class MainScreen extends Component {
     if (exists) {
       localUri = fileUri;
     } else {
-      const remote_uri = config.BASE_URL + '/phrase/' + uri;
+      const remote_uri = config.BASE_AUDIO_URL + uri + '.caf';
       StatusBar.setNetworkActivityIndicatorVisible(true);
       const result = await FileSystem.downloadAsync(remote_uri, fileUri);
       StatusBar.setNetworkActivityIndicatorVisible(false);
