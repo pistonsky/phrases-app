@@ -16,7 +16,8 @@ import { RNS3 } from 'react-native-aws3';
 import {
   getRecordingPermissions,
   getOriginalPhrase,
-  getTranslatedPhrase
+  getTranslatedPhrase,
+  getUserId
 } from '../reducers/selectors';
 import {
   RECORDING_PERMISSIONS_DENIED,
@@ -28,6 +29,7 @@ import {
 import store from '../store';
 import * as config from '../utils/config';
 import axios from 'axios';
+import * as api from '../api';
 import { Circle as Progress } from 'react-native-progress';
 import { FontAwesome } from '@expo/vector-icons';
 import styles from '../styles';
@@ -374,14 +376,18 @@ class AddNewForm extends Component {
                 title="Готово!"
                 disabled={!this.state.uploaded}
                 onPress={() => {
-                  store.dispatch({
-                    type: ADD_NEW_PHRASE,
+                  const phrase = {
                     original: this.props.originalPhrase,
                     translated: this.props.translatedPhrase,
-                    recording: this.recording,
                     localUri: this.recording.getURI(),
                     uri: this.sound_uri
+                  };
+                  store.dispatch({
+                    type: ADD_NEW_PHRASE,
+                    ...phrase
                   });
+                  const user_id = getUserId(store.getState());
+                  api.addPhrase(phrase, user_id);
                 }}
               />
             </KeyboardAvoidingView>

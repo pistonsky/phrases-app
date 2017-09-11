@@ -15,7 +15,7 @@ import { Button } from 'react-native-elements';
 import { Permissions, Audio, Asset, FileSystem, Constants } from 'expo';
 import qs from 'qs';
 import { ListItem, Separator, Item, AddNewForm } from '../components';
-import { getData, getAddNewModalShown } from '../reducers/selectors';
+import { getData, getAddNewModalShown, getUserId } from '../reducers/selectors';
 import store from '../store';
 import {
   OPEN_ADD_NEW_MODAL,
@@ -87,12 +87,17 @@ class MainScreen extends Component {
     if (queryString) {
       let data = qs.parse(queryString);
       if (data.uri) {
-        store.dispatch({
-          type: ADD_SHARED_PHRASE,
+        const phrase = {
           original: data.original,
           translated: data.translated,
           uri: data.uri
+        };
+        store.dispatch({
+          type: ADD_SHARED_PHRASE,
+          ...phrase
         });
+        const user_id = getUserId(store.getState());
+        api.addPhrase(phrase, user_id);
       }
     }
   }
@@ -193,6 +198,7 @@ class MainScreen extends Component {
 
 function mapStateToProps(state) {
   return {
+    user_id: getUserId(state),
     data: getData(state),
     add_new_modal_shown: getAddNewModalShown(state)
   };
