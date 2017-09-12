@@ -190,6 +190,29 @@ class MainScreen extends Component {
               </Text>
             </View>
           }
+          ListFooterComponent={
+            <View style={styles.shareButtonContainer}>
+              <Button
+                iconRight
+                icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}
+                title='SHARE ALL PHRASES'
+                backgroundColor={colors.secondary}
+                onPress={() => {
+                  const url =
+                    config.BASE_URL +
+                    '/share?' +
+                    qs.stringify({
+                      user_id: this.props.user_id
+                    });
+                  Share.share({
+                    message: "Зацени мои фразочки!",
+                    title: 'Phrases',
+                    url
+                  });
+                }}
+              />
+            </View>
+          }
         />
       </View>
     );

@@ -73,6 +73,11 @@ export const buttonDisabled = {
   opacity: 0.3
 };
 
+export const shareButtonContainer = {
+  width: SCREEN_WIDTH,
+  backgroundColor: colors.secondary
+};
+
 export const formRecordButtonContainer = {
   width: SCREEN_WIDTH,
   height: 200
