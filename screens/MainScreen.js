@@ -23,7 +23,8 @@ import {
   RECORDING_PERMISSIONS_GRANTED,
   RECORDING_PERMISSIONS_DENIED,
   DELETE_PHRASE,
-  ADD_SHARED_PHRASE
+  ADD_SHARED_PHRASE,
+  ADD_SHARED_PHRASES
 } from '../actions/types';
 import * as config from '../utils/config';
 import styles from '../styles';
@@ -82,10 +83,15 @@ class MainScreen extends Component {
     this.setState({ loaded: { ...this.state.loaded, [uri]: localUri } });
   }
 
-  _handleDeepLink(url) {
+  async _handleDeepLink(url) {
     let queryString = url.replace(Constants.linkingUri, '');
     if (queryString) {
       let data = qs.parse(queryString);
+      if (data.user_id) {
+        // it was a "share all phrases" link
+        const phrases = await api.getPhrases(data.user_id);
+        store.dispatch({ type: ADD_SHARED_PHRASES, phrases });
+      }
       if (data.uri) {
         const phrase = {
           original: data.original,

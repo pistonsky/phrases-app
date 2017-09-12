@@ -5,6 +5,7 @@ import {
   RECORDING_PERMISSIONS_DENIED,
   ADD_NEW_PHRASE,
   ADD_SHARED_PHRASE,
+  ADD_SHARED_PHRASES,
   DELETE_PHRASE
 } from '../actions/types';
 
@@ -56,6 +57,15 @@ export default function(state = INITIAL_STATE, action) {
           }
         ]
       };
+
+    case ADD_SHARED_PHRASES:
+      return {
+        ...state,
+        data: [
+          ...state.data,
+          ...action.phrases
+        ]
+      }
 
     case DELETE_PHRASE:
       let data = state.data.filter(e => e.localUri !== action.payload.localUri);
