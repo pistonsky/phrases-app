@@ -179,13 +179,13 @@ class MainScreen extends Component {
           )}
           ItemSeparatorComponent={Separator}
           ListEmptyComponent={
-            <View style={styles.flatlistEmpty}>
-              <Text
-                style={styles.flatlistPlaceholder}
-                onTouchStart={() => {
-                  store.dispatch({ type: OPEN_ADD_NEW_MODAL });
-                }}
-              >
+            <View
+              style={styles.flatlistEmpty}
+              onTouchStart={() => {
+                store.dispatch({ type: OPEN_ADD_NEW_MODAL });
+              }}
+            >
+              <Text style={styles.flatlistPlaceholder}>
                 Add your first phrase!
               </Text>
             </View>
