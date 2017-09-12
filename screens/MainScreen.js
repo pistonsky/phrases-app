@@ -29,6 +29,7 @@ import {
 import * as config from '../utils/config';
 import styles from '../styles';
 import colors from '../styles/colors';
+import * as api from '../api';
 
 class MainScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
