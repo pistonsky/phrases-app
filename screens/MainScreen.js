@@ -9,7 +9,8 @@ import {
   Modal,
   FlatList,
   Share,
-  Linking
+  Linking,
+  Platform
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Permissions, Audio, Asset, FileSystem, Constants } from 'expo';
@@ -75,9 +76,9 @@ class MainScreen extends Component {
       localUri = fileUri;
     } else {
       const remote_uri = config.BASE_AUDIO_URL + uri + '.caf';
-      StatusBar.setNetworkActivityIndicatorVisible(true);
+      Platform.OS === 'ios' && StatusBar.setNetworkActivityIndicatorVisible(true);
       const result = await FileSystem.downloadAsync(remote_uri, fileUri);
-      StatusBar.setNetworkActivityIndicatorVisible(false);
+      Platform.OS === 'ios' && StatusBar.setNetworkActivityIndicatorVisible(false);
       localUri = result.uri;
     }
     this.cache[uri] = localUri;
@@ -176,10 +177,16 @@ class MainScreen extends Component {
                     translated: item.translated,
                     uri: item.uri
                   });
+                let message = `Зацени фразу! "${item.original}" => "${item.translated}"`;
+                if (Platform.OS !== 'ios') {
+                  message += ` ${url}`;
+                }
                 Share.share({
-                  message: `Зацени фразу! "${item.original}" => "${item.translated}"`,
-                  title: 'Share',
+                  message,
+                  title: 'Фразочки',
                   url
+                },{
+                  dialogTitle: 'Поделиться фразой'
                 });
               }}
             />
@@ -211,10 +218,16 @@ class MainScreen extends Component {
                     qs.stringify({
                       user_id: this.props.user_id
                     });
+                  let message = "Зацени мои фразочки!";
+                  if (Platform.OS !== 'ios') {
+                    message += ` ${url}`;
+                  }
                   Share.share({
-                    message: "Зацени мои фразочки!",
-                    title: 'Phrases',
+                    message,
+                    title: 'Фразочки',
                     url
+                  },{
+                    dialogTitle: 'Поделиться всеми фразочками'
                   });
                 }}
               />

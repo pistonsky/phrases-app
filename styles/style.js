@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import colors from './colors';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -70,7 +70,7 @@ export const button = {
 };
 
 export const buttonDisabled = {
-  opacity: 0.3
+  opacity: Platform.OS === 'ios' ? 0.3 : 1
 };
 
 export const shareButtonContainer = {

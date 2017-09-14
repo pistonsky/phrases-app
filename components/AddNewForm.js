@@ -8,7 +8,8 @@ import {
   Dimensions,
   ScrollView,
   TouchableHighlight,
-  Animated
+  Animated,
+  Platform
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Permissions, Audio, FileSystem } from 'expo';
@@ -72,10 +73,10 @@ class AddNewForm extends Component {
       try {
         const status = await this.recording.prepareToRecordAsync({
           android: {
-            extension: '.3gp',
+            extension: '.m4a',
             outputFormat:
-              Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_THREE_GPP,
-            audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AMR_NB,
+              Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+            audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
             sampleRate: 44100,
             numberOfChannels: 2,
             bitRate: 128000
@@ -145,12 +146,14 @@ class AddNewForm extends Component {
   async _uploadRecordingAsync(uri) {
     try {
       this.setState({ isUploading: true, uploadProgress: undefined });
-      this.sound_uri = Math.random().toString(36).slice(2);
+      this.sound_uri = Math.random()
+        .toString(36)
+        .slice(2);
       const file = {
         uri,
         name: this.sound_uri + '.caf',
         type: 'audio/x-caf'
-      }
+      };
       const options = {
         keyPrefix: '',
         bucket: config.S3_BUCKET,
@@ -158,7 +161,7 @@ class AddNewForm extends Component {
         accessKey: config.S3_ACCESS_KEY,
         secretKey: config.S3_SECRET_KEY,
         successActionStatus: 201
-      }
+      };
       RNS3.put(file, options)
         .progress(e => this.setState({ uploadProgress: e.loaded / e.total }))
         .then(response => {
@@ -186,10 +189,15 @@ class AddNewForm extends Component {
             this.scrollView = e;
           }}
         >
-          <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.formSlide}
+          >
             <Text style={styles.formHeader}>Фраза:</Text>
             <TextInput
               style={styles.formTextInput}
+              underlineColorAndroid="transparent"
+              selectionColor={colors.primary_light}
               value={this.props.originalPhrase}
               onChangeText={text =>
                 store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
@@ -210,7 +218,7 @@ class AddNewForm extends Component {
               large
               buttonStyle={styles.button}
               fontWeight="bold"
-              borderRadius={30}
+              borderRadius={Platform.OS === 'ios' ? 30 : 0}
               title="Дальше"
               onPress={() => {
                 this.scrollView.scrollTo({
@@ -222,7 +230,10 @@ class AddNewForm extends Component {
             />
           </KeyboardAvoidingView>
 
-          <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.formSlide}
+          >
             <Text style={styles.formHeader}>Перевод:</Text>
             <TextInput
               value={this.props.translatedPhrase}
@@ -232,6 +243,8 @@ class AddNewForm extends Component {
                   payload: text
                 })}
               style={styles.formTextInput}
+              underlineColorAndroid="transparent"
+              selectionColor={colors.primary_light}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH * 2,
@@ -250,7 +263,7 @@ class AddNewForm extends Component {
               large
               buttonStyle={styles.button}
               fontWeight="bold"
-              borderRadius={30}
+              borderRadius={Platform.OS === 'ios' ? 30 : 0}
               title="Дальше"
               onPress={() => {
                 this.scrollView.scrollTo({
@@ -273,7 +286,7 @@ class AddNewForm extends Component {
                 large
                 buttonStyle={styles.button}
                 fontWeight="bold"
-                borderRadius={30}
+                borderRadius={Platform.OS === 'ios' ? 30 : 0}
                 onPress={this._askForPermissions}
                 title="Разрешаю!"
               />
@@ -372,7 +385,7 @@ class AddNewForm extends Component {
                 buttonStyle={styles.button}
                 disabledStyle={styles.buttonDisabled}
                 fontWeight="bold"
-                borderRadius={30}
+                borderRadius={Platform.OS === 'ios' ? 30 : 0}
                 title="Готово!"
                 disabled={!this.state.uploaded}
                 onPress={() => {
