@@ -11,7 +11,7 @@
     "qs": "^6.5.0",
     "react": "16.0.0-alpha.12",
     "react-native": "https://github.com/expo/react-native/archive/sdk-20.0.0.tar.gz",
-    "react-native-app-onboarding": "0.1.1",
+    "react-native-app-onboarding": "https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.2",
     "react-native-aws3": "0.0.8",
     "react-native-elements": "^0.16.0",
     "react-native-progress": "^3.4.0",
