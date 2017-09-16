@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, View, Text } from 'react-native';
-import { Permissions } from 'expo';
+import { Modal, Text, Platform } from 'react-native';
+import { Permissions, BlurView } from 'expo';
 import { Button } from 'react-native-elements';
 import { getRecordingPermissions } from '../reducers/selectors';
 import styles from '../styles';
@@ -26,16 +26,16 @@ class RecordingPermissionsModal extends Component {
     return (
       <Modal
         animationType="slide"
-        transparent={false}
+        transparent={true}
         visible={this.props.visible}
       >
-        <View style={{ flex: 1 }}>
-          <Text style={styles.modalTitle}>Доступ к микрофону</Text>
+        <BlurView tint='dark' intensity={100} style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Микрофон</Text>
           <Text style={styles.modalSubtitle}>
             Он нужен для того, чтобы вы могли записывать произношение фраз.
           </Text>
           <Button
-            backgroundColor={colors.secondary}
+            backgroundColor={colors.secondary_dark}
             raised
             large
             buttonStyle={styles.button}
@@ -46,7 +46,7 @@ class RecordingPermissionsModal extends Component {
               this._askForPermissionsAsync();
             }}
           />
-        </View>
+        </BlurView>
       </Modal>
     );
   }
