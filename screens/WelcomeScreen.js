@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image } from 'react-native';
-import Onboarding from 'react-native-app-onboarding';
+import Onboarding from 'react-native-simple-onboarding';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import { getWelcomeScreens } from '../reducers/selectors';
