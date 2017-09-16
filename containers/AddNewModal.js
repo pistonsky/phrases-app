@@ -29,4 +29,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(AddNewForm);
+export default connect(mapStateToProps)(AddNewModal);
