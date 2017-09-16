@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, StatusBar, Linking } from 'react-native';
 import { Permissions, Constants } from 'expo';
 import qs from 'qs';
-import { AddNewModal, PhrasesList } from '../containers';
+import { AddNewModal, PhrasesList, RecordingPermissionsModal } from '../containers';
 import { getUserId } from '../reducers/selectors';
 import store from '../store';
 import {
@@ -25,7 +25,6 @@ class MainScreen extends Component {
   });
 
   componentDidMount() {
-    this._askForPermissions(); // TODO: delegate this to a modal
     Linking.getInitialURL().then(url => {
       this._handleDeepLink(url);
     });
@@ -58,19 +57,11 @@ class MainScreen extends Component {
     }
   }
 
-  async _askForPermissions() {
-    const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    if (status === 'granted') {
-      store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED });
-    } else {
-      store.dispatch({ type: RECORDING_PERMISSIONS_DENIED });
-    }
-  }
-
   render() {
     return (
       <View style={styles.container}>
         <AddNewModal />
+        <RecordingPermissionsModal />
         <StatusBar barStyle="dark-content" translucent={true} />
         <PhrasesList />
       </View>

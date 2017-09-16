@@ -111,3 +111,16 @@ export const noPermissionsText = {
   textAlign: 'center',
   margin: 20
 };
+
+export const modalTitle = {
+  fontSize: 40,
+  marginBottom: 20,
+  color: colors.white
+};
+
+export const modalSubtitle = {
+  fontSize: 20,
+  marginBottom: 40,
+  color: colors.white,
+  opacity: 0.9
+};
