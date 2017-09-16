@@ -20,6 +20,9 @@
     "ios": {
       "bundleIdentifier": "com.phrases.app",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.stash.phrases"
     }
   }
 }
