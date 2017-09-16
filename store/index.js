@@ -3,10 +3,11 @@ import thunk from 'redux-thunk';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { AsyncStorage } from 'react-native';
 import reducers from '../reducers';
+import actions from '../actions';
 
 const store = createStore(
   reducers,
-  {},
+  actions,
   compose(applyMiddleware(thunk), autoRehydrate())
 );
 

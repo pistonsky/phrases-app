@@ -6,3 +6,5 @@ export const getRecordingPermissions = state => state.main.recording_permissions
 
 export const getOriginalPhrase = state => state.form.original;
 export const getTranslatedPhrase = state => state.form.translated;
+
+export const getWelcomeScreens = state => state.main.guide;

@@ -8,11 +8,29 @@ import {
   ADD_SHARED_PHRASES,
   DELETE_PHRASE
 } from '../actions/types';
+import colors from '../styles/colors';
 
 const INITIAL_STATE = {
   add_new_modal_shown: false,
   recording_permissions: false,
-  data: []
+  data: [],
+  guide: [
+    {
+      head: 'Фразочки',
+      body: 'Учите иностранный\nс иностранцами',
+      background: colors.primary_dark
+    },
+    {
+      head: 'Оттачивайте произношение',
+      body: 'Спросите местного\nкак это произносится',
+      background: colors.secondary_dark
+    },
+    {
+      head: 'Делитесь\nс друзьями',
+      body: 'Передавайте собранные фразочки своим друзьям',
+      background: colors.primary
+    }
+  ]
 };
 
 export default function(state = INITIAL_STATE, action) {

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Scene, Router } from 'react-native-router-flux';
 import store from './store';
 
+import LoadingScreen from './screens/LoadingScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
 import MainScreen from './screens/MainScreen';
 
 import { Platform, Text } from 'react-native';
@@ -14,8 +16,20 @@ class AppRouter extends Component {
       <Router sceneStyle={{ marginTop: Platform.OS === 'android' ? 20 : 0 }}>
         <Scene key="root">
           <Scene
-            key="main"
+            key="loading"
+            component={LoadingScreen}
             initial
+            hideNavBar
+            hideTabBar
+          />
+          <Scene
+            key="welcome"
+            component={WelcomeScreen}
+            hideNavBar
+            hideTabBar
+          />
+          <Scene
+            key="main"
             component={MainScreen}
             navigationBarStyle={styles.navBar}
             hideTabBar
