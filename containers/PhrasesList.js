@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, FlatList, Platform, StatusBar, Share } from 'react-native';
+import { View, Text, FlatList, Platform, StatusBar, Share, ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Audio, FileSystem } from 'expo';
 import qs from 'qs';
 import { ListItem, Separator } from '../components';
-import { getData, getUserId } from '../reducers/selectors';
+import { getData, getUserId, getDataLoading } from '../reducers/selectors';
 import styles from '../styles';
 import * as config from '../utils/config';
 import store from '../store';
@@ -16,6 +16,7 @@ import {
   SHARE_PHRASE,
   SHARE_ALL_PHRASES
 } from '../actions/types';
+import * as actions from '../actions';
 
 class PhrasesList extends Component {
   constructor(props) {
@@ -97,8 +98,7 @@ class PhrasesList extends Component {
                 );
               }
             }}
-            onDelete={item =>
-              store.dispatch({ type: DELETE_PHRASE, payload: item })}
+            onDelete={item => this.props.deletePhrase(item)}
             onShare={async item => {
               const url =
                 config.BASE_URL +
@@ -134,8 +134,9 @@ class PhrasesList extends Component {
               store.dispatch({ type: OPEN_ADD_NEW_MODAL });
             }}
           >
+            {this.props.data_loading && <ActivityIndicator size='small' color='#ffffff' />}
             <Text style={styles.flatlistPlaceholder}>
-              Add your first phrase!
+              {this.props.data_loading ? 'Загружаем...' : 'Добавь свою первую фразочку!'}
             </Text>
           </View>
         }
@@ -172,6 +173,8 @@ class PhrasesList extends Component {
             />
           </View>
         }
+        refreshing={this.props.data_loading}
+        onRefresh={() => this.props.refreshPhrases(this.props.user_id)}
       />
     );
   }
@@ -180,8 +183,9 @@ class PhrasesList extends Component {
 function mapStateToProps(state) {
   return {
     data: getData(state),
+    data_loading: getDataLoading(state),
     user_id: getUserId(state)
   };
 }
 
-export default connect(mapStateToProps)(PhrasesList);
+export default connect(mapStateToProps, actions)(PhrasesList);

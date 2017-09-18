@@ -30,6 +30,7 @@ export const flatlistContent = {
 
 export const flatlistEmpty = {
   height: SCREEN_HEIGHT - 64,
+  flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'transparent'
@@ -38,6 +39,7 @@ export const flatlistEmpty = {
 export const flatlistPlaceholder = {
   fontSize: 20,
   fontWeight: 'bold',
+  marginLeft: 10,
   color: colors.primary_light
 };
 

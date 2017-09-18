@@ -6,7 +6,10 @@ import {
   ADD_NEW_PHRASE,
   ADD_SHARED_PHRASE,
   ADD_SHARED_PHRASES,
-  DELETE_PHRASE
+  DATA_LOADING,
+  DATA_LOADED,
+  DELETE_PHRASE,
+  SKIP_LOADING_SCREENS
 } from '../actions/types';
 import colors from '../styles/colors';
 
@@ -14,6 +17,7 @@ const INITIAL_STATE = {
   add_new_modal_shown: false,
   recording_permissions: false,
   data: [],
+  data_loading: true,
   guide: [
     {
       head: 'Фразочки',
@@ -40,6 +44,9 @@ export default function(state = INITIAL_STATE, action) {
 
     case RECORDING_PERMISSIONS_DENIED:
       return { ...state, recording_permissions: false };
+
+    case SKIP_LOADING_SCREENS:
+      return { ...state, data_loading: false };
 
     case OPEN_ADD_NEW_MODAL:
       return { ...state, add_new_modal_shown: true };
@@ -79,15 +86,22 @@ export default function(state = INITIAL_STATE, action) {
     case ADD_SHARED_PHRASES:
       return {
         ...state,
-        data: [
-          ...state.data,
-          ...action.phrases
-        ]
-      }
+        data: [...state.data, ...action.phrases]
+      };
+
+    case DATA_LOADED:
+      return {
+        ...state,
+        data: action.phrases,
+        data_loading: false
+      };
 
     case DELETE_PHRASE:
-      let data = state.data.filter(e => e.localUri !== action.payload.localUri);
+      let data = state.data.filter(e => e.uri !== action.payload.uri);
       return { ...state, data };
+
+    case DATA_LOADING:
+      return { ...state, data_loading: true };
 
     default:
       return state;

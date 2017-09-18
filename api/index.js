@@ -21,5 +21,12 @@ export const getPhrases = async user_id => {
   const query = qs.stringify({ user_id });
   const url = config.BASE_URL + '/?' + query;
   const result = await axios.get(url);
-  return result.data;
+  return result;
+};
+
+export const deletePhrase = async phrase => {
+  const query = qs.stringify({ id: phrase.id, uri: phrase.uri });
+  const url = config.BASE_URL + '/?' + query;
+  const result = await axios.delete(url);
+  return result;
 };

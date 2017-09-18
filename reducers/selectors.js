@@ -6,6 +6,7 @@ export const facebookConnectInProgress = state =>
   state.auth.facebook_connect_in_progress;
 
 export const getData = state => state.main.data;
+export const getDataLoading = state => state.main.data_loading;
 export const getAddNewModalShown = state => state.main.add_new_modal_shown;
 export const getRecordingPermissions = state =>
   state.main.recording_permissions;

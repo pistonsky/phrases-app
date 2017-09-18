@@ -7,7 +7,10 @@ import {
   FACEBOOK_LOGIN,
   FACEBOOK_CONNECT_IN_PROGRESS,
   FACEBOOK_CONNECT_IGNORED,
-  FACEBOOK_CONNECT_FAILED
+  FACEBOOK_CONNECT_FAILED,
+  DATA_LOADING,
+  DATA_LOADED,
+  DELETE_PHRASE
 } from './types';
 
 const facebookLogin = () =>
@@ -44,6 +47,8 @@ export const loginWithFacebook = () => async dispatch => {
     const { data } = await api.connectFacebook(token);
     Actions.main();
     dispatch({ type: FACEBOOK_LOGIN, user_id: data.user_id });
+    const { data: phrases } = await api.getPhrases(data.user_id);
+    dispatch({ type: DATA_LOADED, phrases });
   }
 };
 
@@ -51,4 +56,16 @@ export const ignoreConnectFacebook = () => {
   return {
     type: FACEBOOK_CONNECT_IGNORED
   };
+};
+
+export const refreshPhrases = (user_id) => async dispatch => {
+  dispatch({ type: DATA_LOADING });
+  const { data: phrases } = await api.getPhrases(user_id);
+  console.log(phrases);
+  dispatch({ type: DATA_LOADED, phrases });
+};
+
+export const deletePhrase = (phrase) => async dispatch => {
+  dispatch({ type: DELETE_PHRASE, payload: phrase });
+  const result = await api.deletePhrase(phrase);
 };
