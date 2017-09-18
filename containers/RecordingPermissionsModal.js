@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Modal, Text, Platform } from 'react-native';
 import { Permissions, BlurView } from 'expo';
 import { Button } from 'react-native-elements';
-import { getRecordingPermissions } from '../reducers/selectors';
+import { getRecordingPermissions, getUserId } from '../reducers/selectors';
 import styles from '../styles';
 import colors from '../styles/colors';
 import store from '../store';
@@ -53,9 +53,8 @@ class RecordingPermissionsModal extends Component {
 }
 
 function mapStateToProps(state) {
-  return {
-    visible: !getRecordingPermissions(state)
-  };
+  const visible = !getRecordingPermissions(state) && getUserId(state) !== null;
+  return { visible };
 }
 
 export default connect(mapStateToProps)(RecordingPermissionsModal);
