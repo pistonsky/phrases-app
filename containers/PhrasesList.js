@@ -10,7 +10,12 @@ import styles from '../styles';
 import * as config from '../utils/config';
 import store from '../store';
 import colors from '../styles/colors';
-import { OPEN_ADD_NEW_MODAL, DELETE_PHRASE } from '../actions/types';
+import {
+  OPEN_ADD_NEW_MODAL,
+  DELETE_PHRASE,
+  SHARE_PHRASE,
+  SHARE_ALL_PHRASES
+} from '../actions/types';
 
 class PhrasesList extends Component {
   constructor(props) {
@@ -21,8 +26,16 @@ class PhrasesList extends Component {
     };
   }
 
-  async componentWillReceiveProps(newProps) {
-    for (let item of newProps.data) {
+  componentDidMount() {
+    this._cacheAll(this.props.data);
+  }
+
+  componentWillReceiveProps(newProps) {
+    this._cacheAll(newProps.data);
+  }
+
+  async _cacheAll(data) {
+    for (let item of data) {
       if (!(item.uri in this.cache)) {
         await this._cacheAudio(item.uri);
       }
@@ -38,9 +51,11 @@ class PhrasesList extends Component {
       localUri = fileUri;
     } else {
       const remote_uri = config.BASE_AUDIO_URL + uri + '.caf';
-      Platform.OS === 'ios' && StatusBar.setNetworkActivityIndicatorVisible(true);
+      Platform.OS === 'ios' &&
+        StatusBar.setNetworkActivityIndicatorVisible(true);
       const result = await FileSystem.downloadAsync(remote_uri, fileUri);
-      Platform.OS === 'ios' && StatusBar.setNetworkActivityIndicatorVisible(false);
+      Platform.OS === 'ios' &&
+        StatusBar.setNetworkActivityIndicatorVisible(false);
       localUri = result.uri;
     }
     this.cache[uri] = localUri;
@@ -84,7 +99,7 @@ class PhrasesList extends Component {
             }}
             onDelete={item =>
               store.dispatch({ type: DELETE_PHRASE, payload: item })}
-            onShare={item => {
+            onShare={async item => {
               const url =
                 config.BASE_URL +
                 '/share?' +
@@ -97,7 +112,7 @@ class PhrasesList extends Component {
               if (Platform.OS !== 'ios') {
                 message += ` ${url}`;
               }
-              Share.share(
+              await Share.share(
                 {
                   message,
                   title: 'Фразочки',
@@ -107,6 +122,7 @@ class PhrasesList extends Component {
                   dialogTitle: 'Поделиться фразой'
                 }
               );
+              store.dispatch({ type: SHARE_PHRASE });
             }}
           />
         )}
@@ -130,7 +146,7 @@ class PhrasesList extends Component {
               icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}
               title="SHARE ALL PHRASES"
               backgroundColor={colors.secondary}
-              onPress={() => {
+              onPress={async () => {
                 const url =
                   config.BASE_URL +
                   '/share?' +
@@ -141,7 +157,7 @@ class PhrasesList extends Component {
                 if (Platform.OS !== 'ios') {
                   message += ` ${url}`;
                 }
-                Share.share(
+                await Share.share(
                   {
                     message,
                     title: 'Фразочки',
@@ -151,6 +167,7 @@ class PhrasesList extends Component {
                     dialogTitle: 'Поделиться всеми фразочками'
                   }
                 );
+                store.dispatch({ type: SHARE_ALL_PHRASES });
               }}
             />
           </View>

@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 import { View, StatusBar, Linking } from 'react-native';
 import { Permissions, Constants } from 'expo';
 import qs from 'qs';
-import { AddNewModal, PhrasesList, RecordingPermissionsModal } from '../containers';
+import {
+  AddNewModal,
+  PhrasesList,
+  RecordingPermissionsModal,
+  ConnectFacebookModal
+} from '../containers';
 import { getUserId } from '../reducers/selectors';
 import store from '../store';
 import {
@@ -62,6 +67,7 @@ class MainScreen extends Component {
       <View style={styles.container}>
         <AddNewModal />
         <RecordingPermissionsModal />
+        <ConnectFacebookModal />
         <StatusBar barStyle="dark-content" translucent={true} />
         <PhrasesList />
       </View>

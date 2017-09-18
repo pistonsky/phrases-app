@@ -2,6 +2,7 @@ import { Dimensions, Platform } from 'react-native';
 import colors from './colors';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export const navBarStyle = {
   backgroundColor: colors.secondary
@@ -28,7 +29,7 @@ export const flatlistContent = {
 };
 
 export const flatlistEmpty = {
-  height: 600,
+  height: SCREEN_HEIGHT - 64,
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'transparent'

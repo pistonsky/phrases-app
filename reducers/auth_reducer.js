@@ -1,12 +1,15 @@
 import { randomId } from '../utils/functions';
 import {
   SKIP_WELCOME_SCREENS,
-  FACEBOOK_CONNECT
+  FACEBOOK_CONNECT,
+  FACEBOOK_CONNECT_IN_PROGRESS,
+  FACEBOOK_CONNECT_FAILED
 } from '../actions/types';
 
 const INITIAL_STATE = {
   id: null,
-  facebook_connected: false
+  facebook_connected: false,
+  facebook_connect_in_progress: false
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -20,7 +23,20 @@ export default function(state = INITIAL_STATE, action) {
     case FACEBOOK_CONNECT:
       return {
         ...state,
-        facebook_connected: true
+        facebook_connected: true,
+        facebook_connect_in_progress: false
+      };
+
+    case FACEBOOK_CONNECT_IN_PROGRESS:
+      return {
+        ...state,
+        facebook_connect_in_progress: true
+      };
+
+    case FACEBOOK_CONNECT_FAILED:
+      return {
+        ...state,
+        facebook_connect_in_progress: false
       };
 
     default:

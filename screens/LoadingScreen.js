@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { View, Image } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { getUserId } from '../reducers/selectors';
 
 const styles = {
   container: {
@@ -12,20 +9,12 @@ const styles = {
     backgroundColor: '#2EB2FF'
   },
   image: {
-    width: 100,
-    height: 100
+    width: 200,
+    height: 200
   }
 };
 
-class LoaderScreen extends Component {
-  componentWillMount() {
-    if (this.props.userId) {
-      Actions.main();
-    } else {
-      Actions.welcome();
-    }
-  }
-
+export default class LoaderScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -34,11 +23,3 @@ class LoaderScreen extends Component {
     );
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    userId: getUserId(state)
-  }
-}
-
-export default connect(mapStateToProps)(LoaderScreen);

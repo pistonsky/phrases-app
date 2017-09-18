@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Scene, Router } from 'react-native-router-flux';
+import { Scene, Router, Tabs } from 'react-native-router-flux';
 import store from './store';
 
 import LoadingScreen from './screens/LoadingScreen';
@@ -14,7 +14,7 @@ class AppRouter extends Component {
   render() {
     return (
       <Router sceneStyle={{ marginTop: Platform.OS === 'android' ? 20 : 0 }}>
-        <Scene key="root">
+        <Tabs key="root" hideTabBar>
           <Scene
             key="loading"
             component={LoadingScreen}
@@ -31,6 +31,7 @@ class AppRouter extends Component {
           <Scene
             key="main"
             component={MainScreen}
+            back={false}
             navigationBarStyle={styles.navBar}
             hideTabBar
             rightTitle="Add"
@@ -39,7 +40,7 @@ class AppRouter extends Component {
               store.dispatch({ type: OPEN_ADD_NEW_MODAL });
             }}
           />
-        </Scene>
+        </Tabs>
       </Router>
     );
   }
