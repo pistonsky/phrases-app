@@ -36,6 +36,8 @@ class WelcomeScreen extends Component {
         <Onboarding
           pages={this.renderSlides()}
           onEnd={() => this.props.skipWelcomeScreen()}
+          onLeft={() => this.props.loginWithFacebook()}
+          leftText='Войти'
         />
       </View>
     );

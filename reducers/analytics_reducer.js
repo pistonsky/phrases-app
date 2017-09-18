@@ -1,4 +1,5 @@
 import {
+  FACEBOOK_CONNECT_IN_PROGRESS,
   FACEBOOK_CONNECT_IGNORED,
   ADD_NEW_PHRASE,
   SHARE_PHRASE,
@@ -11,6 +12,12 @@ const INITIAL_STATE = {
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case FACEBOOK_CONNECT_IN_PROGRESS:
+      return {
+        ...state,
+        show_facebook_modal: true
+      };
+
     case FACEBOOK_CONNECT_IGNORED:
       return {
         ...state,
@@ -22,21 +29,24 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         [action.type]: (state[action.type] || 0) + 1,
-        show_facebook_modal: [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
+        show_facebook_modal:
+          [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
       };
 
     case SHARE_PHRASE:
       return {
         ...state,
         [action.type]: (state[action.type] || 0) + 1,
-        show_facebook_modal: [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
+        show_facebook_modal:
+          [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
       };
 
     case SHARE_ALL_PHRASES:
       return {
         ...state,
         [action.type]: (state[action.type] || 0) + 1,
-        show_facebook_modal: [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
+        show_facebook_modal:
+          [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
       };
 
     default:
