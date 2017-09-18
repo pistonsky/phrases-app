@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Image } from 'react-native';
+import store from '../store';
+import { ROUTER_READY } from '../actions/types';
 
 const styles = {
   container: {
@@ -15,6 +17,10 @@ const styles = {
 };
 
 export default class LoaderScreen extends Component {
+  componentDidMount() {
+    store.dispatch({ type: ROUTER_READY });
+  }
+
   render() {
     return (
       <View style={styles.container}>
