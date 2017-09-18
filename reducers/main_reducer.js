@@ -9,7 +9,7 @@ import {
   DATA_LOADING,
   DATA_LOADED,
   DELETE_PHRASE,
-  SKIP_LOADING_SCREENS
+  SKIP_WELCOME_SCREENS
 } from '../actions/types';
 import colors from '../styles/colors';
 
@@ -45,7 +45,7 @@ export default function(state = INITIAL_STATE, action) {
     case RECORDING_PERMISSIONS_DENIED:
       return { ...state, recording_permissions: false };
 
-    case SKIP_LOADING_SCREENS:
+    case SKIP_WELCOME_SCREENS:
       return { ...state, data_loading: false };
 
     case OPEN_ADD_NEW_MODAL:

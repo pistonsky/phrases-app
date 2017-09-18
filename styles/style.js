@@ -39,6 +39,7 @@ export const flatlistEmpty = {
 export const flatlistPlaceholder = {
   fontSize: 20,
   fontWeight: 'bold',
+  textAlign: 'center',
   marginLeft: 10,
   color: colors.primary_light
 };
