@@ -1,3 +1,7 @@
+## 0.6.2 (September 19, 2017)
+
+* Support for long phrases.
+
 ## 0.6.1 (September 19, 2017)
 
 * Translate UI to English.
