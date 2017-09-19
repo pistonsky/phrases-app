@@ -32,18 +32,18 @@ class ConnectFacebookModal extends Component {
           <BlurView tint="dark" intensity={100} style={styles.modalContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <ActivityIndicator size="small" />
-              <Text style={{ color: '#aaa', fontSize: 12, marginLeft: 10 }}>Выполняем вход...</Text>
+              <Text style={{ color: '#aaa', fontSize: 12, marginLeft: 10 }}>Logging you in...</Text>
             </View>
           </BlurView>
         ) : (
           <BlurView tint="dark" intensity={100} style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Создайте аккаунт</Text>
+            <Text style={styles.modalTitle}>Create an Account</Text>
             <Text style={styles.modalSubtitle}>
-              Чтобы не потерять свои фразочки!
+              So that you never loose your nasty phrazes!
             </Text>
             <SocialIcon
               button
-              title="Войти через Facebook"
+              title="Login with Facebook"
               type="facebook"
               style={{ paddingLeft: 20, paddingRight: 20 }}
               onPress={() => {
@@ -54,7 +54,7 @@ class ConnectFacebookModal extends Component {
               onPress={() => {
                 this.props.ignoreConnectFacebook();
               }}
-              title="Я не хочу"
+              title="Not now"
               color="#888"
             />
           </BlurView>

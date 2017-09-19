@@ -37,7 +37,7 @@ class WelcomeScreen extends Component {
           pages={this.renderSlides()}
           onEnd={() => this.props.skipWelcomeScreen()}
           onLeft={() => this.props.loginWithFacebook()}
-          leftText='Войти'
+          leftText='Login'
         />
       </View>
     );

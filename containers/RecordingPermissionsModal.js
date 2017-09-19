@@ -30,9 +30,9 @@ class RecordingPermissionsModal extends Component {
         visible={this.props.visible}
       >
         <BlurView tint='dark' intensity={100} style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Микрофон</Text>
+          <Text style={styles.modalTitle}>Microphone</Text>
           <Text style={styles.modalSubtitle}>
-            Он нужен для того, чтобы вы могли записывать произношение фраз.
+            {'We need it,\nso that you can record\nthe pronunciation of phrazes'}
           </Text>
           <Button
             backgroundColor={colors.secondary_dark}
@@ -41,7 +41,7 @@ class RecordingPermissionsModal extends Component {
             buttonStyle={styles.button}
             fontWeight="bold"
             borderRadius={Platform.OS === 'ios' ? 30 : 0}
-            title="Разрешить"
+            title="Allow"
             onPress={() => {
               this._askForPermissionsAsync();
             }}

@@ -15,28 +15,28 @@ import {
 } from '../actions/types';
 import colors from '../styles/colors';
 
-const SHARED_DICTIONARY_NAME = 'Добавленные';
+const SHARED_DICTIONARY_NAME = 'Added';
 
 const INITIAL_STATE = {
   add_new_modal_shown: false,
   recording_permissions: false,
   data: [],
   data_loading: true,
-  dictionaries: [{ name: 'Фразочки', selected: true }],
+  dictionaries: [{ name: 'Phrazes', selected: true }],
   guide: [
     {
-      head: 'Фразочки',
-      body: 'Учите иностранный\nс иностранцами',
+      head: 'Phrazes',
+      body: 'Learn languages\nwith natives',
       background: colors.primary_dark
     },
     {
-      head: 'Оттачивайте произношение',
-      body: 'Спросите местного\nкак это произносится',
+      head: 'Say Accent Bye',
+      body: 'Ask locals\nhow to pronounce it',
       background: colors.secondary_dark
     },
     {
-      head: 'Делитесь\nс друзьями',
-      body: 'Передавайте собранные фразочки своим друзьям',
+      head: 'Share\nwith friends',
+      body: 'Bequeath your phrazes\nand discover new ones',
       background: colors.primary
     }
   ]

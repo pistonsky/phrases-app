@@ -55,7 +55,7 @@ class DictionarySelectorModal extends Component {
             }}
           >
             <Text style={{ fontSize: 17, color: colors.white }}>
-              Выберите словарь
+              Choose
             </Text>
             <TouchableOpacity
               style={{
@@ -79,7 +79,7 @@ class DictionarySelectorModal extends Component {
                   color: colors.primary_dark
                 }}
               >
-                Закрыть
+                Close
               </Text>
             </TouchableOpacity>
           </View>
@@ -149,7 +149,7 @@ class DictionarySelectorModal extends Component {
                   });
                   this.setState({ text: '' });
                 }}
-                placeholder="Добавить..."
+                placeholder="Add new..."
                 placeholderTextColor="#888"
               />
             }

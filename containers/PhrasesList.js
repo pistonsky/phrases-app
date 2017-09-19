@@ -108,18 +108,18 @@ class PhrasesList extends Component {
                   translated: item.translated,
                   uri: item.uri
                 });
-              let message = `Зацени фразу! "${item.original}" => "${item.translated}"`;
+              let message = `Check out my phraze! "${item.original}" => "${item.translated}"`;
               if (Platform.OS !== 'ios') {
                 message += ` ${url}`;
               }
               await Share.share(
                 {
                   message,
-                  title: 'Фразочки',
+                  title: 'Phrazes',
                   url
                 },
                 {
-                  dialogTitle: 'Поделиться фразой'
+                  dialogTitle: 'Share a phraze'
                 }
               );
               store.dispatch({ type: SHARE_PHRASE });
@@ -136,7 +136,7 @@ class PhrasesList extends Component {
           >
             {this.props.data_loading && <ActivityIndicator size='small' color='#ffffff' />}
             <Text style={styles.flatlistPlaceholder}>
-              {this.props.data_loading ? 'Загружаем...' : 'Добавь свою первую фразочку!'}
+              {this.props.data_loading ? 'Loading...' : 'Add your first phrazee!'}
             </Text>
           </View>
         }
@@ -145,7 +145,7 @@ class PhrasesList extends Component {
             <Button
               iconRight
               icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}
-              title="SHARE ALL PHRASES"
+              title="SHARE ALL PHRAZES"
               backgroundColor={colors.secondary}
               onPress={async () => {
                 const url =
@@ -154,18 +154,18 @@ class PhrasesList extends Component {
                   qs.stringify({
                     user_id: this.props.user_id
                   });
-                let message = 'Зацени мои фразочки!';
+                let message = 'Check out my phrazes!';
                 if (Platform.OS !== 'ios') {
                   message += ` ${url}`;
                 }
                 await Share.share(
                   {
                     message,
-                    title: 'Фразочки',
+                    title: 'Phrazes',
                     url
                   },
                   {
-                    dialogTitle: 'Поделиться всеми фразочками'
+                    dialogTitle: 'Share all your phrazes'
                   }
                 );
                 store.dispatch({ type: SHARE_ALL_PHRASES });

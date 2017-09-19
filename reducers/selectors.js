@@ -20,7 +20,7 @@ export const shouldShowDictionariesSelectorModal = state =>
   state.ui.show_dictionaries_selector;
 export const getCurrentDictionaryName = state => {
   return (state.main.dictionaries.find(e => e.selected) || {
-    name: 'Фразочки',
+    name: 'Phrazes',
     selected: true
   }).name;
 };

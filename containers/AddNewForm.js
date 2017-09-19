@@ -192,7 +192,7 @@ class AddNewForm extends Component {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.formSlide}
           >
-            <Text style={styles.formHeader}>Фраза:</Text>
+            <Text style={styles.formHeader}>Original:</Text>
             <TextInput
               style={styles.formTextInput}
               underlineColorAndroid="transparent"
@@ -218,7 +218,7 @@ class AddNewForm extends Component {
               buttonStyle={styles.button}
               fontWeight="bold"
               borderRadius={Platform.OS === 'ios' ? 30 : 0}
-              title="Дальше"
+              title="Next"
               onPress={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH,
@@ -233,7 +233,7 @@ class AddNewForm extends Component {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.formSlide}
           >
-            <Text style={styles.formHeader}>Перевод:</Text>
+            <Text style={styles.formHeader}>Translated:</Text>
             <TextInput
               value={this.props.translatedPhrase}
               onChangeText={text =>
@@ -263,7 +263,7 @@ class AddNewForm extends Component {
               buttonStyle={styles.button}
               fontWeight="bold"
               borderRadius={Platform.OS === 'ios' ? 30 : 0}
-              title="Дальше"
+              title="Next"
               onPress={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH * 2,
@@ -277,7 +277,7 @@ class AddNewForm extends Component {
           {!this.props.haveRecordingPermissions ? (
             <View style={styles.formSlide}>
               <Text style={styles.noPermissionsText}>
-                Чувак, разреши сначала доступ к диктофону, ну ё-моё!
+                Dude, you gotta let me use your mic!
               </Text>
               <Button
                 backgroundColor={colors.secondary}
@@ -287,14 +287,14 @@ class AddNewForm extends Component {
                 fontWeight="bold"
                 borderRadius={Platform.OS === 'ios' ? 30 : 0}
                 onPress={this._askForPermissions}
-                title="Разрешаю!"
+                title="Okay dude!"
               />
             </View>
           ) : (
             <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
               <Animated.Text style={styles.formHeader}>
                 {this.state.recordingDuration === 0 ? (
-                  'Диктуй!'
+                  'Say it!'
                 ) : (
                   this.state.recordingDuration.toFixed(2)
                 )}

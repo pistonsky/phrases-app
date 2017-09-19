@@ -24,7 +24,7 @@ import * as api from '../api';
 
 class MainScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: `Phrases`,
+    title: `Phrazes`,
     headerStyle: styles.navBarStyle,
     headerTintColor: colors.white,
     back: false
