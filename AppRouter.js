@@ -6,6 +6,8 @@ import LoadingScreen from './screens/LoadingScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import MainScreen from './screens/MainScreen';
 
+import { DictionarySelector } from './containers';
+
 import { Platform, Text } from 'react-native';
 
 import { OPEN_ADD_NEW_MODAL } from './actions/types';
@@ -31,10 +33,11 @@ class AppRouter extends Component {
           <Scene
             key="main"
             component={MainScreen}
+            renderTitle={() => <DictionarySelector />}
             back={false}
             navigationBarStyle={styles.navBar}
             hideTabBar
-            rightTitle="Add"
+            rightTitle={'Добавить'}
             rightButtonTextStyle={{ marginLeft: 5 }}
             onRight={() => {
               store.dispatch({ type: OPEN_ADD_NEW_MODAL });

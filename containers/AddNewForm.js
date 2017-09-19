@@ -18,7 +18,8 @@ import {
   getRecordingPermissions,
   getOriginalPhrase,
   getTranslatedPhrase,
-  getUserId
+  getUserId,
+  getCurrentDictionaryName
 } from '../reducers/selectors';
 import {
   RECORDING_PERMISSIONS_DENIED,
@@ -92,7 +93,6 @@ class AddNewForm extends Component {
             linearPCMIsFloat: false
           }
         });
-        console.log('prepareToRecordAsync: ', status);
       } catch (e) {
         console.log(e);
       }
@@ -169,7 +169,6 @@ class AddNewForm extends Component {
             this.setState({ isUploading: false, uploaded: false });
           } else {
             this.setState({ isUploading: false, uploaded: true });
-            console.log(response.body.postResponse.location);
           }
         });
     } catch (e) {
@@ -341,7 +340,6 @@ class AddNewForm extends Component {
                             durationMillis
                           } = playbackStatus;
                           const progress = positionMillis / durationMillis;
-                          console.log(progress);
                           this.setState({
                             playbackProgress: progress
                           });
@@ -393,7 +391,8 @@ class AddNewForm extends Component {
                     original: this.props.originalPhrase,
                     translated: this.props.translatedPhrase,
                     localUri: this.recording.getURI(),
-                    uri: this.sound_uri
+                    uri: this.sound_uri,
+                    dictionary: this.props.currentDictionary
                   };
                   store.dispatch({
                     type: ADD_NEW_PHRASE,
@@ -415,7 +414,8 @@ function mapStateToProps(state) {
   return {
     haveRecordingPermissions: getRecordingPermissions(state),
     originalPhrase: getOriginalPhrase(state),
-    translatedPhrase: getTranslatedPhrase(state)
+    translatedPhrase: getTranslatedPhrase(state),
+    currentDictionary: getCurrentDictionaryName(state)
   };
 }
 

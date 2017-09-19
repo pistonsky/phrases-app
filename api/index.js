@@ -5,7 +5,6 @@ import * as config from '../utils/config';
 export const connectFacebook = async (facebook_token, user_id) => {
   const query = qs.stringify({ facebook_token, user_id });
   const url = config.BASE_URL + '/connect_facebook?' + query;
-  console.log(url);
   const result = await axios.get(url);
   return result;
 };

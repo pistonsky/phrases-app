@@ -25,13 +25,11 @@ export const skipWelcomeScreen = () => async dispatch => {
 };
 
 export const connectFacebook = user_id => async dispatch => {
-  console.log('connectFacebook', user_id);
   dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS });
   let { type, token } = await facebookLogin();
 
   if (type !== 'cancel') {
     const { data } = await api.connectFacebook(token, user_id);
-    console.log(data);
     dispatch({ type: FACEBOOK_CONNECT }); // sets 'facebook_connected' flag
   } else {
     dispatch({ type: FACEBOOK_CONNECT_FAILED });
@@ -61,7 +59,6 @@ export const ignoreConnectFacebook = () => {
 export const refreshPhrases = (user_id) => async dispatch => {
   dispatch({ type: DATA_LOADING });
   const { data: phrases } = await api.getPhrases(user_id);
-  console.log(phrases);
   dispatch({ type: DATA_LOADED, phrases });
 };
 
