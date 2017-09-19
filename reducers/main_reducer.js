@@ -35,8 +35,8 @@ const INITIAL_STATE = {
       background: colors.secondary_dark
     },
     {
-      head: 'Share\nwith friends',
-      body: 'Bequeath your phrazes\nand discover new ones',
+      head: 'Share with friends',
+      body: 'Pass on all your dirty phrazes\nand discover new ones',
       background: colors.primary
     }
   ]
