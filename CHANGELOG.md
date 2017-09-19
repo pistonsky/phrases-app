@@ -1,3 +1,7 @@
+## 0.6.0 (September 19, 2017)
+
+* Dictionaries feature.
+
 ## 0.5.0 (September 18, 2017)
 
 * Facebook login.
