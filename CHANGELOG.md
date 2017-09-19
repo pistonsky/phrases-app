@@ -1,3 +1,7 @@
+## 0.6.1 (September 19, 2017)
+
+* Translate UI to English.
+
 ## 0.6.0 (September 19, 2017)
 
 * Dictionaries feature.
