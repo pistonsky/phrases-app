@@ -37,7 +37,7 @@ class AppRouter extends Component {
             back={false}
             navigationBarStyle={styles.navBar}
             hideTabBar
-            rightTitle={'Добавить'}
+            rightTitle={'Add'}
             rightButtonTextStyle={{ marginLeft: 5 }}
             onRight={() => {
               store.dispatch({ type: OPEN_ADD_NEW_MODAL });

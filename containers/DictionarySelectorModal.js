@@ -149,7 +149,7 @@ class DictionarySelectorModal extends Component {
                   });
                   this.setState({ text: '' });
                 }}
-                placeholder="Add new..."
+                placeholder="Add new dictionary..."
                 placeholderTextColor="#888"
               />
             }
