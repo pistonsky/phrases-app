@@ -47,7 +47,7 @@ class PhrasesList extends Component {
     let localUri;
     // check if already exists
     const fileUri = FileSystem.documentDirectory + uri + '.caf';
-    const { exists } = FileSystem.getInfoAsync(fileUri);
+    const { exists } = await FileSystem.getInfoAsync(fileUri);
     if (exists) {
       localUri = fileUri;
     } else {
