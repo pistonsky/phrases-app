@@ -1,6 +1,7 @@
 ## 0.6.3 (September 22, 2017)
 
 * Load phrases faster - read from cache.
+* Support for long dictionary names.
 
 ## 0.6.2 (September 19, 2017)
 

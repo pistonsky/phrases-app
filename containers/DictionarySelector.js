@@ -6,6 +6,7 @@ import store from '../store';
 import { TOGGLE_DICTIONARY_SELECTOR } from '../actions/types';
 import colors from '../styles/colors';
 import { getCurrentDictionaryName } from '../reducers/selectors';
+import { smartFontSize } from '../utils/functions';
 
 class DictionarySelector extends Component {
   render() {
@@ -14,7 +15,20 @@ class DictionarySelector extends Component {
         style={{ flexDirection: 'row', alignItems: 'center' }}
         onPress={() => store.dispatch({ type: TOGGLE_DICTIONARY_SELECTOR })}
       >
-        <Text style={{ fontSize: 18, marginRight: 5, color: colors.white }}>
+        <Text
+          style={{
+            fontSize: smartFontSize({
+              min: 14,
+              max: 18,
+              threshold: 18,
+              text: this.props.dictionary
+            }),
+            marginRight: 5,
+            color: colors.white,
+            textAlign: 'center'
+          }}
+          numberOfLines={2}
+        >
           {this.props.dictionary}
         </Text>
         <Icon
@@ -22,7 +36,15 @@ class DictionarySelector extends Component {
           type="entypo"
           size={12}
           color={colors.white}
-          style={{ position: 'relative', top: 2 }}
+          style={{
+            position: 'relative',
+            top: smartFontSize({
+              min: 1,
+              max: 2,
+              threshold: 18,
+              text: this.props.dictionary
+            })
+          }}
         />
       </TouchableOpacity>
     );
