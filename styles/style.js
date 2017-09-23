@@ -46,7 +46,7 @@ export const flatlistPlaceholder = {
 
 export const formSlide = {
   flex: 1,
-  justifyContent: 'center',
+  justifyContent: 'space-around',
   alignItems: 'center',
   width: SCREEN_WIDTH,
   backgroundColor: colors.primary
@@ -61,7 +61,6 @@ export const formHeader = {
 export const formTextInput = {
   height: 100,
   width: SCREEN_WIDTH,
-  margin: 50,
   backgroundColor: colors.primary_dark,
   color: '#eee',
   fontSize: 70,

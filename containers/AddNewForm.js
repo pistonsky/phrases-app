@@ -36,6 +36,7 @@ import { Circle as Progress } from 'react-native-progress';
 import { FontAwesome } from '@expo/vector-icons';
 import styles from '../styles';
 import colors from '../styles/colors';
+import { smartFontSize } from '../utils/functions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -75,8 +76,7 @@ class AddNewForm extends Component {
         const status = await this.recording.prepareToRecordAsync({
           android: {
             extension: '.m4a',
-            outputFormat:
-              Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+            outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
             audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
             sampleRate: 44100,
             numberOfChannels: 2,
@@ -194,7 +194,17 @@ class AddNewForm extends Component {
           >
             <Text style={styles.formHeader}>Original:</Text>
             <TextInput
-              style={styles.formTextInput}
+              style={[
+                styles.formTextInput,
+                {
+                  fontSize: smartFontSize({
+                    max: 70,
+                    min: 24,
+                    threshold: 7,
+                    text: this.props.originalPhrase
+                  })
+                }
+              ]}
               underlineColorAndroid="transparent"
               selectionColor={colors.primary_light}
               value={this.props.originalPhrase}
@@ -241,7 +251,17 @@ class AddNewForm extends Component {
                   type: FORM_TRANSLATED_CHANGED,
                   payload: text
                 })}
-              style={styles.formTextInput}
+              style={[
+                styles.formTextInput,
+                {
+                  fontSize: smartFontSize({
+                    max: 70,
+                    min: 24,
+                    threshold: 7,
+                    text: this.props.translatedPhrase
+                  })
+                }
+              ]}
               underlineColorAndroid="transparent"
               selectionColor={colors.primary_light}
               onSubmitEditing={() => {
@@ -293,32 +313,28 @@ class AddNewForm extends Component {
           ) : (
             <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
               <Animated.Text style={styles.formHeader}>
-                {this.state.recordingDuration === 0 ? (
-                  'Say it!'
-                ) : (
-                  this.state.recordingDuration.toFixed(2)
-                )}
+                {this.state.recordingDuration === 0
+                  ? 'Say it!'
+                  : this.state.recordingDuration.toFixed(2)}
               </Animated.Text>
               <View style={styles.formRecordButtonContainer}>
                 {(this.state.isUploading || this.state.uploaded) && (
-                  <Progress
-                    style={styles.formCircleProgress}
-                    size={120}
-                    thickness={6}
-                    color={this.state.uploaded ? '#fa4' : '#f00'}
-                    animated={false}
-                    unfilledColor="#4af"
-                    borderWidth={0}
-                    progress={
-                      this.state.isUploading ? (
-                        this.state.uploadProgress
-                      ) : (
-                        this.state.playbackProgress
-                      )
-                    }
-                    indeterminate={this.state.uploadProgress === undefined}
-                  />
-                )}
+                    <Progress
+                      style={styles.formCircleProgress}
+                      size={120}
+                      thickness={6}
+                      color={this.state.uploaded ? '#fa4' : '#f00'}
+                      animated={false}
+                      unfilledColor="#4af"
+                      borderWidth={0}
+                      progress={
+                        this.state.isUploading
+                          ? this.state.uploadProgress
+                          : this.state.playbackProgress
+                      }
+                      indeterminate={this.state.uploadProgress === undefined}
+                    />
+                  )}
                 <Animated.View
                   style={{
                     ...styles.recordButton,
