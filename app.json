@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Phrases",
+    "name": "Phrazes",
     "description": "Learn any language. Phrase by phrase.",
     "slug": "phrases",
     "privacy": "unlisted",
@@ -18,11 +18,14 @@
       "assetExts": ["ttf", "mp4"]
     },
     "ios": {
-      "bundleIdentifier": "com.phrases.app",
+      "bundleIdentifier": "com.pistonsky.phrazes",
+      "buildNumber": 1,
+      "icon": "./assets/icons/ios.png",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.stash.phrases"
-    }
+      "package": "com.pistonsky.phrazes"
+    },
+    "scheme": "phrazes"
   }
 }
