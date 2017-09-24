@@ -46,7 +46,7 @@ export const loginWithFacebook = () => async dispatch => {
     const { data } = await api.connectFacebook(token);
     Actions.main();
     dispatch({ type: FACEBOOK_LOGIN, user_id: data.user_id });
-    dispatch({ type: DATA_LOADED, data.phrases });
+    dispatch({ type: DATA_LOADED, phrases: data.phrases });
   }
 };
 
