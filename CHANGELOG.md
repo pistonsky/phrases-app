@@ -1,3 +1,7 @@
+## 0.6.4 (September 24, 2017)
+
+* When connecting Facebook account which had already been connected before, join all accounts together.
+
 ## 0.6.3 (September 22, 2017)
 
 * Load phrases faster - read from cache.

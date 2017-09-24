@@ -29,8 +29,9 @@ export const connectFacebook = user_id => async dispatch => {
   let { type, token } = await facebookLogin();
 
   if (type !== 'cancel') {
-    const { data } = await api.connectFacebook(token, user_id);
+    const { data: phrases } = await api.connectFacebook(token, user_id);
     dispatch({ type: FACEBOOK_CONNECT }); // sets 'facebook_connected' flag
+    dispatch({ type: DATA_LOADED, phrases });
   } else {
     dispatch({ type: FACEBOOK_CONNECT_FAILED });
   }
@@ -45,8 +46,7 @@ export const loginWithFacebook = () => async dispatch => {
     const { data } = await api.connectFacebook(token);
     Actions.main();
     dispatch({ type: FACEBOOK_LOGIN, user_id: data.user_id });
-    const { data: phrases } = await api.getPhrases(data.user_id);
-    dispatch({ type: DATA_LOADED, phrases });
+    dispatch({ type: DATA_LOADED, data.phrases });
   }
 };
 
