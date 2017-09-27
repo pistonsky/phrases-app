@@ -257,6 +257,12 @@ class AddNewForm extends Component {
               ) {
                 this._askForPermissions(); // ask for recording permissions when user first sees recording page
               }
+              if (page === 0) {
+                this._textInput1.focus();
+              }
+              if (page === 1) {
+                this._textInput2.focus();
+              }
               if (page === 2) {
                 Keyboard.dismiss();
               }
@@ -280,6 +286,9 @@ class AddNewForm extends Component {
                   animated: true
                 });
                 this._textInput2.focus();
+              }}
+              textInputRef={e => {
+                this._textInput1 = e;
               }}
             />
             <Button
