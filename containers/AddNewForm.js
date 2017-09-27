@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  KeyboardAvoidingView,
   View,
+  View as KeyboardAvoidingView,
   Text,
   Dimensions,
   Image,
