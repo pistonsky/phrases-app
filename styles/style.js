@@ -108,11 +108,19 @@ export const recordButton = {
   alignItems: 'center'
 };
 
-export const noPermissionsText = {
-  fontSize: 40,
+export const noPermissionsTitle = {
+  fontSize: 30,
   color: colors.white,
   textAlign: 'center',
-  margin: 20
+  marginTop: 20
+};
+
+export const noPermissionsSubtitle = {
+  fontSize: 20,
+  color: colors.white,
+  textAlign: 'center',
+  marginHorizontal: 20,
+  opacity: 0.9
 };
 
 export const modalContainer = {

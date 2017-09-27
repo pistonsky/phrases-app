@@ -15,7 +15,7 @@ const store = createStore(
   compose(applyMiddleware(saga), applyMiddleware(thunk), autoRehydrate())
 );
 
-persistStore(store, { storage: AsyncStorage, whitelist: ['main', 'auth', 'analytics'] });
+persistStore(store, { storage: AsyncStorage, whitelist: ['main', 'auth', 'analytics', 'form'] });
 
 if (module.hot) {
   // Enable Webpack hot module replacement for reducers

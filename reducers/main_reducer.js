@@ -19,7 +19,7 @@ const SHARED_DICTIONARY_NAME = 'Added';
 
 const INITIAL_STATE = {
   add_new_modal_shown: false,
-  recording_permissions: false,
+  recording_permissions: undefined,
   data: [],
   data_loading: true,
   dictionaries: [{ name: 'Phrazes', selected: true }],

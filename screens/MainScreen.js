@@ -67,7 +67,6 @@ class MainScreen extends Component {
     return (
       <View style={styles.container}>
         <AddNewModal />
-        <RecordingPermissionsModal />
         <ConnectFacebookModal />
         <DictionarySelectorModal />
         <StatusBar barStyle="dark-content" translucent={true} />

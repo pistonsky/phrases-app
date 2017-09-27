@@ -47,7 +47,6 @@ class DictionarySelectorModal extends Component {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}
           onKeyboardChange={event => {
-            console.log('onKeyboardChange', event);
             this.flatlist.scrollToEnd();
           }}
         >

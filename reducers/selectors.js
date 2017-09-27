@@ -9,9 +9,12 @@ export const getDataLoading = state => state.main.data_loading;
 export const getAddNewModalShown = state => state.main.add_new_modal_shown;
 export const getRecordingPermissions = state =>
   state.main.recording_permissions;
+export const shouldShowRecordingPermissionsSecondaryModal = state =>
+  state.ui.show_recording_permissions_modal;
 
 export const getOriginalPhrase = state => state.form.original;
 export const getTranslatedPhrase = state => state.form.translated;
+export const getCurrentFormPage = state => state.form.current_page;
 
 export const getWelcomeScreens = state => state.main.guide;
 
