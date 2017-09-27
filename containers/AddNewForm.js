@@ -4,7 +4,6 @@ import {
   KeyboardAvoidingView,
   View,
   Text,
-  TextInput,
   Dimensions,
   Image,
   ScrollView,
@@ -14,11 +13,13 @@ import {
   Platform,
   Linking,
   AppState,
+  Keyboard,
   Button as ReactNativeButton
 } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { Permissions, Audio, FileSystem } from 'expo';
 import { RNS3 } from 'react-native-aws3';
+import { TextInput, Button, NoPermissionsSlide } from '../components';
 import {
   getRecordingPermissions,
   getOriginalPhrase,
@@ -45,7 +46,6 @@ import { Circle as Progress } from 'react-native-progress';
 import { FontAwesome } from '@expo/vector-icons';
 import styles from '../styles';
 import colors from '../styles/colors';
-import { smartFontSize } from '../utils/functions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -257,6 +257,9 @@ class AddNewForm extends Component {
               ) {
                 this._askForPermissions(); // ask for recording permissions when user first sees recording page
               }
+              if (page === 2) {
+                Keyboard.dismiss();
+              }
             }
           }}
         >
@@ -266,24 +269,10 @@ class AddNewForm extends Component {
           >
             <Text style={styles.formHeader}>Original:</Text>
             <TextInput
-              style={[
-                styles.formTextInput,
-                {
-                  fontSize: smartFontSize({
-                    max: 70,
-                    min: 24,
-                    threshold: 7,
-                    text: this.props.originalPhrase
-                  })
-                }
-              ]}
-              underlineColorAndroid="transparent"
-              selectionColor={colors.primary_light}
               value={this.props.originalPhrase}
               onChangeText={text =>
                 store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
               autoFocus
-              autoCorrect={false}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH,
@@ -294,12 +283,6 @@ class AddNewForm extends Component {
               }}
             />
             <Button
-              backgroundColor={colors.secondary}
-              raised
-              large
-              buttonStyle={styles.button}
-              fontWeight="bold"
-              borderRadius={Platform.OS === 'ios' ? 30 : 0}
               title="Next"
               onPress={() => {
                 this.scrollView.scrollTo({
@@ -323,19 +306,6 @@ class AddNewForm extends Component {
                   type: FORM_TRANSLATED_CHANGED,
                   payload: text
                 })}
-              style={[
-                styles.formTextInput,
-                {
-                  fontSize: smartFontSize({
-                    max: 70,
-                    min: 24,
-                    threshold: 7,
-                    text: this.props.translatedPhrase
-                  })
-                }
-              ]}
-              underlineColorAndroid="transparent"
-              selectionColor={colors.primary_light}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH * 2,
@@ -343,18 +313,11 @@ class AddNewForm extends Component {
                   animated: true
                 });
               }}
-              autoCorrect={false}
-              ref={e => {
+              textInputRef={e => {
                 this._textInput2 = e;
               }}
             />
             <Button
-              backgroundColor={colors.secondary}
-              raised
-              large
-              buttonStyle={styles.button}
-              fontWeight="bold"
-              borderRadius={Platform.OS === 'ios' ? 30 : 0}
               title="Next"
               onPress={() => {
                 this.scrollView.scrollTo({
@@ -368,32 +331,10 @@ class AddNewForm extends Component {
 
           {this.props.haveRecordingPermissions === false &&
           !this.state.checkingPermissions ? (
-            <View style={styles.formSlide}>
-              <Text style={styles.noPermissionsTitle}>No Microphone</Text>
-              <Text style={styles.noPermissionsSubtitle}>
-                Please allow to use microphone to record the native speaker's
-                voice for this phraze!
-              </Text>
-              {Platform.OS === 'ios' ? (
-                <Image source={require('../assets/microphone.png')} />
-              ) : null}
-              <Button
-                backgroundColor={colors.secondary}
-                raised
-                large
-                buttonStyle={[styles.button, { marginBottom: 10 }]}
-                fontWeight="bold"
-                borderRadius={Platform.OS === 'ios' ? 30 : 0}
-                onPress={() => this._askForPermissions()}
-                title="Enable Microphone"
-              />
-              <TouchableOpacity onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}>
-                <View style={{ opacity: 0.7, flexDirection: 'column', alignItems: 'center', marginBottom: 10 }}>
-                  <Icon name='ios-close-circle' type='ionicon' size={30} color={colors.white} />
-                  <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <NoPermissionsSlide
+              onPress={() => this._askForPermissions()}
+              onCancel={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
+            />
           ) : (
             <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
               <Animated.Text style={styles.formHeader}>
@@ -477,13 +418,7 @@ class AddNewForm extends Component {
                 </Animated.View>
               </View>
               <Button
-                backgroundColor={colors.secondary}
-                raised
-                large
-                buttonStyle={styles.button}
-                disabledStyle={styles.buttonDisabled}
                 fontWeight="bold"
-                borderRadius={Platform.OS === 'ios' ? 30 : 0}
                 title="Done!"
                 disabled={!this.state.uploaded}
                 onPress={() => {
@@ -502,10 +437,26 @@ class AddNewForm extends Component {
                   api.addPhrase(phrase, user_id);
                 }}
               />
-              <TouchableOpacity onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}>
-                <View style={{ opacity: 0.5, flexDirection: 'column', alignItems: 'center', marginBottom: 10 }}>
-                  <Icon name='ios-close-circle' type='ionicon' size={30} color={colors.white} />
-                  <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
+              <TouchableOpacity
+                onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
+              >
+                <View
+                  style={{
+                    opacity: 0.5,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: 10
+                  }}
+                >
+                  <Icon
+                    name="ios-close-circle"
+                    type="ionicon"
+                    size={30}
+                    color={colors.white}
+                  />
+                  <Text style={{ color: colors.white, fontSize: 12 }}>
+                    Cancel
+                  </Text>
                 </View>
               </TouchableOpacity>
             </KeyboardAvoidingView>
