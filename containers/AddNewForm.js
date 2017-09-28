@@ -16,10 +16,14 @@ import {
   Keyboard,
   Button as ReactNativeButton
 } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { Permissions, Audio, FileSystem } from 'expo';
 import { RNS3 } from 'react-native-aws3';
-import { TextInput, Button, NoPermissionsSlide } from '../components';
+import {
+  TextInput,
+  Button,
+  NoPermissionsSlide,
+  RecordingSlide
+} from '../components';
 import {
   getRecordingPermissions,
   getOriginalPhrase,
@@ -42,8 +46,6 @@ import store from '../store';
 import * as config from '../utils/config';
 import axios from 'axios';
 import * as api from '../api';
-import { Circle as Progress } from 'react-native-progress';
-import { FontAwesome } from '@expo/vector-icons';
 import styles from '../styles';
 import colors from '../styles/colors';
 
@@ -345,130 +347,57 @@ class AddNewForm extends Component {
               onCancel={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
             />
           ) : (
-            <KeyboardAvoidingView behavior="padding" style={styles.formSlide}>
-              <Animated.Text style={styles.formHeader}>
-                {this.state.recordingDuration === 0
-                  ? 'Say it!'
-                  : this.state.recordingDuration.toFixed(2)}
-              </Animated.Text>
-              <View style={styles.formRecordButtonContainer}>
-                {(this.state.isUploading || this.state.uploaded) && (
-                    <Progress
-                      style={styles.formCircleProgress}
-                      size={120}
-                      thickness={6}
-                      color={this.state.uploaded ? '#fa4' : '#f00'}
-                      animated={false}
-                      unfilledColor="#4af"
-                      borderWidth={0}
-                      progress={
-                        this.state.isUploading
-                          ? this.state.uploadProgress
-                          : this.state.playbackProgress
-                      }
-                      indeterminate={this.state.uploadProgress === undefined}
-                    />
-                  )}
-                <Animated.View
-                  style={{
-                    ...styles.recordButton,
-                    backgroundColor: this.state.uploaded ? '#fa4' : '#f00',
-                    transform: [{ scale: this.animated.recordButtonScale }]
-                  }}
-                  onTouchStart={async () => {
-                    if (this.state.uploaded) {
-                      this.setState({ isPlaying: true });
-                      const {
-                        sound,
-                        status
-                      } = await this.recording.createNewLoadedSound();
-                      this.sound = sound;
-                      this.sound.setOnPlaybackStatusUpdate(
-                        async playbackStatus => {
-                          const {
-                            positionMillis,
-                            durationMillis
-                          } = playbackStatus;
-                          const progress = positionMillis / durationMillis;
-                          this.setState({
-                            playbackProgress: progress
-                          });
-                          if (playbackStatus.didJustFinish) {
-                            await this.sound.unloadAsync();
-                            this.setState({ isPlaying: false });
-                          }
-                        }
-                      );
-                      await this.sound.playAsync();
-                    } else {
-                      this._startRecording();
+            <RecordingSlide
+              recordingDuration={this.state.recordingDuration}
+              isUploading={this.state.isUploading}
+              isPlaying={this.state.isPlaying}
+              uploaded={this.state.uploaded}
+              uploadProgress={this.state.uploadProgress}
+              playbackProgress={this.state.playbackProgress}
+              animated={this.animated}
+              onTouchStart={async () => {
+                if (this.state.uploaded) {
+                  this.setState({ isPlaying: true });
+                  const {
+                    sound,
+                    status
+                  } = await this.recording.createNewLoadedSound();
+                  this.sound = sound;
+                  this.sound.setOnPlaybackStatusUpdate(async playbackStatus => {
+                    const { positionMillis, durationMillis } = playbackStatus;
+                    const progress = positionMillis / durationMillis;
+                    this.setState({
+                      playbackProgress: progress
+                    });
+                    if (playbackStatus.didJustFinish) {
+                      await this.sound.unloadAsync();
+                      this.setState({ isPlaying: false });
                     }
-                  }}
-                  onTouchEnd={() => {
-                    this.state.isRecording && this._stopRecording();
-                  }}
-                >
-                  {this.state.uploaded &&
-                    (this.state.isPlaying ? (
-                      <FontAwesome
-                        name="play-circle"
-                        size={100}
-                        color="red"
-                        style={{ backgroundColor: 'transparent' }}
-                      />
-                    ) : (
-                      <FontAwesome
-                        name="play-circle-o"
-                        size={100}
-                        color="red"
-                        style={{ backgroundColor: 'transparent' }}
-                      />
-                    ))}
-                </Animated.View>
-              </View>
-              <Button
-                fontWeight="bold"
-                title="Done!"
-                disabled={!this.state.uploaded}
-                onPress={() => {
-                  const phrase = {
-                    original: this.props.originalPhrase,
-                    translated: this.props.translatedPhrase,
-                    localUri: this.recording.getURI(),
-                    uri: this.sound_uri,
-                    dictionary: this.props.currentDictionary
-                  };
-                  store.dispatch({
-                    type: ADD_NEW_PHRASE,
-                    ...phrase
                   });
-                  const user_id = getUserId(store.getState());
-                  api.addPhrase(phrase, user_id);
-                }}
-              />
-              <TouchableOpacity
-                onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
-              >
-                <View
-                  style={{
-                    opacity: 0.5,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    marginBottom: 10
-                  }}
-                >
-                  <Icon
-                    name="ios-close-circle"
-                    type="ionicon"
-                    size={30}
-                    color={colors.white}
-                  />
-                  <Text style={{ color: colors.white, fontSize: 12 }}>
-                    Cancel
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
+                  await this.sound.playAsync();
+                } else {
+                  this._startRecording();
+                }
+              }}
+              onTouchEnd={() => {
+                this.state.isRecording && this._stopRecording();
+              }}
+              onDone={() => {
+                const phrase = {
+                  original: this.props.originalPhrase,
+                  translated: this.props.translatedPhrase,
+                  localUri: this.recording.getURI(),
+                  uri: this.sound_uri,
+                  dictionary: this.props.currentDictionary
+                };
+                store.dispatch({
+                  type: ADD_NEW_PHRASE,
+                  ...phrase
+                });
+                const user_id = getUserId(store.getState());
+                api.addPhrase(phrase, user_id);
+              }}
+            />
           )}
         </ScrollView>
       </View>
