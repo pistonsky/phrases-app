@@ -12,7 +12,7 @@ import colors from '../../styles/colors';
 const RecordingSlide = props => {
   return (
     <View style={styles.formSlide}>
-      <Text style={styles.formHeader}>
+      <Text style={[styles.formHeader, { marginTop: 20 }]}>
         {props.recordingDuration === 0
           ? 'Say it!'
           : props.recordingDuration.toFixed(2)}
@@ -61,6 +61,32 @@ const RecordingSlide = props => {
               />
             ))}
         </Animated.View>
+        <View
+          style={{
+            position: 'absolute',
+            left: '65%',
+            right: 0,
+            top: 0,
+            height: 200,
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: props.uploaded ? 0.5 : 0
+          }}
+        >
+          <TouchableOpacity
+            onPress={props.onReset}
+          >
+            <View style={{ alignItems: 'center', justifyContent: 'center', position: 'relative', top: 10 }}>
+              <Icon
+                name="ios-refresh-circle"
+                type="ionicon"
+                size={40}
+                color={colors.white}
+              />
+              <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>Reset</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       <Button
         fontWeight="bold"

@@ -108,6 +108,14 @@ export const recordButton = {
   alignItems: 'center'
 };
 
+export const resetButton = {
+  position: 'absolute',
+  left: '75%',
+  top: '50%',
+  marginLeft: 20,
+  marginTop: 20
+};
+
 export const noPermissionsTitle = {
   fontSize: 30,
   color: colors.white,

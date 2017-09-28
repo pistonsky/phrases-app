@@ -238,6 +238,10 @@ class AddNewForm extends Component {
     }
   }
 
+  _resetRecording() {
+    this.setState({ uploaded: false, recordingDuration: 0 });
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -397,6 +401,7 @@ class AddNewForm extends Component {
                 const user_id = getUserId(store.getState());
                 api.addPhrase(phrase, user_id);
               }}
+              onReset={() => this._resetRecording()}
             />
           )}
         </ScrollView>
