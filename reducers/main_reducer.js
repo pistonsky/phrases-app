@@ -6,6 +6,7 @@ import {
   ADD_NEW_PHRASE,
   ADD_SHARED_PHRASE,
   ADD_SHARED_PHRASES,
+  PHRASE_UPLOADED,
   DATA_LOADING,
   DATA_LOADED,
   DELETE_PHRASE,
@@ -70,9 +71,9 @@ export default function(state = INITIAL_STATE, action) {
             original: action.original,
             translated: action.translated,
             uri: action.uri,
-            localUri: action.localUri,
             recording: action.recording,
-            dictionary: state.dictionaries.find(e => e.selected).name
+            dictionary: state.dictionaries.find(e => e.selected).name,
+            uploaded: action.uploaded === undefined ? true : action.uploaded
           }
         ]
       };
@@ -148,7 +149,7 @@ export default function(state = INITIAL_STATE, action) {
           });
         }
       } else {
-        dictionaries = [ ...state.dictionaries ];
+        dictionaries = [...state.dictionaries];
       }
       return {
         ...state,
@@ -161,6 +162,18 @@ export default function(state = INITIAL_STATE, action) {
       return {
         ...state,
         data: state.data.filter(e => e.uri !== action.payload.uri)
+      };
+
+    case PHRASE_UPLOADED:
+      return {
+        ...state,
+        data: state.data.map(e => {
+          if (e.uri === action.uri) {
+            return { ...e, uploaded: true };
+          } else {
+            return e;
+          }
+        })
       };
 
     case DATA_LOADING:

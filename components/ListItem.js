@@ -29,7 +29,7 @@ export default class ListItem extends PureComponent {
       >
         {short
           ? <TouchableHighlight
-              style={[styles.container, { opacity: this.props.loaded ? 1 : 0.1 }]}
+              style={[styles.container, { opacity: this.props.loaded ? 1 : 0.1, backgroundColor: this.props.uploaded ? '#eee' : '#fee' }]}
               activeOpacity={1}
               underlayColor="#ddd"
               onPress={() => this.props.onPress(this.props.item)}
@@ -50,7 +50,7 @@ export default class ListItem extends PureComponent {
               </View>
             </TouchableHighlight>
           : <TouchableHighlight
-              style={[styles.container, { opacity: this.props.loaded ? 1 : 0.1 }]}
+              style={[styles.container, { opacity: this.props.loaded ? 1 : 0.1, backgroundColor: this.props.uploaded ? '#eee' : '#fee' }]}
               activeOpacity={1}
               underlayColor="#ddd"
               onPress={() => this.props.onPress(this.props.item)}

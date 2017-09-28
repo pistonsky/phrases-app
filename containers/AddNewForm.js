@@ -17,7 +17,6 @@ import {
   Button as ReactNativeButton
 } from 'react-native';
 import { Permissions, Audio, FileSystem } from 'expo';
-import { RNS3 } from 'react-native-aws3';
 import {
   TextInput,
   Button,
@@ -57,6 +56,7 @@ class AddNewForm extends Component {
     this.state = {
       isLoading: false,
       isRecording: false,
+      recorded: false,
       recordingDuration: 0,
       checkingPermissions: false,
       permissionsStage: 0,
@@ -136,7 +136,7 @@ class AddNewForm extends Component {
         interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
       });
       this.recording = new Audio.Recording();
-      const status = await this.recording.prepareToRecordAsync({
+      this.recording.prepareToRecordAsync({
         android: {
           extension: '.m4a',
           outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
@@ -155,8 +155,7 @@ class AddNewForm extends Component {
           linearPCMIsBigEndian: false,
           linearPCMIsFloat: false
         }
-      });
-      await this.recording.startAsync();
+      }).then(status => this.recording.startAsync());
       this._interval = setInterval(async () => {
         const status = await this.recording.getStatusAsync();
         if (status.durationMillis)
@@ -169,12 +168,12 @@ class AddNewForm extends Component {
         useNativeDriver: true
       }).start();
     } catch (e) {
-      alert('_startRecording failed');
+      console.log('_startRecording failed');
     }
   }
 
   async _stopRecording() {
-    this.setState({ isRecording: false });
+    this.setState({ isRecording: false, recorded: true });
     Animated.timing(this.animated.recordButtonScale, {
       toValue: 1,
       duration: 200,
@@ -190,8 +189,6 @@ class AddNewForm extends Component {
         shouldDuckAndroid: true,
         interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
       });
-      const uri = this.recording.getURI();
-      this._uploadRecordingAsync(uri);
       const { sound, status } = await this.recording.createNewLoadedSound();
       this.sound = sound;
       this.sound.setOnPlaybackStatusUpdate(async playbackStatus => {
@@ -205,41 +202,53 @@ class AddNewForm extends Component {
     }
   }
 
-  async _uploadRecordingAsync(uri) {
-    try {
-      this.setState({ isUploading: true, uploadProgress: undefined });
-      this.sound_uri = Math.random()
-        .toString(36)
-        .slice(2);
-      const file = {
-        uri,
-        name: this.sound_uri + '.caf',
-        type: 'audio/x-caf'
-      };
-      const options = {
-        keyPrefix: '',
-        bucket: config.S3_BUCKET,
-        region: config.S3_REGION,
-        accessKey: config.S3_ACCESS_KEY,
-        secretKey: config.S3_SECRET_KEY,
-        successActionStatus: 201
-      };
-      RNS3.put(file, options)
-        .progress(e => this.setState({ uploadProgress: e.loaded / e.total }))
-        .then(response => {
-          if (response.status !== 201) {
-            this.setState({ isUploading: false, uploaded: false });
-          } else {
-            this.setState({ isUploading: false, uploaded: true });
-          }
-        });
-    } catch (e) {
-      console.error(e);
-    }
+  _resetRecording() {
+    this.setState({ uploaded: false, recordingDuration: 0, recorded: false });
   }
 
-  _resetRecording() {
-    this.setState({ uploaded: false, recordingDuration: 0 });
+  async _submit() {
+    const uri = Math.random()
+        .toString(36)
+        .slice(2);
+    // move local recording file to documents directory so we don't lose it
+    await FileSystem.moveAsync({
+      from: this.recording.getURI(),
+      to: FileSystem.documentDirectory + uri + '.caf'
+    });
+    const phrase = {
+      original: this.props.originalPhrase,
+      translated: this.props.translatedPhrase,
+      uploaded: false,
+      uri: uri,
+      dictionary: this.props.currentDictionary
+    };
+    store.dispatch({
+      type: ADD_NEW_PHRASE,
+      ...phrase
+    });
+    const user_id = getUserId(store.getState());
+    api.addPhrase(phrase, user_id);
+  }
+
+  async _play() {
+    this.setState({ isPlaying: true });
+    const {
+      sound,
+      status
+    } = await this.recording.createNewLoadedSound();
+    this.sound = sound;
+    this.sound.setOnPlaybackStatusUpdate(async playbackStatus => {
+      const { positionMillis, durationMillis } = playbackStatus;
+      const progress = positionMillis / durationMillis;
+      this.setState({
+        playbackProgress: progress
+      });
+      if (playbackStatus.didJustFinish) {
+        await this.sound.unloadAsync();
+        this.setState({ isPlaying: false });
+      }
+    });
+    await this.sound.playAsync();
   }
 
   render() {
@@ -284,7 +293,7 @@ class AddNewForm extends Component {
               value={this.props.originalPhrase}
               onChangeText={text =>
                 store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
-              autoFocus
+              autoFocus={this.props.currentPage === 0}
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH,
@@ -316,6 +325,7 @@ class AddNewForm extends Component {
             <Text style={styles.formHeader}>Translated:</Text>
             <TextInput
               value={this.props.translatedPhrase}
+              autoFocus={this.props.currentPage === 1}
               onChangeText={text =>
                 store.dispatch({
                   type: FORM_TRANSLATED_CHANGED,
@@ -356,51 +366,25 @@ class AddNewForm extends Component {
               isUploading={this.state.isUploading}
               isPlaying={this.state.isPlaying}
               uploaded={this.state.uploaded}
+              recorded={this.state.recorded}
               uploadProgress={this.state.uploadProgress}
               playbackProgress={this.state.playbackProgress}
               animated={this.animated}
               onTouchStart={async () => {
-                if (this.state.uploaded) {
-                  this.setState({ isPlaying: true });
-                  const {
-                    sound,
-                    status
-                  } = await this.recording.createNewLoadedSound();
-                  this.sound = sound;
-                  this.sound.setOnPlaybackStatusUpdate(async playbackStatus => {
-                    const { positionMillis, durationMillis } = playbackStatus;
-                    const progress = positionMillis / durationMillis;
-                    this.setState({
-                      playbackProgress: progress
-                    });
-                    if (playbackStatus.didJustFinish) {
-                      await this.sound.unloadAsync();
-                      this.setState({ isPlaying: false });
-                    }
-                  });
-                  await this.sound.playAsync();
+                if (this.state.recorded) {
+                  this._play();
                 } else {
-                  this._startRecording();
+                  if (this.state.isRecording) {
+                    this._stopRecording();
+                  } else {
+                    this._startRecording();
+                  }
                 }
               }}
               onTouchEnd={() => {
-                this.state.isRecording && this._stopRecording();
+                this.state.isRecording && (this.state.recordingDuration > 0) && this._stopRecording();
               }}
-              onDone={() => {
-                const phrase = {
-                  original: this.props.originalPhrase,
-                  translated: this.props.translatedPhrase,
-                  localUri: this.recording.getURI(),
-                  uri: this.sound_uri,
-                  dictionary: this.props.currentDictionary
-                };
-                store.dispatch({
-                  type: ADD_NEW_PHRASE,
-                  ...phrase
-                });
-                const user_id = getUserId(store.getState());
-                api.addPhrase(phrase, user_id);
-              }}
+              onDone={() => this._submit()}
               onReset={() => this._resetRecording()}
             />
           )}

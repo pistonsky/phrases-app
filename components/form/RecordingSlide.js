@@ -18,7 +18,7 @@ const RecordingSlide = props => {
           : props.recordingDuration.toFixed(2)}
       </Text>
       <View style={styles.formRecordButtonContainer}>
-        {(props.isUploading || props.uploaded) && (
+        {props.recorded && (
             <Progress
               style={styles.formCircleProgress}
               size={120}
@@ -27,24 +27,19 @@ const RecordingSlide = props => {
               animated={false}
               unfilledColor="#4af"
               borderWidth={0}
-              progress={
-                props.isUploading
-                  ? props.uploadProgress
-                  : props.playbackProgress
-              }
-              indeterminate={props.uploadProgress === undefined}
+              progress={props.playbackProgress}
             />
           )}
         <Animated.View
           style={{
             ...styles.recordButton,
-            backgroundColor: props.uploaded ? '#fa4' : '#f00',
+            backgroundColor: props.recorded ? '#fa4' : '#f00',
             transform: [{ scale: props.animated.recordButtonScale }]
           }}
           onTouchStart={props.onTouchStart}
           onTouchEnd={props.onTouchEnd}
         >
-          {props.uploaded &&
+          {props.recorded &&
             (props.isPlaying ? (
               <FontAwesome
                 name="play-circle"
@@ -70,7 +65,7 @@ const RecordingSlide = props => {
             height: 200,
             alignItems: 'center',
             justifyContent: 'center',
-            opacity: props.uploaded ? 0.5 : 0
+            opacity: props.recorded ? 0.5 : 0
           }}
         >
           <TouchableOpacity
@@ -91,7 +86,7 @@ const RecordingSlide = props => {
       <Button
         fontWeight="bold"
         title="Done!"
-        disabled={!props.uploaded}
+        disabled={!props.recorded}
         onPress={props.onDone}
       />
       <TouchableOpacity
