@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StatusBar, Linking } from 'react-native';
+import { View, StatusBar, Linking, NetInfo } from 'react-native';
 import { Permissions, Constants } from 'expo';
 import qs from 'qs';
 import {
@@ -16,7 +16,9 @@ import {
   RECORDING_PERMISSIONS_GRANTED,
   RECORDING_PERMISSIONS_DENIED,
   ADD_SHARED_PHRASE,
-  ADD_SHARED_PHRASES
+  ADD_SHARED_PHRASES,
+  GO_ONLINE,
+  GO_OFFLINE
 } from '../actions/types';
 import styles from '../styles';
 import colors from '../styles/colors';
@@ -36,6 +38,14 @@ class MainScreen extends Component {
     });
     Linking.addEventListener('url', ({ url }) => {
       this._handleDeepLink(url);
+    });
+    NetInfo.addEventListener('connectionChange', connectionInfo => {
+      if ((connectionInfo === 'wifi') || (connectionInfo === 'cellular')) {
+        store.dispatch({ type: GO_ONLINE });
+      }
+      if (connectionInfo === 'none') {
+        store.dispatch({ type: GO_OFFLINE });
+      }
     });
   }
 

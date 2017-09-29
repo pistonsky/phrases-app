@@ -12,7 +12,9 @@ import {
   DELETE_PHRASE,
   SKIP_WELCOME_SCREENS,
   ADD_DICTIONARY,
-  SELECT_DICTIONARY
+  SELECT_DICTIONARY,
+  GO_ONLINE,
+  GO_OFFLINE
 } from '../actions/types';
 import colors from '../styles/colors';
 
@@ -21,6 +23,7 @@ const SHARED_DICTIONARY_NAME = 'Added';
 const INITIAL_STATE = {
   add_new_modal_shown: false,
   recording_permissions: undefined,
+  offline: undefined,
   data: [],
   data_loading: true,
   dictionaries: [{ name: 'Phrazes', selected: true }],
@@ -199,6 +202,12 @@ export default function(state = INITIAL_STATE, action) {
           })
         ]
       };
+
+    case GO_OFFLINE:
+      return { ...state, offline: true };
+
+    case GO_ONLINE:
+      return { ...state, offline: false };
 
     default:
       return state;

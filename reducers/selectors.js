@@ -17,6 +17,7 @@ export const getTranslatedPhrase = state => state.form.translated;
 export const getCurrentFormPage = state => state.form.current_page;
 
 export const getWelcomeScreens = state => state.main.guide;
+export const getOffline = state => state.main.offline;
 
 export const getDictionaries = state => state.main.dictionaries;
 export const shouldShowDictionariesSelectorModal = state =>

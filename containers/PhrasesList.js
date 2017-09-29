@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, FlatList, Platform, StatusBar, Share, ActivityIndicator, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Platform,
+  StatusBar,
+  Share,
+  ActivityIndicator,
+  Alert
+} from 'react-native';
 import { Button } from 'react-native-elements';
 import { Audio, FileSystem } from 'expo';
 import qs from 'qs';
 import { RNS3 } from 'react-native-aws3';
-import { ListItem, Separator } from '../components';
-import { getData, getUserId, getDataLoading } from '../reducers/selectors';
+import { ListItem, Separator, OfflineBar } from '../components';
+import {
+  getData,
+  getUserId,
+  getDataLoading,
+  getOffline
+} from '../reducers/selectors';
 import styles from '../styles';
 import * as config from '../utils/config';
 import store from '../store';
@@ -49,7 +63,12 @@ class PhrasesList extends Component {
   async _uploadAll(data) {
     for (let item of data) {
       if (item.uploaded === false) {
-        if (await this._uploadRecordingAsync(FileSystem.documentDirectory + item.uri + '.caf', item.uri)) {
+        if (
+          await this._uploadRecordingAsync(
+            FileSystem.documentDirectory + item.uri + '.caf',
+            item.uri
+          )
+        ) {
           store.dispatch({ type: PHRASE_UPLOADED, uri: item.uri });
         }
       }
@@ -97,14 +116,14 @@ class PhrasesList extends Component {
       } else {
         return true;
       }
-        // .progress(e => this.setState({ uploadProgress: e.loaded / e.total }))
-        // .then(response => {
-        //   if (response.status !== 201) {
-        //     this.setState({ isUploading: false, uploaded: false });
-        //   } else {
-        //     this.setState({ isUploading: false, uploaded: true });
-        //   }
-        // });
+      // .progress(e => this.setState({ uploadProgress: e.loaded / e.total }))
+      // .then(response => {
+      //   if (response.status !== 201) {
+      //     this.setState({ isUploading: false, uploaded: false });
+      //   } else {
+      //     this.setState({ isUploading: false, uploaded: true });
+      //   }
+      // });
     } catch (e) {
       // Alert.alert("Looks like we're offline =(", "We could not upload this phrase to the cloud. It is still available on your device though!");
       return false;
@@ -183,9 +202,13 @@ class PhrasesList extends Component {
               store.dispatch({ type: OPEN_ADD_NEW_MODAL });
             }}
           >
-            {this.props.data_loading && <ActivityIndicator size='small' color='#ffffff' />}
+            {this.props.data_loading && (
+              <ActivityIndicator size="small" color="#ffffff" />
+            )}
             <Text style={styles.flatlistPlaceholder}>
-              {this.props.data_loading ? 'Loading...' : 'Add your first phrazee!'}
+              {this.props.data_loading
+                ? 'Loading...'
+                : 'Add your first phrazee!'}
             </Text>
           </View>
         }
@@ -220,6 +243,7 @@ class PhrasesList extends Component {
                 store.dispatch({ type: SHARE_ALL_PHRASES });
               }}
             />
+            {this.props.offline && <OfflineBar />}
           </View>
         }
         refreshing={this.props.data_loading}
@@ -233,7 +257,8 @@ function mapStateToProps(state) {
   return {
     data: getData(state),
     data_loading: getDataLoading(state),
-    user_id: getUserId(state)
+    user_id: getUserId(state),
+    offline: getOffline(state)
   };
 }
 
