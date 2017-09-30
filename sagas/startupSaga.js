@@ -4,6 +4,8 @@ import { getUserId } from '../reducers/selectors';
 import { Actions } from 'react-native-router-flux';
 import { ROUTER_READY } from '../actions/types';
 
+import { syncSaga } from './index';
+
 const startupSaga = function* startupSaga() {
   yield all([
     take(ROUTER_READY),
@@ -15,6 +17,7 @@ const startupSaga = function* startupSaga() {
   } else {
     yield call(Actions.welcome);
   }
+  yield call(syncSaga);
 }
 
 export default startupSaga;

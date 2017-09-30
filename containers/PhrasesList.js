@@ -13,7 +13,6 @@ import {
 import { Button } from 'react-native-elements';
 import { Audio, FileSystem } from 'expo';
 import qs from 'qs';
-import { RNS3 } from 'react-native-aws3';
 import { ListItem, Separator, OfflineBar } from '../components';
 import {
   getData,
@@ -29,8 +28,7 @@ import {
   OPEN_ADD_NEW_MODAL,
   DELETE_PHRASE,
   SHARE_PHRASE,
-  SHARE_ALL_PHRASES,
-  PHRASE_UPLOADED
+  SHARE_ALL_PHRASES
 } from '../actions/types';
 import * as actions from '../actions';
 
@@ -49,28 +47,12 @@ class PhrasesList extends Component {
 
   componentWillReceiveProps(newProps) {
     this._cacheAll(newProps.data);
-    this._uploadAll(newProps.data);
   }
 
   async _cacheAll(data) {
     for (let item of data) {
       if (!(item.uri in this.cache)) {
         await this._cacheAudio(item.uri);
-      }
-    }
-  }
-
-  async _uploadAll(data) {
-    for (let item of data) {
-      if (item.uploaded === false) {
-        if (
-          await this._uploadRecordingAsync(
-            FileSystem.documentDirectory + item.uri + '.caf',
-            item.uri
-          )
-        ) {
-          store.dispatch({ type: PHRASE_UPLOADED, uri: item.uri });
-        }
       }
     }
   }
@@ -95,41 +77,6 @@ class PhrasesList extends Component {
     this.setState({ loaded: { ...this.state.loaded, [uri]: localUri } });
   }
 
-  async _uploadRecordingAsync(localUri, remoteUri) {
-    try {
-      const file = {
-        uri: localUri,
-        name: remoteUri + '.caf',
-        type: 'audio/x-caf'
-      };
-      const options = {
-        keyPrefix: '',
-        bucket: config.S3_BUCKET,
-        region: config.S3_REGION,
-        accessKey: config.S3_ACCESS_KEY,
-        secretKey: config.S3_SECRET_KEY,
-        successActionStatus: 201
-      };
-      const response = await RNS3.put(file, options);
-      if (response.status !== 201) {
-        return false;
-      } else {
-        return true;
-      }
-      // .progress(e => this.setState({ uploadProgress: e.loaded / e.total }))
-      // .then(response => {
-      //   if (response.status !== 201) {
-      //     this.setState({ isUploading: false, uploaded: false });
-      //   } else {
-      //     this.setState({ isUploading: false, uploaded: true });
-      //   }
-      // });
-    } catch (e) {
-      // Alert.alert("Looks like we're offline =(", "We could not upload this phrase to the cloud. It is still available on your device though!");
-      return false;
-    }
-  }
-
   render() {
     return (
       <FlatList
@@ -144,7 +91,7 @@ class PhrasesList extends Component {
             key={item.uri + item.original}
             item={item}
             loaded={item.uri in this.state.loaded}
-            uploaded={item.uploaded === undefined ? true : item.uploaded}
+            uploaded={item.synced === undefined ? true : item.synced}
             onPress={async item => {
               let localUri;
               // check cache

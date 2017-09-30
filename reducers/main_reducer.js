@@ -7,6 +7,7 @@ import {
   ADD_SHARED_PHRASE,
   ADD_SHARED_PHRASES,
   PHRASE_UPLOADED,
+  PHRASE_SYNCED,
   DATA_LOADING,
   DATA_LOADED,
   DELETE_PHRASE,
@@ -76,7 +77,7 @@ export default function(state = INITIAL_STATE, action) {
             uri: action.uri,
             recording: action.recording,
             dictionary: state.dictionaries.find(e => e.selected).name,
-            uploaded: action.uploaded === undefined ? true : action.uploaded
+            synced: action.synced === undefined ? true : action.synced
           }
         ]
       };
@@ -173,6 +174,18 @@ export default function(state = INITIAL_STATE, action) {
         data: state.data.map(e => {
           if (e.uri === action.uri) {
             return { ...e, uploaded: true };
+          } else {
+            return e;
+          }
+        })
+      };
+
+    case PHRASE_SYNCED:
+      return {
+        ...state,
+        data: state.data.map(e => {
+          if (e.uri === action.uri) {
+            return { ...e, synced: true };
           } else {
             return e;
           }

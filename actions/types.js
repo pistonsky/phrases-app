@@ -28,7 +28,8 @@ export const SHARE_PHRASE = 'SHARE_PHRASE';
 export const SHARE_ALL_PHRASES = 'SHARE_ALL_PHRASES';
 export const DATA_LOADING = 'DATA_LOADING';
 export const DATA_LOADED = 'DATA_LOADED';
-export const PHRASE_UPLOADED = 'PHRASE_UPLOADED';
+export const PHRASE_UPLOADED = 'PHRASE_UPLOADED'; // audio uploaded
+export const PHRASE_SYNCED = 'PHRASE_SYNCED'; // entire phrase is synced
 
 export const TOGGLE_DICTIONARY_SELECTOR = 'TOGGLE_DICTIONARY_SELECTOR';
 export const ADD_DICTIONARY = 'ADD_DICTIONARY';

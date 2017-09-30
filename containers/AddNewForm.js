@@ -218,7 +218,7 @@ class AddNewForm extends Component {
     const phrase = {
       original: this.props.originalPhrase,
       translated: this.props.translatedPhrase,
-      uploaded: false,
+      synced: false,
       uri: uri,
       dictionary: this.props.currentDictionary
     };
@@ -226,8 +226,6 @@ class AddNewForm extends Component {
       type: ADD_NEW_PHRASE,
       ...phrase
     });
-    const user_id = getUserId(store.getState());
-    api.addPhrase(phrase, user_id);
   }
 
   async _play() {

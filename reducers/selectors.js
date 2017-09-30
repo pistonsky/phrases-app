@@ -33,3 +33,11 @@ export const getData = state => {
   const currentDictionaryName = getCurrentDictionaryName(state);
   return state.main.data.filter(e => e.dictionary == currentDictionaryName);
 };
+
+// sync
+export const getUnsyncedPhrases = state => {
+  return state.main.data.filter(e => e.synced === false);
+}
+export const anyUnsyncedPhrases = state => {
+  return getUnsyncedPhrases(state).length;
+}
