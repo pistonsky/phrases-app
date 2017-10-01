@@ -8,7 +8,7 @@ export default class ListItem extends PureComponent {
   render() {
     const { original, translated, recording, uri, localUri } = this.props.item;
 
-    let short = (original.length + translated.length) < 28;
+    let short = (original.length + translated.length) < 27;
 
     return (
       <Swipeout
