@@ -12,7 +12,8 @@ import {
 import {
   ADD_NEW_PHRASE,
   PHRASE_UPLOADED,
-  PHRASE_SYNCED
+  PHRASE_SYNCED,
+  ALL_PHRASES_SYNCED
 } from '../actions/types';
 import * as config from '../utils/config';
 import * as api from '../api';
@@ -25,6 +26,7 @@ const syncSaga = function* syncSaga() {
     while (yield select(anyUnsyncedPhrases)) {
       (yield call(sync)) || (yield delay(INTERVAL));
     }
+    yield put({ type: ALL_PHRASES_SYNCED });
     // wait for new phrases
     yield take(ADD_NEW_PHRASE);
   }

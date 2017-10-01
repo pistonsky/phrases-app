@@ -2,8 +2,8 @@ import {
   FACEBOOK_CONNECT_IN_PROGRESS,
   FACEBOOK_CONNECT_IGNORED,
   ADD_NEW_PHRASE,
-  SHARE_PHRASE,
-  SHARE_ALL_PHRASES
+  SHARE_PHRASE_COMPLETED,
+  SHARE_ALL_PHRASES_COMPLETED
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -33,7 +33,7 @@ export default function(state = INITIAL_STATE, action) {
           [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
       };
 
-    case SHARE_PHRASE:
+    case SHARE_PHRASE_COMPLETED:
       return {
         ...state,
         [action.type]: (state[action.type] || 0) + 1,
@@ -41,7 +41,7 @@ export default function(state = INITIAL_STATE, action) {
           [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
       };
 
-    case SHARE_ALL_PHRASES:
+    case SHARE_ALL_PHRASES_COMPLETED:
       return {
         ...state,
         [action.type]: (state[action.type] || 0) + 1,

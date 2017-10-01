@@ -114,31 +114,7 @@ class PhrasesList extends Component {
               }
             }}
             onDelete={item => this.props.deletePhrase(item)}
-            onShare={async item => {
-              const url =
-                config.BASE_URL +
-                '/share?' +
-                qs.stringify({
-                  original: item.original,
-                  translated: item.translated,
-                  uri: item.uri
-                });
-              let message = `Check out my phraze! "${item.original}" => "${item.translated}"`;
-              if (Platform.OS !== 'ios') {
-                message += ` ${url}`;
-              }
-              await Share.share(
-                {
-                  message,
-                  title: 'Phrazes',
-                  url
-                },
-                {
-                  dialogTitle: 'Share a phraze'
-                }
-              );
-              store.dispatch({ type: SHARE_PHRASE });
-            }}
+            onShare={item => store.dispatch({ type: SHARE_PHRASE, phrase: item })}
           />
         )}
         ItemSeparatorComponent={Separator}
@@ -166,29 +142,7 @@ class PhrasesList extends Component {
               icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}
               title="SHARE ALL PHRAZES"
               backgroundColor={colors.secondary}
-              onPress={async () => {
-                const url =
-                  config.BASE_URL +
-                  '/share?' +
-                  qs.stringify({
-                    user_id: this.props.user_id
-                  });
-                let message = 'Check out my phrazes!';
-                if (Platform.OS !== 'ios') {
-                  message += ` ${url}`;
-                }
-                await Share.share(
-                  {
-                    message,
-                    title: 'Phrazes',
-                    url
-                  },
-                  {
-                    dialogTitle: 'Share all your phrazes'
-                  }
-                );
-                store.dispatch({ type: SHARE_ALL_PHRASES });
-              }}
+              onPress={() => store.dispatch({ type: SHARE_ALL_PHRASES })}
             />
             {this.props.offline && <OfflineBar />}
           </View>

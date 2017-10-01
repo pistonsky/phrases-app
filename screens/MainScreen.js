@@ -8,7 +8,8 @@ import {
   PhrasesList,
   RecordingPermissionsModal,
   ConnectFacebookModal,
-  DictionarySelectorModal
+  DictionarySelectorModal,
+  SyncModal
 } from '../containers';
 import { getUserId } from '../reducers/selectors';
 import store from '../store';
@@ -79,6 +80,7 @@ class MainScreen extends Component {
         <AddNewModal />
         <ConnectFacebookModal />
         <DictionarySelectorModal />
+        <SyncModal />
         <StatusBar barStyle="dark-content" translucent={true} />
         <PhrasesList />
       </View>

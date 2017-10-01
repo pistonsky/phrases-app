@@ -5,7 +5,7 @@
     "slug": "phrases",
     "privacy": "unlisted",
     "sdkVersion": "20.0.0",
-    "version": "0.6.4",
+    "version": "0.7.0",
     "orientation": "portrait",
     "primaryColor": "#03A9F4",
     "icon": "./assets/icons/app.png",

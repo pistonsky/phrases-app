@@ -1,10 +1,10 @@
-import { all, take, select, call } from 'redux-saga/effects';
+import { all, take, select, call, fork } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist/constants';
 import { getUserId } from '../reducers/selectors';
 import { Actions } from 'react-native-router-flux';
 import { ROUTER_READY } from '../actions/types';
 
-import { syncSaga } from './index';
+import { syncSaga, shareSaga } from './index';
 
 const startupSaga = function* startupSaga() {
   yield all([
@@ -17,6 +17,7 @@ const startupSaga = function* startupSaga() {
   } else {
     yield call(Actions.welcome);
   }
+  yield fork(shareSaga);
   yield call(syncSaga);
 }
 

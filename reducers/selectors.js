@@ -41,3 +41,4 @@ export const getUnsyncedPhrases = state => {
 export const anyUnsyncedPhrases = state => {
   return getUnsyncedPhrases(state).length;
 }
+export const shouldShowSyncModal = state => state.ui.show_sync_modal;

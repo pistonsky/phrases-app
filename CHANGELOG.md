@@ -1,3 +1,12 @@
+## 0.7.0 (October 1, 2017)
+
+* Offline mode feature.
+* Re-record feature.
+* Sharing experience when unsynced (offline) phrases exist.
+* Improved recording permissions experience.
+* Improved form experience.
+* Fixed bugs when user was pressing on record button rather than holding it.
+
 ## 0.6.4 (September 24, 2017)
 
 * When connecting Facebook account which had already been connected before, join all accounts together.

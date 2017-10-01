@@ -5,3 +5,4 @@ export RecordingPermissionsModal from './RecordingPermissionsModal';
 export ConnectFacebookModal from './ConnectFacebookModal';
 export DictionarySelector from './DictionarySelector';
 export DictionarySelectorModal from './DictionarySelectorModal';
+export SyncModal from './SyncModal';
