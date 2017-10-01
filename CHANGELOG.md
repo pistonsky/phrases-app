@@ -1,3 +1,7 @@
+## 0.7.1 (October 1, 2017)
+
+* Correctly detect online/offline status.
+
 ## 0.7.0 (October 1, 2017)
 
 * Offline mode feature.

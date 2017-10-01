@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StatusBar, Linking, NetInfo } from 'react-native';
+import { View, StatusBar, Linking, NetInfo, AppState } from 'react-native';
 import { Permissions, Constants } from 'expo';
 import qs from 'qs';
 import {
@@ -40,14 +40,25 @@ class MainScreen extends Component {
     Linking.addEventListener('url', ({ url }) => {
       this._handleDeepLink(url);
     });
-    NetInfo.addEventListener('connectionChange', connectionInfo => {
-      if ((connectionInfo === 'wifi') || (connectionInfo === 'cellular')) {
-        store.dispatch({ type: GO_ONLINE });
-      }
-      if (connectionInfo === 'none') {
-        store.dispatch({ type: GO_OFFLINE });
+    NetInfo.addEventListener('change', reach =>
+      this._connectionInfoHandler(reach)
+    );
+    AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'active') {
+        NetInfo.fetch().then(reach =>
+          this._connectionInfoHandler(reach)
+        );
       }
     });
+  }
+
+  _connectionInfoHandler(reach) {
+    if (reach === 'wifi' || reach === 'cell') { // WARNING! THESE WILL CHANGE IN 0.48
+      store.dispatch({ type: GO_ONLINE });
+    }
+    if (reach === 'none') {
+      store.dispatch({ type: GO_OFFLINE });
+    }
   }
 
   async _handleDeepLink(url) {
