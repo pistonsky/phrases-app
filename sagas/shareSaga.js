@@ -127,8 +127,7 @@ const sharePhrase = function sharePhrase(phrase) {
   Share.share(
     { message, title: 'Phrazes', url },
     { dialogTitle: 'Share a phraze' }
-  );
-  store.dispatch({ type: SHARE_PHRASE_COMPLETED });
+  ).then(e => store.dispatch({ type: SHARE_PHRASE_COMPLETED }));
   return true;
 };
 
@@ -146,8 +145,7 @@ const shareAllPhrases = function shareAllPhrases(user_id) {
   Share.share(
     { message, title: 'Phrazes', url },
     { dialogTitle: 'Share all your phrazes' }
-  );
-  store.dispatch({ type: SHARE_ALL_PHRASES_COMPLETED });
+  ).then(e => store.dispatch({ type: SHARE_ALL_PHRASES_COMPLETED }));
   return true;
 };
 
