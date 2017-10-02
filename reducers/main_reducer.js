@@ -10,6 +10,7 @@ import {
   PHRASE_SYNCED,
   DATA_LOADING,
   DATA_LOADED,
+  DATA_LOADING_FAILED,
   DELETE_PHRASE,
   SKIP_WELCOME_SCREENS,
   ADD_DICTIONARY,
@@ -161,6 +162,9 @@ export default function(state = INITIAL_STATE, action) {
         dictionaries,
         data_loading: false
       };
+
+    case DATA_LOADING_FAILED:
+      return { ...state, data_loading: false };
 
     case DELETE_PHRASE:
       return {

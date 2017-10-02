@@ -34,6 +34,7 @@ export const SHARE_ALL_PHRASES = 'SHARE_ALL_PHRASES';
 export const SHARE_ALL_PHRASES_COMPLETED = 'SHARE_ALL_PHRASES_COMPLETED';
 export const DATA_LOADING = 'DATA_LOADING';
 export const DATA_LOADED = 'DATA_LOADED';
+export const DATA_LOADING_FAILED = 'DATA_LOADING_FAILED';
 export const PHRASE_UPLOADED = 'PHRASE_UPLOADED'; // audio uploaded
 export const PHRASE_SYNCED = 'PHRASE_SYNCED'; // entire phrase is synced
 export const ALL_PHRASES_SYNCED = 'ALL_PHRASES_SYNCED'; // all phrases are now synced, enable sharing

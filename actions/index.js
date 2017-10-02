@@ -10,6 +10,7 @@ import {
   FACEBOOK_CONNECT_FAILED,
   DATA_LOADING,
   DATA_LOADED,
+  DATA_LOADING_FAILED,
   DELETE_PHRASE
 } from './types';
 
@@ -56,13 +57,17 @@ export const ignoreConnectFacebook = () => {
   };
 };
 
-export const refreshPhrases = (user_id) => async dispatch => {
+export const refreshPhrases = user_id => async dispatch => {
   dispatch({ type: DATA_LOADING });
-  const { data: phrases } = await api.getPhrases(user_id);
-  dispatch({ type: DATA_LOADED, phrases });
+  try {
+    const { data: { phrases } } = await api.getPhrases(user_id);
+    dispatch({ type: DATA_LOADED, phrases });
+  } catch (e) {
+    dispatch({ type: DATA_LOADING_FAILED });
+  }
 };
 
-export const deletePhrase = (phrase) => async dispatch => {
+export const deletePhrase = phrase => async dispatch => {
   dispatch({ type: DELETE_PHRASE, payload: phrase });
   const result = await api.deletePhrase(phrase);
 };
