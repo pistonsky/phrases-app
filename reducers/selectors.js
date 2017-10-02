@@ -1,7 +1,9 @@
 export const getUserId = state => state.auth.id;
 export const getFacebookConnected = state => state.auth.facebook_connected;
 export const shouldShowConnectFacebookModal = state =>
-  !getFacebookConnected(state) && state.analytics.show_facebook_modal;
+  anyUnsyncedPhrases(state) === 0 &&
+  !getFacebookConnected(state) &&
+  state.analytics.show_facebook_modal;
 export const facebookConnectInProgress = state =>
   state.auth.facebook_connect_in_progress;
 
@@ -37,8 +39,8 @@ export const getData = state => {
 // sync
 export const getUnsyncedPhrases = state => {
   return state.main.data.filter(e => e.synced === false);
-}
+};
 export const anyUnsyncedPhrases = state => {
   return getUnsyncedPhrases(state).length;
-}
+};
 export const shouldShowSyncModal = state => state.ui.show_sync_modal;
