@@ -16,7 +16,7 @@ import {
 const facebookLogin = () =>
   Facebook.logInWithReadPermissionsAsync('672834932920089', {
     permissions: ['public_profile', 'email'],
-    behavior: 'web' // use 'native' when ready for production
+    behavior: 'native' // use 'native' when ready for production
   });
 
 export const skipWelcomeScreen = () => async dispatch => {
