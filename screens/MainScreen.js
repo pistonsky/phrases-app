@@ -67,7 +67,7 @@ class MainScreen extends Component {
       let data = qs.parse(queryString);
       if (data.user_id) {
         // it was a "share all phrases" link
-        const { data: phrases } = await api.getPhrases(data.user_id);
+        const { data: { phrases } } = await api.getPhrases(data.user_id);
         store.dispatch({ type: ADD_SHARED_PHRASES, phrases });
       }
       if (data.uri) {
