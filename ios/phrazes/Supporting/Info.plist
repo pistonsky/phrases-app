@@ -77,6 +77,12 @@
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need it, so that you can record the pronounciation of phrazes.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Access to your contacts will allow us to show you your friends' phrazes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This will allow you to set your profile picture =)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need to take your selfie and put it to your profile picture!</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
