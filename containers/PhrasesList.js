@@ -68,7 +68,15 @@ class PhrasesList extends Component {
       const remote_uri = config.BASE_AUDIO_URL + uri + '.caf';
       Platform.OS === 'ios' &&
         StatusBar.setNetworkActivityIndicatorVisible(true);
-      const result = await FileSystem.downloadAsync(remote_uri, fileUri);
+      let result;
+      while (true) {
+        try {
+          result = await FileSystem.downloadAsync(remote_uri, fileUri);
+          break;
+        } catch (e) {
+          console.log(`download of ${uri} failed`);
+        }
+      }
       Platform.OS === 'ios' &&
         StatusBar.setNetworkActivityIndicatorVisible(false);
       localUri = result.uri;
