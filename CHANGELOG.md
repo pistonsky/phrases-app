@@ -1,3 +1,9 @@
+## 0.7.2 (October 2, 2017)
+
+* Improved Facebook login/connect experience.
+* UI not emphasizing phrases that are not yet loaded.
+* Keep trying to download phrase if it fails the first time.
+
 ## 0.7.1 (October 1, 2017)
 
 * Correctly detect online/offline status.
