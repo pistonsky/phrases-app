@@ -1,5 +1,6 @@
 import { Facebook } from 'expo';
 import { Actions } from 'react-native-router-flux';
+import { Alert } from 'react-native';
 import * as api from '../api';
 import {
   SKIP_WELCOME_SCREENS,
@@ -26,28 +27,49 @@ export const skipWelcomeScreen = () => async dispatch => {
 };
 
 export const connectFacebook = user_id => async dispatch => {
-  dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS });
-  let { type, token } = await facebookLogin();
-
-  if (type !== 'cancel') {
-    const { data: phrases } = await api.connectFacebook(token, user_id);
-    dispatch({ type: FACEBOOK_CONNECT }); // sets 'facebook_connected' flag
-    dispatch({ type: DATA_LOADED, phrases });
-  } else {
-    dispatch({ type: FACEBOOK_CONNECT_FAILED });
-  }
-};
-
-export const loginWithFacebook = () => async dispatch => {
-  dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS });
   let { type, token } = await facebookLogin();
   if (type === 'cancel') {
     dispatch({ type: FACEBOOK_CONNECT_FAILED });
   } else {
-    const { data } = await api.connectFacebook(token);
-    Actions.main();
-    dispatch({ type: FACEBOOK_LOGIN, user_id: data.user_id });
-    dispatch({ type: DATA_LOADED, phrases: data.phrases });
+    dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS });
+    try {
+      const { status, data: { phrases } } = await api.connectFacebook(token, user_id);
+      if (status !== 200) throw status;
+      dispatch({ type: FACEBOOK_CONNECT }); // sets 'facebook_connected' flag
+      dispatch({ type: DATA_LOADED, phrases });
+    } catch (e) {
+      dispatch({ type: FACEBOOK_CONNECT_FAILED });
+      requestAnimationFrame(() => {
+        Alert.alert(
+          'Login Failed =(',
+          "We couldn't log you in this time. Please check your signal or try to find wi-fi."
+        );
+      });
+    }
+  }
+};
+
+export const loginWithFacebook = () => async dispatch => {
+  let { type, token } = await facebookLogin();
+  if (type === 'cancel') {
+    dispatch({ type: FACEBOOK_CONNECT_FAILED });
+  } else {
+    dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS });
+    try {
+      const { status, data } = await api.connectFacebook(token);
+      if (status !== 200) throw status;
+      Actions.main();
+      dispatch({ type: FACEBOOK_LOGIN, user_id: data.user_id });
+      dispatch({ type: DATA_LOADED, phrases: data.phrases });
+    } catch (e) {
+      dispatch({ type: FACEBOOK_CONNECT_FAILED });
+      requestAnimationFrame(() => {
+        Alert.alert(
+          'Login Failed =(',
+          "We couldn't log you in this time. Please check your signal or try to find wi-fi."
+        );
+      });
+    }
   }
 };
 

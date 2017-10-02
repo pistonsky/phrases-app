@@ -24,7 +24,7 @@ class ConnectFacebookModal extends Component {
   render() {
     return (
       <Modal
-        animationType="slide"
+        animationType={this.props.in_progress ? 'none' : 'slide'}
         transparent={true}
         visible={this.props.visible}
       >

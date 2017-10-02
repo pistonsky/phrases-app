@@ -1,6 +1,7 @@
 import {
   FACEBOOK_CONNECT_IN_PROGRESS,
   FACEBOOK_CONNECT_IGNORED,
+  FACEBOOK_CONNECT_FAILED,
   ADD_NEW_PHRASE,
   SHARE_PHRASE_COMPLETED,
   SHARE_ALL_PHRASES_COMPLETED
@@ -15,7 +16,15 @@ export default function(state = INITIAL_STATE, action) {
     case FACEBOOK_CONNECT_IN_PROGRESS:
       return {
         ...state,
+        [action.type]: (state[action.type] || 0) + 1,
         show_facebook_modal: true
+      };
+
+    case FACEBOOK_CONNECT_FAILED:
+      return {
+        ...state,
+        [action.type]: (state[action.type] || 0) + 1,
+        show_facebook_modal: false
       };
 
     case FACEBOOK_CONNECT_IGNORED:

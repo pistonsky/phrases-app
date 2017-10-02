@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image } from 'react-native';
 import Onboarding from 'react-native-simple-onboarding';
 import { connect } from 'react-redux';
+import { ConnectFacebookModal } from '../containers';
 import * as actions from '../actions';
 import { getWelcomeScreens } from '../reducers/selectors';
 
@@ -33,6 +34,7 @@ class WelcomeScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
+        <ConnectFacebookModal />
         <Onboarding
           pages={this.renderSlides()}
           onEnd={() => this.props.skipWelcomeScreen()}
