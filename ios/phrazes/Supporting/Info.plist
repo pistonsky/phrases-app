@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.4</string>
+	<string>0.7.1</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -23,6 +23,7 @@
 			<array>
 				<string>phrazesapp</string>
 				<string>exp6ac6cbe5e72046efbe317fbbf9a29fad</string>
+				<string>fb672834932920089</string>
 			</array>
 		</dict>
 		<dict>
@@ -76,5 +77,12 @@
 	<false/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need it, so that you can record the pronounciation of phrazes.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 </dict>
 </plist>
