@@ -1,3 +1,8 @@
+## 0.8.0 (October 3, 2017)
+
+* Delete a dictionary by swiping left and pressing "Delete".
+* Update dictionary name by long-pressing on it in dictionaries selector modal.
+
 ## 0.7.2 (October 2, 2017)
 
 * Improved Facebook login/connect experience.
