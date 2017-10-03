@@ -1,4 +1,5 @@
 export ListItem from './ListItem';
+export DictionaryListItem from './DictionaryListItem';
 export Separator from './Separator';
 export TextInput from './TextInput';
 export Button from './Button';

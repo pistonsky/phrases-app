@@ -29,3 +29,17 @@ export const deletePhrase = async phrase => {
   const result = await axios.delete(url);
   return result;
 };
+
+export const deleteDictionary = async ({ dictionary_name, user_id }) => {
+  const query = qs.stringify({ id: dictionary_name, user_id });
+  const url = config.BASE_URL + '/dictionary?' + query;
+  const result = await axios.delete(url);
+  return result;
+};
+
+export const updateDictionary = async ({ old_name, new_name, user_id }) => {
+  const query = qs.stringify({ old_name, new_name, user_id });
+  const url = config.BASE_URL + '/dictionary?' + query;
+  const result = await axios.put(url);
+  return result;
+};

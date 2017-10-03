@@ -2,6 +2,7 @@ import { Facebook } from 'expo';
 import { Actions } from 'react-native-router-flux';
 import { Alert } from 'react-native';
 import * as api from '../api';
+import { getUserId } from '../reducers/selectors';
 import {
   SKIP_WELCOME_SCREENS,
   FACEBOOK_CONNECT,
@@ -12,8 +13,11 @@ import {
   DATA_LOADING,
   DATA_LOADED,
   DATA_LOADING_FAILED,
-  DELETE_PHRASE
+  DELETE_PHRASE,
+  DELETE_DICTIONARY,
+  UPDATE_DICTIONARY_NAME
 } from './types';
+import store from '../store';
 
 const facebookLogin = () =>
   Facebook.logInWithReadPermissionsAsync('672834932920089', {
@@ -33,7 +37,10 @@ export const connectFacebook = user_id => async dispatch => {
   } else {
     dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS });
     try {
-      const { status, data: { phrases } } = await api.connectFacebook(token, user_id);
+      const { status, data: { phrases } } = await api.connectFacebook(
+        token,
+        user_id
+      );
       if (status !== 200) throw status;
       dispatch({ type: FACEBOOK_CONNECT }); // sets 'facebook_connected' flag
       dispatch({ type: DATA_LOADED, phrases });
@@ -92,4 +99,29 @@ export const refreshPhrases = user_id => async dispatch => {
 export const deletePhrase = phrase => async dispatch => {
   dispatch({ type: DELETE_PHRASE, payload: phrase });
   const result = await api.deletePhrase(phrase);
+};
+
+export const deleteDictionary = ({ dictionary_name }) => async dispatch => {
+  const user_id = getUserId(store.getState());
+  Alert.alert(
+    'Delete Forever?',
+    `This will remove all phrases in "${dictionary_name}". This action cannot be undone. Sure?`,
+    [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          dispatch({ type: DELETE_DICTIONARY, payload: dictionary_name });
+          const result = await api.deleteDictionary({ dictionary_name, user_id });
+        }
+      }
+    ]
+  );
+};
+
+export const updateDictionaryName = ({ old_name, new_name }) => async dispatch => {
+  const user_id = getUserId(store.getState());
+  dispatch({ type: UPDATE_DICTIONARY_NAME, old_name, new_name });
+  const result = await api.updateDictionary({ old_name, new_name, user_id });
 };

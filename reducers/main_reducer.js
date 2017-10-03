@@ -15,12 +15,16 @@ import {
   SKIP_WELCOME_SCREENS,
   ADD_DICTIONARY,
   SELECT_DICTIONARY,
+  DELETE_DICTIONARY,
+  UPDATE_DICTIONARY_NAME,
   GO_ONLINE,
-  GO_OFFLINE
+  GO_OFFLINE,
+  TOGGLE_DICTIONARY_SELECTOR
 } from '../actions/types';
 import colors from '../styles/colors';
 
 const SHARED_DICTIONARY_NAME = 'Added';
+const DEFAULT_DICTIONARY_NAME = 'Phrazes';
 
 const INITIAL_STATE = {
   add_new_modal_shown: false,
@@ -28,7 +32,7 @@ const INITIAL_STATE = {
   offline: undefined,
   data: [],
   data_loading: true,
-  dictionaries: [{ name: 'Phrazes', selected: true }],
+  dictionaries: [{ name: DEFAULT_DICTIONARY_NAME, selected: true }],
   guide: [
     {
       head: 'Phrazes',
@@ -219,6 +223,42 @@ export default function(state = INITIAL_STATE, action) {
           })
         ]
       };
+
+    case DELETE_DICTIONARY:
+      // 1. delete all phrases of this dictionary
+      // 2. delete the dictionary itself
+      return {
+        ...state,
+        data: state.data.filter(e => e.dictionary !== action.payload),
+        dictionaries: state.dictionaries.filter(e => e.name !== action.payload)
+      };
+
+    case UPDATE_DICTIONARY_NAME:
+      const { old_name, new_name } = action;
+      return {
+        ...state,
+        data: state.data.map(e => e.dictionary === old_name ? { ...e, dictionary: new_name } : e),
+        dictionaries: state.dictionaries.map(e => e.name === old_name ? { ...e, name: new_name } : e)
+      };
+
+    case TOGGLE_DICTIONARY_SELECTOR:
+      // case when user deletes currently selected dictionary but doesn't select any other
+      if (state.dictionaries.filter(e => e.selected === true).length === 0) {
+        if (state.dictionaries.filter(e => e.name === DEFAULT_DICTIONARY_NAME).length === 0) {
+          if (state.dictionaries.filter(e => e.name === SHARED_DICTIONARY_NAME).length === 0) {
+            if (state.dictionaries.length > 0) {
+              return { ...state, dictionaries: state.dictionaries.map((e, i) => i === 0 ? { ...e, selected: true } : e)};
+            } else {
+              // no dictionaries left!
+              return { ...state, dictionaries: [{ name: DEFAULT_DICTIONARY_NAME, selected: true }] };
+            }
+          } else {
+            return { ...state, dictionaries: state.dictionaries.map(e => e.name === SHARED_DICTIONARY_NAME ? { ...e, selected: true } : e)};
+          }
+        } else {
+          return { ...state, dictionaries: state.dictionaries.map(e => e.name === DEFAULT_DICTIONARY_NAME ? { ...e, selected: true } : e)};
+        }
+      } else return state;
 
     case GO_OFFLINE:
       return { ...state, offline: true };

@@ -11,12 +11,12 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { BlurView } from 'expo';
-import { Separator } from '../components';
+import { Separator, DictionaryListItem } from '../components';
 import {
   getDictionaries,
-  shouldShowDictionariesSelectorModal
+  shouldShowDictionariesSelectorModal,
+  getUserId
 } from '../reducers/selectors';
 import styles from '../styles';
 import colors from '../styles/colors';
@@ -27,6 +27,7 @@ import {
   TOGGLE_DICTIONARY_SELECTOR
 } from '../actions/types';
 import { smartFontSize } from '../utils/functions';
+import * as actions from '../actions';
 
 class DictionarySelectorModal extends Component {
   constructor(props) {
@@ -99,53 +100,29 @@ class DictionarySelectorModal extends Component {
               contentContainerStyle={{ backgroundColor: 'transparent' }}
               data={this.props.dictionaries}
               keyExtractor={item => item.name}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  underlayColor="rgba(0, 0, 0, 0.2)"
-                  activeOpacity={1}
+              renderItem={({ item, index }) => (
+                <DictionaryListItem
+                  item={item}
+                  onDelete={() =>
+                    this.props.deleteDictionary({ dictionary_name: item.name })}
                   onPress={() =>
                     store.dispatch({
                       type: SELECT_DICTIONARY,
                       name: item.name
                     })}
-                >
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: 10,
-                      paddingHorizontal: 20,
-                      height: 40,
-                      borderBottomWidth: 1,
-                      borderColor: 'rgba(0, 0, 0, 0.1)'
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: colors.white,
-                        fontSize: smartFontSize({
-                          min: 14,
-                          max: 18,
-                          threshold: 25,
-                          text: item.name
-                        })
-                      }}
-                      numberOfLines={2}
-                    >
-                      {item.name}
-                    </Text>
-                    {item.selected && (
-                      <Icon
-                        name="ios-checkmark"
-                        type="ionicon"
-                        size={30}
-                        color={colors.white}
-                        style={{ position: 'relative', top: 2 }}
-                      />
-                    )}
-                  </View>
-                </TouchableHighlight>
+                  onChange={text =>
+                    this.props.updateDictionaryName({
+                      old_name: item.name,
+                      new_name: text
+                    })}
+                  onFocus={() => {
+                    setTimeout(
+                      () =>
+                        this.flatlist.scrollToIndex({ index, viewPosition: 1 }),
+                      100
+                    );
+                  }}
+                />
               )}
               ListFooterComponent={
                 <TextInput
@@ -174,7 +151,6 @@ class DictionarySelectorModal extends Component {
                     this.setState({ text: '' });
                   }}
                   onFocus={() => {
-                    console.log('onFocus');
                     setTimeout(() => this.flatlist.scrollToEnd(), 100);
                   }}
                   placeholder="Add new dictionary..."
@@ -197,8 +173,9 @@ class DictionarySelectorModal extends Component {
 function mapStateToProps(state) {
   return {
     visible: shouldShowDictionariesSelectorModal(state),
-    dictionaries: getDictionaries(state)
+    dictionaries: getDictionaries(state),
+    user_id: getUserId(state)
   };
 }
 
-export default connect(mapStateToProps)(DictionarySelectorModal);
+export default connect(mapStateToProps, actions)(DictionarySelectorModal);
