@@ -1,3 +1,7 @@
+## 0.8.1 (October 4, 2017)
+
+* Share dictionary feature now keeps original dictionary name.
+
 ## 0.8.0 (October 3, 2017)
 
 * Delete a dictionary by swiping left and pressing "Delete".
