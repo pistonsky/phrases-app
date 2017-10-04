@@ -35,6 +35,7 @@ export const getData = state => {
   const currentDictionaryName = getCurrentDictionaryName(state);
   return state.main.data.filter(e => e.dictionary == currentDictionaryName);
 };
+export const getAllPhrases = state => state.main.data;
 
 // sync
 export const getUnsyncedPhrases = state => {

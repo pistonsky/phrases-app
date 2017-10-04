@@ -89,7 +89,7 @@ export const ignoreConnectFacebook = () => {
 export const refreshPhrases = user_id => async dispatch => {
   dispatch({ type: DATA_LOADING });
   try {
-    const { data: { phrases } } = await api.getPhrases(user_id);
+    const { data: { phrases } } = await api.getPhrases({ user_id });
     dispatch({ type: DATA_LOADED, phrases });
   } catch (e) {
     dispatch({ type: DATA_LOADING_FAILED });

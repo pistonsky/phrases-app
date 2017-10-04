@@ -8,7 +8,8 @@ import {
   StatusBar,
   Share,
   ActivityIndicator,
-  Alert
+  Alert,
+  ActionSheetIOS
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Audio, FileSystem } from 'expo';
@@ -28,7 +29,8 @@ import {
   OPEN_ADD_NEW_MODAL,
   DELETE_PHRASE,
   SHARE_PHRASE,
-  SHARE_ALL_PHRASES
+  SHARE_ALL_PHRASES,
+  SHARE_DICTIONARY
 } from '../actions/types';
 import * as actions from '../actions';
 
@@ -122,7 +124,8 @@ class PhrasesList extends Component {
               }
             }}
             onDelete={item => this.props.deletePhrase(item)}
-            onShare={item => store.dispatch({ type: SHARE_PHRASE, phrase: item })}
+            onShare={item =>
+              store.dispatch({ type: SHARE_PHRASE, phrase: item })}
           />
         )}
         ItemSeparatorComponent={Separator}
@@ -148,9 +151,15 @@ class PhrasesList extends Component {
             <Button
               iconRight
               icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}
-              title="SHARE ALL PHRAZES"
+              title="SHARE THIS DICTIONARY"
               backgroundColor={colors.secondary}
-              onPress={() => store.dispatch({ type: SHARE_ALL_PHRASES })}
+              onPress={() => store.dispatch({ type: SHARE_DICTIONARY })}
+              onLongPress={() => {
+                ActionSheetIOS.showActionSheetWithOptions(
+                  { options: ['Share This Dictionary', 'Share All Phrazes', 'Cancel'], cancelButtonIndex: 2 },
+                  i => (i < 2) && store.dispatch({ type: [SHARE_DICTIONARY, SHARE_ALL_PHRASES][i] })
+                );
+              }}
             />
             {this.props.offline && <OfflineBar />}
           </View>

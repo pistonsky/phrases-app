@@ -3,8 +3,11 @@ import { Alert, Linking, Platform, Share } from 'react-native';
 import qs from 'qs';
 import {
   getUserId,
+  getCurrentDictionaryName,
   getOffline,
-  anyUnsyncedPhrases
+  anyUnsyncedPhrases,
+  getData,
+  getAllPhrases
 } from '../reducers/selectors';
 import {
   CANCEL_SHARE,
@@ -12,6 +15,8 @@ import {
   SHARE_PHRASE_COMPLETED,
   SHARE_ALL_PHRASES,
   SHARE_ALL_PHRASES_COMPLETED,
+  SHARE_DICTIONARY,
+  SHARE_DICTIONARY_COMPLETED,
   SHOW_SYNC_MODAL,
   HIDE_SYNC_MODAL,
   PHRASE_SYNCED,
@@ -22,9 +27,10 @@ import store from '../store';
 
 const shareSaga = function* shareSaga() {
   while (true) {
-    const { shareSingle, shareAll } = yield race({
-      shareSingle: take(SHARE_PHRASE),
-      shareAll: take(SHARE_ALL_PHRASES)
+    const { _shareSingle, _shareAll, _shareDictionary } = yield race({
+      _shareSingle: take(SHARE_PHRASE),
+      _shareAll: take(SHARE_ALL_PHRASES),
+      _shareDictionary: take(SHARE_DICTIONARY)
     });
     if (yield select(getOffline)) {
       Alert.alert(
@@ -39,8 +45,8 @@ const shareSaga = function* shareSaga() {
         ]
       );
     } else {
-      if (shareSingle) {
-        const { phrase } = shareSingle;
+      if (_shareSingle) {
+        const { phrase } = _shareSingle;
         if (phrase.synced === false) {
           yield race({
             cancel: take(CANCEL_SHARE),
@@ -50,7 +56,7 @@ const shareSaga = function* shareSaga() {
           yield call(sharePhrase, phrase);
         }
       }
-      if (shareAll) {
+      if (_shareAll) {
         if (yield select(anyUnsyncedPhrases)) {
           yield race({
             cancel: take(CANCEL_SHARE),
@@ -59,6 +65,19 @@ const shareSaga = function* shareSaga() {
         } else {
           const user_id = yield select(getUserId);
           yield call(shareAllPhrases, user_id);
+        }
+      }
+      if (_shareDictionary) {
+        const dictionary = yield select(getCurrentDictionaryName);
+        const phrases_to_sync = yield select(getData); // current dictionary
+        if (phrases_to_sync.some(e => e.synced === false)) {
+          yield race({
+            cancel: take(CANCEL_SHARE),
+            share: call(waitUntilSyncedThenShareDictionary, dictionary)
+          });
+        } else {
+          const user_id = yield select(getUserId);
+          yield call(shareDictionary, { user_id, dictionary });
         }
       }
     }
@@ -111,6 +130,42 @@ const waitUntilSyncedThenShare = function* waitUntilSyncedThenShare(phrase) {
   return true;
 };
 
+const waitUntilSyncedThenShareDictionary = function* waitUntilSyncedThenShareDictionary(
+  dictionary
+) {
+  try {
+    yield put({ type: SHOW_SYNC_MODAL });
+    while (true) {
+      const { single, all } = yield race({
+        single: take(PHRASE_SYNCED),
+        all: take(ALL_PHRASES_SYNCED)
+      });
+      if (all) break;
+      if (single) {
+        if (
+          (yield select(getAllPhrases))
+            .filter(e => e.dictionary === dictionary)
+            .all(e => e.synced !== false)
+        ) {
+          break;
+        }
+      }
+    }
+    const user_id = yield select(getUserId);
+    requestAnimationFrame(() => {
+      store.dispatch({ type: HIDE_SYNC_MODAL });
+      requestAnimationFrame(() => {
+        shareDictionary({ user_id, dictionary });
+      });
+    });
+  } finally {
+    if (yield cancelled()) {
+      yield put({ type: HIDE_SYNC_MODAL });
+    }
+  }
+  return true;
+};
+
 const sharePhrase = function sharePhrase(phrase) {
   const url =
     config.BASE_URL +
@@ -146,6 +201,25 @@ const shareAllPhrases = function shareAllPhrases(user_id) {
     { message, title: 'Phrazes', url },
     { dialogTitle: 'Share all your phrazes' }
   ).then(e => store.dispatch({ type: SHARE_ALL_PHRASES_COMPLETED }));
+  return true;
+};
+
+const shareDictionary = function shareDictionary({ user_id, dictionary }) {
+  const url =
+    config.BASE_URL +
+    '/share?' +
+    qs.stringify({
+      user_id,
+      dictionary
+    });
+  let message = `Check these phrazes - ${dictionary}`;
+  if (Platform.OS !== 'ios') {
+    message += ` ${url}`;
+  }
+  Share.share(
+    { message, title: 'Phrazes', url },
+    { dialogTitle: `Share "${dictionary}"` }
+  ).then(e => store.dispatch({ type: SHARE_DICTIONARY_COMPLETED }));
   return true;
 };
 

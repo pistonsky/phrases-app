@@ -16,8 +16,8 @@ export const addPhrase = async (phrase, user_id) => {
   return result;
 };
 
-export const getPhrases = async user_id => {
-  const query = qs.stringify({ user_id });
+export const getPhrases = async (params) => { // params: { user_id, dictionary }
+  const query = qs.stringify(params);
   const url = config.BASE_URL + '/?' + query;
   const result = await axios.get(url);
   return result;

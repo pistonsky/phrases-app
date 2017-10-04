@@ -6,6 +6,7 @@ import {
   ADD_NEW_PHRASE,
   ADD_SHARED_PHRASE,
   ADD_SHARED_PHRASES,
+  ADD_SHARED_DICTIONARY,
   PHRASE_UPLOADED,
   PHRASE_SYNCED,
   DATA_LOADING,
@@ -119,6 +120,16 @@ export default function(state = INITIAL_STATE, action) {
           })
         ],
         dictionaries
+      };
+
+    case ADD_SHARED_DICTIONARY:
+      const shared_dictionary_name = action.phrases[0].dictionary;
+      return {
+        ...state,
+        data: [...state.data, ...action.phrases],
+        dictionaries: state.dictionaries.map(e => {
+          return { ...e, selected: e.name === shared_dictionary_name };
+        })
       };
 
     case DATA_LOADED:
@@ -237,26 +248,62 @@ export default function(state = INITIAL_STATE, action) {
       const { old_name, new_name } = action;
       return {
         ...state,
-        data: state.data.map(e => e.dictionary === old_name ? { ...e, dictionary: new_name } : e),
-        dictionaries: state.dictionaries.map(e => e.name === old_name ? { ...e, name: new_name } : e)
+        data: state.data.map(
+          e => (e.dictionary === old_name ? { ...e, dictionary: new_name } : e)
+        ),
+        dictionaries: state.dictionaries.map(
+          e => (e.name === old_name ? { ...e, name: new_name } : e)
+        )
       };
 
     case TOGGLE_DICTIONARY_SELECTOR:
       // case when user deletes currently selected dictionary but doesn't select any other
       if (state.dictionaries.filter(e => e.selected === true).length === 0) {
-        if (state.dictionaries.filter(e => e.name === DEFAULT_DICTIONARY_NAME).length === 0) {
-          if (state.dictionaries.filter(e => e.name === SHARED_DICTIONARY_NAME).length === 0) {
+        if (
+          state.dictionaries.filter(e => e.name === DEFAULT_DICTIONARY_NAME)
+            .length === 0
+        ) {
+          if (
+            state.dictionaries.filter(e => e.name === SHARED_DICTIONARY_NAME)
+              .length === 0
+          ) {
             if (state.dictionaries.length > 0) {
-              return { ...state, dictionaries: state.dictionaries.map((e, i) => i === 0 ? { ...e, selected: true } : e)};
+              return {
+                ...state,
+                dictionaries: state.dictionaries.map(
+                  (e, i) => (i === 0 ? { ...e, selected: true } : e)
+                )
+              };
             } else {
               // no dictionaries left!
-              return { ...state, dictionaries: [{ name: DEFAULT_DICTIONARY_NAME, selected: true }] };
+              return {
+                ...state,
+                dictionaries: [
+                  { name: DEFAULT_DICTIONARY_NAME, selected: true }
+                ]
+              };
             }
           } else {
-            return { ...state, dictionaries: state.dictionaries.map(e => e.name === SHARED_DICTIONARY_NAME ? { ...e, selected: true } : e)};
+            return {
+              ...state,
+              dictionaries: state.dictionaries.map(
+                e =>
+                  e.name === SHARED_DICTIONARY_NAME
+                    ? { ...e, selected: true }
+                    : e
+              )
+            };
           }
         } else {
-          return { ...state, dictionaries: state.dictionaries.map(e => e.name === DEFAULT_DICTIONARY_NAME ? { ...e, selected: true } : e)};
+          return {
+            ...state,
+            dictionaries: state.dictionaries.map(
+              e =>
+                e.name === DEFAULT_DICTIONARY_NAME
+                  ? { ...e, selected: true }
+                  : e
+            )
+          };
         }
       } else return state;
 

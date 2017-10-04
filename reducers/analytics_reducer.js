@@ -4,7 +4,8 @@ import {
   FACEBOOK_CONNECT_FAILED,
   ADD_NEW_PHRASE,
   SHARE_PHRASE_COMPLETED,
-  SHARE_ALL_PHRASES_COMPLETED
+  SHARE_ALL_PHRASES_COMPLETED,
+  SHARE_DICTIONARY_COMPLETED
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -51,6 +52,14 @@ export default function(state = INITIAL_STATE, action) {
       };
 
     case SHARE_ALL_PHRASES_COMPLETED:
+      return {
+        ...state,
+        [action.type]: (state[action.type] || 0) + 1,
+        show_facebook_modal:
+          [1, 5, 10].indexOf((state[action.type] || 0) + 1) !== -1
+      };
+
+    case SHARE_DICTIONARY_COMPLETED:
       return {
         ...state,
         [action.type]: (state[action.type] || 0) + 1,

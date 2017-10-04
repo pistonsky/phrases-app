@@ -18,6 +18,7 @@ import {
   RECORDING_PERMISSIONS_DENIED,
   ADD_SHARED_PHRASE,
   ADD_SHARED_PHRASES,
+  ADD_SHARED_DICTIONARY,
   GO_ONLINE,
   GO_OFFLINE
 } from '../actions/types';
@@ -66,9 +67,15 @@ class MainScreen extends Component {
     if (queryString) {
       let data = qs.parse(queryString);
       if (data.user_id) {
-        // it was a "share all phrases" link
-        const { data: { phrases } } = await api.getPhrases(data.user_id);
-        store.dispatch({ type: ADD_SHARED_PHRASES, phrases });
+        if (data.dictionary) {
+          // it was a "share this dictionary" link
+          const { data: { phrases } } = await api.getPhrases({ user_id: data.user_id, dictionary: data.dictionary });
+          store.dispatch({ type: ADD_SHARED_DICTIONARY, phrases });
+        } else {
+          // it was a "share all phrases" link
+          const { data: { phrases } } = await api.getPhrases({ user_id: data.user_id });
+          store.dispatch({ type: ADD_SHARED_PHRASES, phrases });
+        }
       }
       if (data.uri) {
         const phrase = {
