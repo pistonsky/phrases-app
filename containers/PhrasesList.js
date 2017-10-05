@@ -166,6 +166,7 @@ class PhrasesList extends Component {
         }
         refreshing={this.props.data_loading}
         onRefresh={() => this.props.refreshPhrases(this.props.user_id)}
+        initialNumToRender={15}
       />
     );
   }

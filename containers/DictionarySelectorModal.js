@@ -162,6 +162,7 @@ class DictionarySelectorModal extends Component {
                 offset: 40 * index,
                 index
               })}
+              initialNumToRender={17}
             />
           </BlurView>
         </KeyboardAvoidingView>
