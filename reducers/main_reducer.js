@@ -126,8 +126,11 @@ export default function(state = INITIAL_STATE, action) {
       const shared_dictionary_name = action.phrases[0].dictionary;
       return {
         ...state,
-        data: [...state.data, ...action.phrases],
-        dictionaries: state.dictionaries.map(e => {
+        data: [...state.data, ...action.phrases.map(e => ({ ...e, synced: false, uploaded: true }))],
+        dictionaries: [
+          ...state.dictionaries,
+          { name: shared_dictionary_name }
+        ].map(e => {
           return { ...e, selected: e.name === shared_dictionary_name };
         })
       };
