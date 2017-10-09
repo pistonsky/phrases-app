@@ -6,3 +6,4 @@ export Button from './Button';
 export NoPermissionsSlide from './form/NoPermissionsSlide';
 export RecordingSlide from './form/RecordingSlide';
 export OfflineBar from './OfflineBar';
+export RecButton from './RecButton';

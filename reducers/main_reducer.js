@@ -12,6 +12,7 @@ import {
   DATA_LOADING,
   DATA_LOADED,
   DATA_LOADING_FAILED,
+  UPDATE_PHRASE,
   DELETE_PHRASE,
   SKIP_WELCOME_SCREENS,
   ADD_DICTIONARY,
@@ -126,7 +127,10 @@ export default function(state = INITIAL_STATE, action) {
       const shared_dictionary_name = action.phrases[0].dictionary;
       return {
         ...state,
-        data: [...state.data, ...action.phrases.map(e => ({ ...e, synced: false, uploaded: true }))],
+        data: [
+          ...state.data,
+          ...action.phrases.map(e => ({ ...e, synced: false, uploaded: true }))
+        ],
         dictionaries: [
           ...state.dictionaries,
           { name: shared_dictionary_name }
@@ -183,6 +187,22 @@ export default function(state = INITIAL_STATE, action) {
 
     case DATA_LOADING_FAILED:
       return { ...state, data_loading: false };
+
+    case UPDATE_PHRASE:
+      return {
+        ...state,
+        data: state.data.map(
+          e =>
+            e.uri === action.phrase.uri
+              ? {
+                  ...e,
+                  ...action.update,
+                  uploaded: action.audio_modified ? false : true,
+                  synced: false
+                }
+              : e
+        )
+      };
 
     case DELETE_PHRASE:
       return {

@@ -6,13 +6,18 @@ import {
   RECORDING_PERMISSIONS_DENIED,
   RECORDING_PERMISSIONS_GRANTED,
   HIDE_SYNC_MODAL,
-  SHOW_SYNC_MODAL
+  SHOW_SYNC_MODAL,
+  CLOSE_PHRASE_MODAL,
+  OPEN_PHRASE,
+  UPDATE_PHRASE
 } from '../actions/types';
 
 const INITIAL_STATE = {
   show_dictionaries_selector: false,
   show_recording_permissions_modal: false,
-  show_sync_modal: false
+  show_sync_modal: false,
+  show_phrase_modal: false,
+  opened_phrase: null
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -39,6 +44,19 @@ export default function(state = INITIAL_STATE, action) {
 
     case HIDE_SYNC_MODAL:
       return { ...state, show_sync_modal: false };
+
+    case OPEN_PHRASE:
+      return {
+        ...state,
+        show_phrase_modal: true,
+        opened_phrase: action.phrase
+      };
+
+    case UPDATE_PHRASE:
+      return { ...state, show_phrase_modal: false, opened_phrase: null };
+
+    case CLOSE_PHRASE_MODAL:
+      return { ...state, show_phrase_modal: false, opened_phrase: null };
 
     default:
       return state;

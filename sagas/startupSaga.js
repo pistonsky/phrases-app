@@ -4,7 +4,7 @@ import { getUserId } from '../reducers/selectors';
 import { Actions } from 'react-native-router-flux';
 import { ROUTER_READY } from '../actions/types';
 
-import { syncSaga, shareSaga } from './index';
+import { syncSaga, shareSaga, audioSaga } from './index';
 
 const startupSaga = function* startupSaga() {
   yield all([
@@ -18,6 +18,7 @@ const startupSaga = function* startupSaga() {
     yield call(Actions.welcome);
   }
   yield fork(shareSaga);
+  yield fork(audioSaga);
   yield call(syncSaga);
 }
 

@@ -5,6 +5,7 @@ import item_screen from './item_screen_reducer';
 import form from './form_reducer';
 import analytics from './analytics_reducer';
 import ui from './ui_reducer';
+import audio from './audio_reducer';
 
 export default combineReducers({
   auth,
@@ -12,5 +13,6 @@ export default combineReducers({
   item_screen,
   form,
   analytics,
-  ui
+  ui,
+  audio
 });

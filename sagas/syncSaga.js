@@ -11,6 +11,7 @@ import {
 } from '../reducers/selectors';
 import {
   ADD_NEW_PHRASE,
+  UPDATE_PHRASE,
   ADD_SHARED_PHRASE,
   ADD_SHARED_PHRASES,
   ADD_SHARED_DICTIONARY,
@@ -30,8 +31,8 @@ const syncSaga = function* syncSaga() {
       (yield call(sync)) || (yield delay(INTERVAL));
     }
     yield put({ type: ALL_PHRASES_SYNCED });
-    // wait for new phrases
-    yield take([ADD_NEW_PHRASE, ADD_SHARED_DICTIONARY, ADD_SHARED_PHRASES, ADD_SHARED_PHRASE]);
+    // wait for new or updated phrases
+    yield take([ADD_NEW_PHRASE, UPDATE_PHRASE, ADD_SHARED_DICTIONARY, ADD_SHARED_PHRASES, ADD_SHARED_PHRASE]);
   }
 };
 

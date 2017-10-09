@@ -1,22 +1,22 @@
 import React, { PureComponent } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '../styles/colors';
-
-const NOT_YET_LOADED_OPACITY = 0.9;
+import ListItemShort from './ListItemShort';
 
 export default class ListItem extends PureComponent {
   render() {
-    const { original, translated, recording, uri, localUri } = this.props.item;
-
-    let short = (original.length + translated.length) < 27;
+    const { original, translated, recording, uri } = this.props.item;
 
     return (
       <Swipeout
-        key={localUri}
         autoClose
         right={[
+          {
+            text: 'Edit',
+            backgroundColor: colors.secondary_dark,
+            onPress: () => this.props.onEdit(this.props.item)
+          },
           {
             text: 'Share',
             backgroundColor: colors.primary_dark,
@@ -29,58 +29,14 @@ export default class ListItem extends PureComponent {
           }
         ]}
       >
-        {short
-          ? <TouchableHighlight
-              style={[styles.container, { opacity: this.props.loaded ? 1 : NOT_YET_LOADED_OPACITY, backgroundColor: this.props.uploaded ? '#eee' : '#fee' }]}
-              activeOpacity={1}
-              underlayColor="#ddd"
-              onPress={() => this.props.onPress(this.props.item)}
-            >
-              <View
-                style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-              >
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{original}</Text>
-                <FontAwesome
-                  name="long-arrow-right"
-                  size={20}
-                  color="#4af"
-                  style={{ backgroundColor: 'transparent' }}
-                />
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                  {translated}
-                </Text>
-              </View>
-            </TouchableHighlight>
-          : <TouchableHighlight
-              style={[styles.container, { opacity: this.props.loaded ? 1 : NOT_YET_LOADED_OPACITY, backgroundColor: this.props.uploaded ? '#eee' : '#fee' }]}
-              activeOpacity={1}
-              underlayColor="#ddd"
-              onPress={() => this.props.onPress(this.props.item)}
-            >
-              <View
-                style={{ flexDirection: 'column', justifyContent: 'flex-start' }}
-              >
-                <Text
-                  style={{ fontSize: 20, fontWeight: 'bold' }}
-                  numberOfLines={1}
-                >
-                  {original}
-                </Text>
-                <Text style={{ fontSize: 15, color: '#444' }} numberOfLines={1}>
-                  {translated}
-                </Text>
-              </View>
-            </TouchableHighlight>}
+        <ListItemShort
+          item={this.props.item}
+          loaded={this.props.loaded}
+          uploaded={this.props.uploaded}
+          onPress={() => this.props.onPress(this.props.item)}
+          onLongPress={() => this.props.onEdit(this.props.item)}
+        />
       </Swipeout>
     );
   }
 }
-
-const styles = {
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: '#eee',
-    padding: 10
-  }
-};

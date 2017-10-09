@@ -30,7 +30,8 @@ import {
   DELETE_PHRASE,
   SHARE_PHRASE,
   SHARE_ALL_PHRASES,
-  SHARE_DICTIONARY
+  SHARE_DICTIONARY,
+  OPEN_PHRASE
 } from '../actions/types';
 import * as actions from '../actions';
 
@@ -126,6 +127,7 @@ class PhrasesList extends Component {
             onDelete={item => this.props.deletePhrase(item)}
             onShare={item =>
               store.dispatch({ type: SHARE_PHRASE, phrase: item })}
+            onEdit={item => store.dispatch({ type: OPEN_PHRASE, phrase: item })}
           />
         )}
         ItemSeparatorComponent={Separator}

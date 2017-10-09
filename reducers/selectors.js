@@ -13,6 +13,7 @@ export const getRecordingPermissions = state =>
   state.main.recording_permissions;
 export const shouldShowRecordingPermissionsSecondaryModal = state =>
   state.ui.show_recording_permissions_modal;
+export const shouldShowPhraseModal = state => state.ui.show_phrase_modal;
 
 export const getOriginalPhrase = state => state.form.original;
 export const getTranslatedPhrase = state => state.form.translated;
@@ -45,3 +46,10 @@ export const anyUnsyncedPhrases = state => {
   return getUnsyncedPhrases(state).length;
 };
 export const shouldShowSyncModal = state => state.ui.show_sync_modal;
+
+// open phrase
+export const getOpenedPhrase = state => state.ui.opened_phrase;
+
+// audio cache
+export const getAudioCache = state => state.audio.cache;
+export const getCachedAudioUri = (state, uri) => state.audio.cache[uri];

@@ -1,3 +1,3 @@
-import * as styles from './style';
+import * as generalStyles from './style';
 
-export default styles;
+export default generalStyles;
