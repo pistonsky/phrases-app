@@ -1,3 +1,8 @@
+## 0.9.0 (October 10, 2017)
+
+* Edit phrase feature.
+* When sharing, add shared phrases to recipient's account.
+
 ## 0.8.1 (October 4, 2017)
 
 * Share dictionary feature now keeps original dictionary name.
