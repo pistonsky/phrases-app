@@ -47,6 +47,8 @@ export const PHRASE_UPLOADED = 'PHRASE_UPLOADED'; // audio uploaded
 export const PHRASE_SYNCED = 'PHRASE_SYNCED'; // entire phrase is synced
 export const ALL_PHRASES_SYNCED = 'ALL_PHRASES_SYNCED'; // all phrases are now synced, enable sharing
 export const PLAY_PHRASE = 'PLAY_PHRASE';
+export const PLAY_ALL = 'PLAY_ALL';
+export const PLAYBACK_JUST_FINISHED = 'PLAYBACK_JUST_FINISHED';
 
 export const TOGGLE_DICTIONARY_SELECTOR = 'TOGGLE_DICTIONARY_SELECTOR';
 export const ADD_DICTIONARY = 'ADD_DICTIONARY';

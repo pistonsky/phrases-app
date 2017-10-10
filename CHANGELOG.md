@@ -1,3 +1,8 @@
+## 1.0.0 (October 10, 2017)
+
+* Play all feature.
+* Fixed edit phrase form for multi-line phrases.
+
 ## 0.9.0 (October 10, 2017)
 
 * Edit phrase feature.

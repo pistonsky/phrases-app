@@ -3,8 +3,13 @@ import { Alert, Platform, StatusBar } from 'react-native';
 import { Audio, FileSystem } from 'expo';
 
 import { getCachedAudioUri } from '../reducers/selectors';
-import { PLAY_PHRASE, AUDIO_CACHED } from '../actions/types';
+import {
+  PLAY_PHRASE,
+  AUDIO_CACHED,
+  PLAYBACK_JUST_FINISHED
+} from '../actions/types';
 import * as config from '../utils/config';
+import store from '../store';
 
 const audioSaga = function* audioSaga() {
   yield takeEvery(PLAY_PHRASE, playPhrase);
@@ -21,12 +26,25 @@ const playPhrase = function* playPhrase(action) {
   }
 
   try {
-    Audio.Sound.create(
+    yield call(
+      Audio.Sound.create,
       { uri: localUri },
-      { shouldPlay: true }
+      { shouldPlay: true },
+      playbackStatus => {
+        if (playbackStatus.didJustFinish)
+          store.dispatch({ type: PLAYBACK_JUST_FINISHED });
+      }
     );
   } catch (e) {
     Alert.alert('No Sound', 'The pronounciation for this phrase is missing.');
+  }
+};
+
+const playbackStatusUpdateCallback = function* playbackStatusUpdateCallback(
+  playbackStatus
+) {
+  if (playbackStatus.didJustFinish) {
+    console.log(playbackStatus.didJustFinish);
   }
 };
 

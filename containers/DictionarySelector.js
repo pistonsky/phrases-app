@@ -12,7 +12,12 @@ class DictionarySelector extends Component {
   render() {
     return (
       <TouchableOpacity
-        style={{ flexDirection: 'row', alignItems: 'center' }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1
+        }}
         onPress={() => store.dispatch({ type: TOGGLE_DICTIONARY_SELECTOR })}
       >
         <Text

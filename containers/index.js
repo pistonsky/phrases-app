@@ -7,3 +7,4 @@ export DictionarySelector from './DictionarySelector';
 export DictionarySelectorModal from './DictionarySelectorModal';
 export SyncModal from './SyncModal';
 export PhraseModal from './PhraseModal';
+export NavBar from './NavBar';

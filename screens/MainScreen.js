@@ -28,13 +28,6 @@ import colors from '../styles/colors';
 import * as api from '../api';
 
 class MainScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: `Phrazes`,
-    headerStyle: styles.navBarStyle,
-    headerTintColor: colors.white,
-    back: false
-  });
-
   componentDidMount() {
     Linking.getInitialURL().then(url => {
       this._handleDeepLink(url);

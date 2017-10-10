@@ -5,7 +5,13 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export const navBarStyle = {
-  backgroundColor: colors.secondary
+  backgroundColor: colors.secondary,
+  paddingTop: 20,
+  width: SCREEN_WIDTH,
+  height: 60,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  flexDirection: 'row'
 };
 
 export const navBarTitle = {

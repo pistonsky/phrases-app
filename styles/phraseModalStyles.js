@@ -42,11 +42,14 @@ export const originalContainer = {
 };
 
 export const touchable = {
-  flex: 1,
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
   paddingVertical: 20,
   justifyContent: 'center',
-  alignItems: 'center',
-  width: SCREEN_WIDTH
+  alignItems: 'center'
 };
 
 export const playContainer = {

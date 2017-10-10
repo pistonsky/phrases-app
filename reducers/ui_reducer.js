@@ -9,7 +9,8 @@ import {
   SHOW_SYNC_MODAL,
   CLOSE_PHRASE_MODAL,
   OPEN_PHRASE,
-  UPDATE_PHRASE
+  UPDATE_PHRASE,
+  PLAY_ALL
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -17,7 +18,8 @@ const INITIAL_STATE = {
   show_recording_permissions_modal: false,
   show_sync_modal: false,
   show_phrase_modal: false,
-  opened_phrase: null
+  opened_phrase: null,
+  play_all_mode: false
 };
 
 export default function(state = INITIAL_STATE, action) {
@@ -56,7 +58,15 @@ export default function(state = INITIAL_STATE, action) {
       return { ...state, show_phrase_modal: false, opened_phrase: null };
 
     case CLOSE_PHRASE_MODAL:
-      return { ...state, show_phrase_modal: false, opened_phrase: null };
+      return {
+        ...state,
+        show_phrase_modal: false,
+        opened_phrase: null,
+        play_all_mode: false
+      };
+
+    case PLAY_ALL:
+      return { ...state, play_all_mode: true };
 
     default:
       return state;

@@ -11,13 +11,18 @@ import {
   KeyboardAvoidingView,
   Platform,
   LayoutAnimation,
-  NativeModules
+  NativeModules,
+  Image
 } from 'react-native';
 import { Audio, BlurView, FileSystem } from 'expo';
 import { Icon } from 'react-native-elements';
 import { FontAwesome } from '@expo/vector-icons';
 import { RecButton } from '../components';
-import { shouldShowPhraseModal, getOpenedPhrase } from '../reducers/selectors';
+import {
+  shouldShowPhraseModal,
+  getOpenedPhrase,
+  isPlayAllMode
+} from '../reducers/selectors';
 import {
   CLOSE_PHRASE_MODAL,
   PLAY_PHRASE,
@@ -47,11 +52,16 @@ class PhraseModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.visible && nextProps.visible) {
-      // overwrite only when modal is opened
+    if (
+      nextProps.visible &&
+      (!this.props.visible || this.props.phrase.uri !== nextProps.phrase.uri)
+    ) {
+      // overwrite only when modal is opened or "play all" is going on
       this.setState({
         original: nextProps.phrase.original,
         translated: nextProps.phrase.translated,
+        original_editable: false,
+        translated_editable: false,
         audio_modified: false,
         audio: null
       });
@@ -73,8 +83,39 @@ class PhraseModal extends Component {
         <BlurView tint="dark" intensity={100} style={styles.container}>
           <View style={styles.topContainer} />
           <View style={styles.centerContainer}>
-            <View style={styles.originalContainer}>
-              {this.state.original_editable ? (
+            {this.state.original_editable ? (
+              <View style={styles.originalContainer}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: smartFontSize({
+                        max: 35,
+                        min: 20,
+                        threshold: 14,
+                        text: this.state.original
+                      }),
+                      fontWeight: 'normal',
+                      color: 'transparent',
+                      textAlign: 'center',
+                      paddingHorizontal: 10
+                    }}
+                    onLayout={({ nativeEvent: { layout: { height } } }) => {
+                      if (this.state.original_height !== height) {
+                        this.setState({ original_height: height });
+                      }
+                    }}
+                  >
+                    {original}
+                  </Text>
+                </View>
                 <TextInput
                   style={{
                     backgroundColor: 'transparent',
@@ -85,8 +126,9 @@ class PhraseModal extends Component {
                       text: this.state.original
                     }),
                     color: '#eee',
-                    textAlign: 'center',
                     width: '100%',
+                    height: Math.max(20, this.state.original_height || 0),
+                    textAlign: 'center',
                     paddingHorizontal: 10
                   }}
                   multiline={true}
@@ -110,13 +152,19 @@ class PhraseModal extends Component {
                     this.setState({ original_editable: false });
                   }}
                 />
-              ) : (
+              </View>
+            ) : (
+              <View style={styles.originalContainer}>
                 <TouchableHighlight
-                  activeOpacity={0.5}
-                  underlayColor={colors.white}
+                  activeOpacity={this.props.play_all_mode ? 1 : 0.5}
+                  underlayColor={
+                    this.props.play_all_mode ? 'transparent' : colors.white
+                  }
                   onPress={() => {
-                    LayoutAnimation.spring();
-                    this.setState({ original_editable: true });
+                    if (!this.props.play_all_mode) {
+                      LayoutAnimation.spring();
+                      this.setState({ original_editable: true });
+                    }
                   }}
                   style={styles.touchable}
                 >
@@ -137,9 +185,25 @@ class PhraseModal extends Component {
                     {original}
                   </Text>
                 </TouchableHighlight>
-              )}
-            </View>
-            {!this.state.original_editable &&
+              </View>
+            )}
+            {this.props.play_all_mode && (
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Image
+                  style={{ width: 80, height: 80 }}
+                  source={require('../assets/icons/loading.png')}
+                />
+              </View>
+            )}
+            {!this.props.play_all_mode &&
+              !this.state.original_editable &&
               !this.state.translated_editable && (
                 <View style={styles.playContainer}>
                   {this.state.audio_modified ? (
@@ -204,8 +268,39 @@ class PhraseModal extends Component {
                   </View>
                 </View>
               )}
-            <View style={styles.originalContainer}>
-              {this.state.translated_editable ? (
+            {this.state.translated_editable ? (
+              <View style={styles.originalContainer}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: smartFontSize({
+                        max: 35,
+                        min: 20,
+                        threshold: 14,
+                        text: this.state.translated
+                      }),
+                      fontWeight: 'normal',
+                      color: 'transparent',
+                      textAlign: 'center',
+                      paddingHorizontal: 10
+                    }}
+                    onLayout={({ nativeEvent: { layout: { height } } }) => {
+                      if (this.state.translated_height !== height) {
+                        this.setState({ translated_height: height });
+                      }
+                    }}
+                  >
+                    {translated}
+                  </Text>
+                </View>
                 <TextInput
                   style={{
                     backgroundColor: 'transparent',
@@ -218,6 +313,7 @@ class PhraseModal extends Component {
                     color: '#eee',
                     textAlign: 'center',
                     width: '100%',
+                    height: Math.max(20, this.state.translated_height || 0),
                     paddingHorizontal: 10
                   }}
                   multiline={true}
@@ -241,13 +337,19 @@ class PhraseModal extends Component {
                     this.setState({ translated_editable: false });
                   }}
                 />
-              ) : (
+              </View>
+            ) : (
+              <View style={styles.originalContainer}>
                 <TouchableHighlight
-                  activeOpacity={0.1}
-                  underlayColor={colors.white}
+                  activeOpacity={this.props.play_all_mode ? 1 : 0.5}
+                  underlayColor={
+                    this.props.play_all_mode ? 'transparent' : colors.white
+                  }
                   onPress={() => {
-                    LayoutAnimation.spring();
-                    this.setState({ translated_editable: true });
+                    if (!this.props.play_all_mode) {
+                      LayoutAnimation.spring();
+                      this.setState({ translated_editable: true });
+                    }
                   }}
                   style={styles.touchable}
                 >
@@ -268,49 +370,55 @@ class PhraseModal extends Component {
                     {translated}
                   </Text>
                 </TouchableHighlight>
-              )}
-            </View>
+              </View>
+            )}
           </View>
           <View style={styles.bottomContainer}>
-            <TouchableOpacity
-              onPress={() => store.dispatch({ type: CLOSE_PHRASE_MODAL })}
-            >
-              <View style={styles.cancelContainer}>
-                <Icon
-                  name="ios-close-circle"
-                  type="ionicon"
-                  size={50}
-                  color={colors.white}
-                />
-                <Text style={styles.iconLabel}>Cancel</Text>
-              </View>
-            </TouchableOpacity>
+            {!this.props.play_all_mode && (
+              <TouchableOpacity
+                onPress={() => store.dispatch({ type: CLOSE_PHRASE_MODAL })}
+              >
+                <View style={styles.cancelContainer}>
+                  <Icon
+                    name="ios-close-circle"
+                    type="ionicon"
+                    size={50}
+                    color={colors.white}
+                  />
+                  <Text style={styles.iconLabel}>Cancel</Text>
+                </View>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={async () => {
-                if (this.state.audio_modified && this.state.audio) {
-                  await FileSystem.moveAsync({
-                    from: this.state.audio.getURI(),
-                    to:
-                      FileSystem.documentDirectory +
-                      this.props.phrase.uri +
-                      '.caf'
-                  });
-                  store.dispatch({
-                    type: UPDATE_PHRASE,
-                    phrase: this.props.phrase,
-                    update: { original, translated },
-                    audio_modified: true
-                  });
+                if (this.props.play_all_mode) {
+                  store.dispatch({ type: CLOSE_PHRASE_MODAL });
                 } else {
-                  store.dispatch({
-                    type: UPDATE_PHRASE,
-                    phrase: this.props.phrase,
-                    update: { original, translated }
-                  });
+                  if (this.state.audio_modified && this.state.audio) {
+                    await FileSystem.moveAsync({
+                      from: this.state.audio.getURI(),
+                      to:
+                        FileSystem.documentDirectory +
+                        this.props.phrase.uri +
+                        '.caf'
+                    });
+                    store.dispatch({
+                      type: UPDATE_PHRASE,
+                      phrase: this.props.phrase,
+                      update: { original, translated },
+                      audio_modified: true
+                    });
+                  } else {
+                    store.dispatch({
+                      type: UPDATE_PHRASE,
+                      phrase: this.props.phrase,
+                      update: { original, translated }
+                    });
+                  }
                 }
               }}
             >
-              <View style={styles.cancelContainer}>
+              <View style={[styles.cancelContainer, { opacity: 1 }]}>
                 <Icon
                   name="ios-checkmark-circle"
                   type="ionicon"
@@ -330,7 +438,8 @@ class PhraseModal extends Component {
 function mapStateToProps(state) {
   return {
     visible: shouldShowPhraseModal(state),
-    phrase: getOpenedPhrase(state)
+    phrase: getOpenedPhrase(state),
+    play_all_mode: isPlayAllMode(state)
   };
 }
 

@@ -53,3 +53,6 @@ export const getOpenedPhrase = state => state.ui.opened_phrase;
 // audio cache
 export const getAudioCache = state => state.audio.cache;
 export const getCachedAudioUri = (state, uri) => state.audio.cache[uri];
+
+// play all mode
+export const isPlayAllMode = state => state.ui.play_all_mode;
