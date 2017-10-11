@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, Dimensions } from 'react-native';
 import Onboarding from 'react-native-simple-onboarding';
 import { connect } from 'react-redux';
 import { ConnectFacebookModal } from '../containers';
@@ -8,13 +8,18 @@ import { getWelcomeScreens } from '../reducers/selectors';
 
 class WelcomeScreen extends Component {
   renderSlides() {
+    // iPhone 6 Plus = 414
+    // iPhone 6      = 375
+    // iPhone SE     = 320
+    const SCREEN_WIDTH = Dimensions.get('window').width;
+    const size = SCREEN_WIDTH / 320 * 200;
     return [
       ...this.props.guide.map((slide, index) => {
         return {
           backgroundColor: slide.background,
           image: (
             <Image
-              style={{ width: 200, height: 200 }}
+              style={{ width: size, height: size }}
               source={
                 [
                   require('../assets/guide_1.png'),

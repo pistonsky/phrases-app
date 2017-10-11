@@ -38,17 +38,18 @@ const INITIAL_STATE = {
   guide: [
     {
       head: 'Phrazes',
-      body: 'Learn languages\nwith natives',
+      body: 'Learn languages with natives\nphrase by phrase',
       background: colors.primary_dark
     },
     {
-      head: 'Say Accent Bye',
-      body: 'Ask locals\nhow to pronounce it',
+      head: 'Connect with locals',
+      body: 'Ask them to give you some phrases\nthen record how they pronounce it',
+      // body: 'Say goodbye to dictionaries\nlearn from locals',
       background: colors.secondary_dark
     },
     {
       head: 'Share with friends',
-      body: 'Pass on all your dirty phrazes\nand discover new ones',
+      body: 'Pass on all your handy phrazes\nand discover new ones',
       background: colors.primary
     }
   ]
