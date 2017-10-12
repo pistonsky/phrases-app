@@ -7,3 +7,4 @@ export NoPermissionsSlide from './form/NoPermissionsSlide';
 export RecordingSlide from './form/RecordingSlide';
 export OfflineBar from './OfflineBar';
 export RecButton from './RecButton';
+export FadingView from './FadingView';

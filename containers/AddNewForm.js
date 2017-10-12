@@ -22,7 +22,8 @@ import {
   TextInput,
   Button,
   NoPermissionsSlide,
-  RecordingSlide
+  RecordingSlide,
+  FadingView
 } from '../components';
 import {
   getRecordingPermissions,
@@ -252,7 +253,7 @@ class AddNewForm extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: colors.primary }}>
         <ScrollView
           horizontal
           pagingEnabled
@@ -262,24 +263,22 @@ class AddNewForm extends Component {
             this.scrollView = e;
           }}
           onScroll={({ nativeEvent: { contentOffset: { x } } }) => {
-            if (x % SCREEN_WIDTH === 0) {
-              const page = x / SCREEN_WIDTH;
-              store.dispatch({ type: FORM_SCROLL_TO_PAGE, page });
-              if (
-                this.props.haveRecordingPermissions === undefined &&
-                page === 2
-              ) {
-                this._askForPermissions(); // ask for recording permissions when user first sees recording page
-              }
-              if (page === 0) {
-                this._textInput1.focus();
-              }
-              if (page === 1) {
-                this._textInput2.focus();
-              }
-              if (page === 2) {
-                Keyboard.dismiss();
-              }
+            const page = Math.ceil(x / SCREEN_WIDTH);
+            store.dispatch({ type: FORM_SCROLL_TO_PAGE, page });
+            if (
+              this.props.haveRecordingPermissions === undefined &&
+              page === 2
+            ) {
+              this._askForPermissions(); // ask for recording permissions when user first sees recording page
+            }
+            if (page === 0) {
+              this._textInput1.focus();
+            }
+            if (page === 1) {
+              this._textInput2.focus();
+            }
+            if (page === 2) {
+              Keyboard.dismiss();
             }
           }}
         >
@@ -287,35 +286,6 @@ class AddNewForm extends Component {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.formSlide}
           >
-            <View
-              style={{
-                position: 'absolute',
-                top: 40,
-                left: 0,
-                right: 0,
-                height: 50
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
-              >
-                <View
-                  style={{
-                    opacity: 0.5,
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Icon
-                    name="ios-close-circle"
-                    type="ionicon"
-                    size={30}
-                    color={colors.white}
-                  />
-                  <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
             <Text style={styles.formHeader}>Original:</Text>
             <TextInput
               value={this.props.originalPhrase}
@@ -418,6 +388,36 @@ class AddNewForm extends Component {
             />
           )}
         </ScrollView>
+        <FadingView
+          visible={this.props.currentPage !== 2}
+          style={{
+            position: 'absolute',
+            top: 40,
+            left: 0,
+            right: 0,
+            height: 50
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
+          >
+            <View
+              style={{
+                opacity: 0.5,
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}
+            >
+              <Icon
+                name="ios-close-circle"
+                type="ionicon"
+                size={30}
+                color={colors.white}
+              />
+              <Text style={{ color: colors.white, backgroundColor: 'transparent', fontSize: 12 }}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
+        </FadingView>
       </View>
     );
   }
