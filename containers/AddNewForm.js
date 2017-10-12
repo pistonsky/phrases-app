@@ -16,6 +16,7 @@ import {
   Keyboard,
   Button as ReactNativeButton
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { Permissions, Audio, FileSystem } from 'expo';
 import {
   TextInput,
@@ -286,6 +287,35 @@ class AddNewForm extends Component {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.formSlide}
           >
+            <View
+              style={{
+                position: 'absolute',
+                top: 40,
+                left: 0,
+                right: 0,
+                height: 50
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
+              >
+                <View
+                  style={{
+                    opacity: 0.5,
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon
+                    name="ios-close-circle"
+                    type="ionicon"
+                    size={30}
+                    color={colors.white}
+                  />
+                  <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.formHeader}>Original:</Text>
             <TextInput
               value={this.props.originalPhrase}
@@ -363,6 +393,7 @@ class AddNewForm extends Component {
               recordingDuration={this.state.recordingDuration}
               isUploading={this.state.isUploading}
               isPlaying={this.state.isPlaying}
+              isRecording={this.state.isRecording}
               uploaded={this.state.uploaded}
               recorded={this.state.recorded}
               uploadProgress={this.state.uploadProgress}

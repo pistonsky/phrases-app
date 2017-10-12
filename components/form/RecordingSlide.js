@@ -56,58 +56,65 @@ const RecordingSlide = props => {
               />
             ))}
         </Animated.View>
-        <View
-          style={{
-            position: 'absolute',
-            left: '65%',
-            right: 0,
-            top: 0,
-            height: 200,
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: props.recorded ? 0.5 : 0
-          }}
-        >
-          <TouchableOpacity
-            onPress={props.onReset}
-          >
-            <View style={{ alignItems: 'center', justifyContent: 'center', position: 'relative', top: 10 }}>
-              <Icon
-                name="ios-refresh-circle"
-                type="ionicon"
-                size={40}
-                color={colors.white}
-              />
-              <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>Reset</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
-      <Button
-        fontWeight="bold"
-        title="Done!"
-        disabled={!props.recorded}
-        onPress={props.onDone}
-      />
-      <TouchableOpacity
-        onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
-      >
-        <View
-          style={{
-            opacity: 0.5,
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginBottom: 10
-          }}
-        >
-          <Icon
-            name="ios-close-circle"
-            type="ionicon"
-            size={30}
-            color={colors.white}
-          />
-          <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
+      {!props.recorded ? (
+        <View style={{ height: 50, justifyContent: 'center' }}>
+          <Text style={[styles.formHeader, { fontSize: 30 }]}>
+            {(props.recordingDuration > 0) && 'Recording...'}
+          </Text>
         </View>
+      ) : (
+        <Button
+          fontWeight="bold"
+          title="Done!"
+          disabled={!props.recorded}
+          onPress={props.onDone}
+        />
+      )}
+      <TouchableOpacity
+        onPress={() => {
+          if (props.recorded) {
+            props.onReset();
+          } else {
+            store.dispatch({ type: CLOSE_ADD_NEW_MODAL });
+          }
+        }}
+      >
+        {props.recorded ? (
+          <View
+            style={{
+              opacity: 0.7,
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginBottom: 10
+            }}
+          >
+            <Icon
+              name="ios-refresh-circle"
+              type="ionicon"
+              size={40}
+              color={colors.white}
+            />
+            <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>Reset</Text>
+          </View>
+        ) : (
+          <View
+            style={{
+              opacity: 0.5,
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginBottom: 10
+            }}
+          >
+            <Icon
+              name="ios-close-circle"
+              type="ionicon"
+              size={30}
+              color={colors.white}
+            />
+            <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
+          </View>
+        )}
       </TouchableOpacity>
     </View>
   );

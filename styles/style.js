@@ -61,7 +61,8 @@ export const formSlide = {
 export const formHeader = {
   textAlign: 'center',
   fontSize: 50,
-  color: colors.primary_light
+  color: colors.primary_light,
+  marginTop: 50
 };
 
 export const formTextInput = {
@@ -70,7 +71,8 @@ export const formTextInput = {
   backgroundColor: colors.primary_dark,
   color: '#eee',
   fontSize: 70,
-  textAlign: 'center'
+  textAlign: 'center',
+  marginTop: -30
 };
 
 export const button = {
