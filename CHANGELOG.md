@@ -1,3 +1,9 @@
+## 1.0.1 (October 12, 2017)
+
+* Remove the lag when recording first phrase.
+* Add CANCEL button to first 2 slides on the form.
+* Place RESET button on the recording slide to more intuitive place.
+
 ## 1.0.0 (October 10, 2017)
 
 * Play all feature.
