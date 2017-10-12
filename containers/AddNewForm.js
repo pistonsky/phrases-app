@@ -69,7 +69,7 @@ class AddNewForm extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
     if (this.props.haveRecordingPermissions !== undefined) {
       // undefined means we never asked for mic yet
@@ -80,6 +80,41 @@ class AddNewForm extends Component {
       y: 0,
       animated: false
     });
+
+    // the code below is used to speed up the first recording
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      allowsRecordingIOS: true,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
+    });
+    const test_recording = new Audio.Recording();
+    test_recording
+      .prepareToRecordAsync({
+        android: {
+          extension: '.m4a',
+          outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+          audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000
+        },
+        ios: {
+          extension: '.caf',
+          audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MIN,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+          linearPCMBitDepth: 16,
+          linearPCMIsBigEndian: false,
+          linearPCMIsFloat: false
+        }
+      })
+      .then(async status => {
+        await test_recording.startAsync();
+        await test_recording.stopAndUnloadAsync();
+      });
   }
 
   componentWillUnmount() {
@@ -138,26 +173,28 @@ class AddNewForm extends Component {
         interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS
       });
       this.recording = new Audio.Recording();
-      this.recording.prepareToRecordAsync({
-        android: {
-          extension: '.m4a',
-          outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
-          audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
-          sampleRate: 44100,
-          numberOfChannels: 2,
-          bitRate: 128000
-        },
-        ios: {
-          extension: '.caf',
-          audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MIN,
-          sampleRate: 44100,
-          numberOfChannels: 2,
-          bitRate: 128000,
-          linearPCMBitDepth: 16,
-          linearPCMIsBigEndian: false,
-          linearPCMIsFloat: false
-        }
-      }).then(status => this.recording.startAsync());
+      this.recording
+        .prepareToRecordAsync({
+          android: {
+            extension: '.m4a',
+            outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+            audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
+            sampleRate: 44100,
+            numberOfChannels: 2,
+            bitRate: 128000
+          },
+          ios: {
+            extension: '.caf',
+            audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MIN,
+            sampleRate: 44100,
+            numberOfChannels: 2,
+            bitRate: 128000,
+            linearPCMBitDepth: 16,
+            linearPCMIsBigEndian: false,
+            linearPCMIsFloat: false
+          }
+        })
+        .then(status => this.recording.startAsync());
       this._interval = setInterval(async () => {
         const status = await this.recording.getStatusAsync();
         if (status.durationMillis)
@@ -210,8 +247,8 @@ class AddNewForm extends Component {
 
   async _submit() {
     const uri = Math.random()
-        .toString(36)
-        .slice(2);
+      .toString(36)
+      .slice(2);
     // move local recording file to documents directory so we don't lose it
     await FileSystem.moveAsync({
       from: this.recording.getURI(),
@@ -232,10 +269,7 @@ class AddNewForm extends Component {
 
   async _play() {
     this.setState({ isPlaying: true });
-    const {
-      sound,
-      status
-    } = await this.recording.createNewLoadedSound();
+    const { sound, status } = await this.recording.createNewLoadedSound();
     this.sound = sound;
     this.sound.setOnPlaybackStatusUpdate(async playbackStatus => {
       const { positionMillis, durationMillis } = playbackStatus;
@@ -381,7 +415,9 @@ class AddNewForm extends Component {
                 }
               }}
               onTouchEnd={() => {
-                this.state.isRecording && (this.state.recordingDuration > 0) && this._stopRecording();
+                this.state.isRecording &&
+                  this.state.recordingDuration > 0 &&
+                  this._stopRecording();
               }}
               onDone={() => this._submit()}
               onReset={() => this._resetRecording()}
@@ -414,7 +450,15 @@ class AddNewForm extends Component {
                 size={30}
                 color={colors.white}
               />
-              <Text style={{ color: colors.white, backgroundColor: 'transparent', fontSize: 12 }}>Cancel</Text>
+              <Text
+                style={{
+                  color: colors.white,
+                  backgroundColor: 'transparent',
+                  fontSize: 12
+                }}
+              >
+                Cancel
+              </Text>
             </View>
           </TouchableOpacity>
         </FadingView>
