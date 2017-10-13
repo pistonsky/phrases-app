@@ -57,20 +57,21 @@ const RecordingSlide = props => {
             ))}
         </Animated.View>
       </View>
-      {!props.recorded ? (
-        <View style={{ height: 50, justifyContent: 'center' }}>
-          <Text style={[styles.formHeader, { fontSize: 30 }]}>
-            {(props.recordingDuration > 0) && 'Recording...'}
-          </Text>
-        </View>
-      ) : (
-        <Button
-          fontWeight="bold"
-          title="Done!"
-          disabled={!props.recorded}
-          onPress={props.onDone}
-        />
-      )}
+      <View style={{ height: 50, justifyContent: 'center', alignItems: 'center' }}>
+        {!props.recorded ? (
+            <Text style={{ fontSize: 30, textAlign: 'center', color: colors.primary_light }}>
+              {(props.recordingDuration > 0) && 'Recording...'}
+            </Text>
+        ) : (
+          <Button
+            fontWeight="bold"
+            title="Done!"
+            disabled={!props.recorded}
+            onPress={props.onDone}
+          />
+        )}
+      </View>
+      <View style={{ height: 100 }}>
       <TouchableOpacity
         onPress={() => {
           if (props.recorded) {
@@ -98,24 +99,27 @@ const RecordingSlide = props => {
             <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>Reset</Text>
           </View>
         ) : (
-          <View
-            style={{
-              opacity: 0.5,
-              flexDirection: 'column',
-              alignItems: 'center',
-              marginBottom: 10
-            }}
-          >
-            <Icon
-              name="ios-close-circle"
-              type="ionicon"
-              size={30}
-              color={colors.white}
-            />
-            <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
-          </View>
+          !props.isRecording && (
+            <View
+              style={{
+                opacity: 0.5,
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginBottom: 10
+              }}
+            >
+              <Icon
+                name="ios-close-circle"
+                type="ionicon"
+                size={30}
+                color={colors.white}
+              />
+              <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
+            </View>
+          )
         )}
       </TouchableOpacity>
+      </View>
     </View>
   );
 };

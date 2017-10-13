@@ -69,7 +69,7 @@ class AddNewForm extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
     if (this.props.haveRecordingPermissions !== undefined) {
       // undefined means we never asked for mic yet
@@ -81,6 +81,27 @@ class AddNewForm extends Component {
       animated: false
     });
 
+    if (this.props.haveRecordingPermissions) {
+      this._prepareRecording();
+    }
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = nextAppState => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active' &&
+      this.state.permissionsStage === 1
+    ) {
+      this._checkPermissionsAsync();
+    }
+    this.setState({ appState: nextAppState });
+  };
+
+  async _prepareRecording() {
     // the code below is used to speed up the first recording
     await Audio.setAudioModeAsync({
       playsInSilentModeIOS: true,
@@ -117,21 +138,6 @@ class AddNewForm extends Component {
       });
   }
 
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-  }
-
-  _handleAppStateChange = nextAppState => {
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === 'active' &&
-      this.state.permissionsStage === 1
-    ) {
-      this._checkPermissionsAsync();
-    }
-    this.setState({ appState: nextAppState });
-  };
-
   async _askForPermissions() {
     if (
       Platform.OS === 'ios' &&
@@ -146,6 +152,7 @@ class AddNewForm extends Component {
       );
       if (status === 'granted') {
         store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED });
+        this._prepareRecording();
       } else {
         store.dispatch({ type: RECORDING_PERMISSIONS_DENIED });
       }
