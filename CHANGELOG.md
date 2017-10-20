@@ -1,3 +1,7 @@
+## 1.0.2 (October 20, 2017)
+
+* Fix dictionary sharing.
+
 ## 1.0.1 (October 12, 2017)
 
 * Remove the lag when recording first phrase.
