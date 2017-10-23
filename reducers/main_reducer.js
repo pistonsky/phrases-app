@@ -56,7 +56,7 @@ const INITIAL_STATE = {
 };
 
 export default function(state = INITIAL_STATE, action) {
-  let dictionaries;
+  let data, dictionaries;
   switch (action.type) {
     case RECORDING_PERMISSIONS_GRANTED:
       return { ...state, recording_permissions: true };
@@ -105,24 +105,29 @@ export default function(state = INITIAL_STATE, action) {
       };
 
     case ADD_SHARED_PHRASES:
-      dictionaries = state.dictionaries.map(e => {
-        return { ...e, selected: e.name === SHARED_DICTIONARY_NAME };
-      });
-      if (
-        dictionaries.find(e => e.name === SHARED_DICTIONARY_NAME) === undefined
-      ) {
-        dictionaries.push({ name: SHARED_DICTIONARY_NAME, selected: true });
+      // determine the largest dictionary among shared phrases and make it selected
+      let shared_dictionaries = {};
+      for (let shared_phrase of action.phrases) {
+        if (!(shared_phrase.dictionary in shared_dictionaries)) {
+          shared_dictionaries[shared_phrase.dictionary] = 0;
+        }
+        shared_dictionaries[shared_phrase.dictionary] += 1;
       }
-      return {
-        ...state,
-        data: [
-          ...state.data,
-          ...action.phrases.map(e => {
-            return { ...e, dictionary: SHARED_DICTIONARY_NAME };
-          })
-        ],
-        dictionaries
-      };
+      let largest_shared_dictionary;
+      for (d in shared_dictionaries) {
+        if ((largest_shared_dictionary === undefined) || (shared_dictionaries[d] > shared_dictionaries[largest_shared_dictionary])) {
+          largest_shared_dictionary = d;
+        }
+      }
+      data = [ ...state.data, ...action.phrases.map(e => ({ ...e, synced: false, uploaded: true })) ];
+      dictionaries = [
+        ...new Set(
+          data.map(
+            e => e.dictionary || INITIAL_STATE.dictionaries[0].name
+          )
+        )
+      ].map(e => ({ name: e, selected: e === largest_shared_dictionary }));
+      return { ...state, data, dictionaries };
 
     case ADD_SHARED_DICTIONARY:
       const shared_dictionary_name = action.phrases[0].dictionary;

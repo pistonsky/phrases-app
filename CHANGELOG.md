@@ -1,3 +1,7 @@
+## 1.0.3 (October 23, 2017)
+
+* Keep original dictionary names when sharing ALL phrases.
+
 ## 1.0.2 (October 20, 2017)
 
 * Fix dictionary sharing.
