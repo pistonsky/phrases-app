@@ -32,7 +32,13 @@ const syncSaga = function* syncSaga() {
     }
     yield put({ type: ALL_PHRASES_SYNCED });
     // wait for new or updated phrases
-    yield take([ADD_NEW_PHRASE, UPDATE_PHRASE, ADD_SHARED_DICTIONARY, ADD_SHARED_PHRASES, ADD_SHARED_PHRASE]);
+    yield take([
+      ADD_NEW_PHRASE,
+      UPDATE_PHRASE,
+      ADD_SHARED_DICTIONARY,
+      ADD_SHARED_PHRASES,
+      ADD_SHARED_PHRASE
+    ]);
   }
 };
 
@@ -63,29 +69,37 @@ const uploadAudio = function* uploadAudio(phrase) {
   if (phrase.uploaded) {
     return true;
   }
+  if (phrase.recorded === false) {
+    return false;
+  }
   const localUri = FileSystem.documentDirectory + phrase.uri + '.caf';
-  try {
-    const file = {
-      uri: localUri,
-      name: phrase.uri + '.caf',
-      type: 'audio/x-caf'
-    };
-    const options = {
-      keyPrefix: '',
-      bucket: config.S3_BUCKET,
-      region: config.S3_REGION,
-      accessKey: config.S3_ACCESS_KEY,
-      secretKey: config.S3_SECRET_KEY,
-      successActionStatus: 201
-    };
-    const response = yield call(RNS3.put, file, options);
-    if (response.status !== 201) {
+  const { exists } = yield call(FileSystem.getInfoAsync, localUri);
+  if (exists) {
+    try {
+      const file = {
+        uri: localUri,
+        name: phrase.uri + '.caf',
+        type: 'audio/x-caf'
+      };
+      const options = {
+        keyPrefix: '',
+        bucket: config.S3_BUCKET,
+        region: config.S3_REGION,
+        accessKey: config.S3_ACCESS_KEY,
+        secretKey: config.S3_SECRET_KEY,
+        successActionStatus: 201
+      };
+      const response = yield call(RNS3.put, file, options);
+      if (response.status !== 201) {
+        return false;
+      } else {
+        yield put({ type: PHRASE_UPLOADED, uri: phrase.uri });
+        return true;
+      }
+    } catch (e) {
       return false;
-    } else {
-      yield put({ type: PHRASE_UPLOADED, uri: phrase.uri });
-      return true;
     }
-  } catch (e) {
+  } else {
     return false;
   }
 };

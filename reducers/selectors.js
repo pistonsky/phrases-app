@@ -49,6 +49,23 @@ export const shouldShowSyncModal = state => state.ui.show_sync_modal;
 
 // open phrase
 export const getOpenedPhrase = state => state.ui.opened_phrase;
+export const getNextPhrase = state => {
+  const openedPhrase = getOpenedPhrase(state);
+  if (!openedPhrase) {
+    return null;
+  }
+  const currentDictionaryPhrases = getData(state);
+  if (currentDictionaryPhrases.length < 2) {
+    return null;
+  } else {
+    const currentPhraseIndex = currentDictionaryPhrases.findIndex(
+      e => e.uri === openedPhrase.uri
+    );
+    return currentDictionaryPhrases[
+      (currentPhraseIndex + 1) % currentDictionaryPhrases.length
+    ];
+  }
+};
 
 // audio cache
 export const getAudioCache = state => state.audio.cache;

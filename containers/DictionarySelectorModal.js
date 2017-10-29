@@ -105,6 +105,10 @@ class DictionarySelectorModal extends Component {
                   item={item}
                   onDelete={() =>
                     this.props.deleteDictionary({ dictionary_name: item.name })}
+                  onCopy={() =>
+                    this.props.copyDictionaryAsTemplate({
+                      dictionary_name: item.name
+                    })}
                   onPress={() =>
                     store.dispatch({
                       type: SELECT_DICTIONARY,

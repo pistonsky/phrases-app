@@ -13,6 +13,7 @@ import {
   DATA_LOADED,
   DATA_LOADING_FAILED,
   UPDATE_PHRASE,
+  UPDATE_PHRASE_KEEP_MODAL_OPEN,
   DELETE_PHRASE,
   SKIP_WELCOME_SCREENS,
   ADD_DICTIONARY,
@@ -21,9 +22,11 @@ import {
   UPDATE_DICTIONARY_NAME,
   GO_ONLINE,
   GO_OFFLINE,
-  TOGGLE_DICTIONARY_SELECTOR
+  TOGGLE_DICTIONARY_SELECTOR,
+  COPY_DICTIONARY_AS_TEMPLATE
 } from '../actions/types';
 import colors from '../styles/colors';
+import { randomId } from '../utils/functions';
 
 const SHARED_DICTIONARY_NAME = 'Added';
 const DEFAULT_DICTIONARY_NAME = 'Phrazes';
@@ -43,7 +46,8 @@ const INITIAL_STATE = {
     },
     {
       head: 'Connect with locals',
-      body: 'Ask them to give you some phrases\nthen record how they pronounce it',
+      body:
+        'Ask them to give you some phrases\nthen record how they pronounce it',
       // body: 'Say goodbye to dictionaries\nlearn from locals',
       background: colors.secondary_dark
     },
@@ -115,16 +119,21 @@ export default function(state = INITIAL_STATE, action) {
       }
       let largest_shared_dictionary;
       for (d in shared_dictionaries) {
-        if ((largest_shared_dictionary === undefined) || (shared_dictionaries[d] > shared_dictionaries[largest_shared_dictionary])) {
+        if (
+          largest_shared_dictionary === undefined ||
+          shared_dictionaries[d] >
+            shared_dictionaries[largest_shared_dictionary]
+        ) {
           largest_shared_dictionary = d;
         }
       }
-      data = [ ...state.data, ...action.phrases.map(e => ({ ...e, synced: false, uploaded: true })) ];
+      data = [
+        ...state.data,
+        ...action.phrases.map(e => ({ ...e, synced: false, uploaded: true }))
+      ];
       dictionaries = [
         ...new Set(
-          data.map(
-            e => e.dictionary || INITIAL_STATE.dictionaries[0].name
-          )
+          data.map(e => e.dictionary || INITIAL_STATE.dictionaries[0].name)
         )
       ].map(e => ({ name: e, selected: e === largest_shared_dictionary }));
       return { ...state, data, dictionaries };
@@ -195,6 +204,7 @@ export default function(state = INITIAL_STATE, action) {
       return { ...state, data_loading: false };
 
     case UPDATE_PHRASE:
+    case UPDATE_PHRASE_KEEP_MODAL_OPEN:
       return {
         ...state,
         data: state.data.map(
@@ -335,6 +345,34 @@ export default function(state = INITIAL_STATE, action) {
           };
         }
       } else return state;
+
+    case COPY_DICTIONARY_AS_TEMPLATE:
+      return {
+        ...state,
+        data: [
+          ...state.data,
+          ...state.data
+            .filter(e => e.dictionary === action.payload.dictionary_name)
+            .map(e => ({
+              ...e,
+              translated: '',
+              uri: randomId(),
+              dictionary: action.payload.new_dictionary_name,
+              recorded: false,
+              synced: false,
+              uploaded: false
+            }))
+        ],
+        dictionaries: [
+          ...state.dictionaries,
+          { name: action.payload.new_dictionary_name }
+        ].map(e => {
+          return {
+            ...e,
+            selected: e.name === action.payload.new_dictionary_name
+          };
+        })
+      };
 
     case GO_OFFLINE:
       return { ...state, offline: true };

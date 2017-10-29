@@ -1,6 +1,6 @@
 import { Facebook } from 'expo';
 import { Actions } from 'react-native-router-flux';
-import { Alert } from 'react-native';
+import { Alert, AlertIOS } from 'react-native';
 import * as api from '../api';
 import { getUserId } from '../reducers/selectors';
 import {
@@ -16,7 +16,9 @@ import {
   UPDATE_PHRASE,
   DELETE_PHRASE,
   DELETE_DICTIONARY,
-  UPDATE_DICTIONARY_NAME
+  UPDATE_DICTIONARY_NAME,
+  COPY_DICTIONARY_AS_TEMPLATE,
+  TOGGLE_DICTIONARY_SELECTOR
 } from './types';
 import store from '../store';
 
@@ -114,15 +116,47 @@ export const deleteDictionary = ({ dictionary_name }) => async dispatch => {
         style: 'destructive',
         onPress: async () => {
           dispatch({ type: DELETE_DICTIONARY, payload: dictionary_name });
-          const result = await api.deleteDictionary({ dictionary_name, user_id });
+          const result = await api.deleteDictionary({
+            dictionary_name,
+            user_id
+          });
         }
       }
     ]
   );
 };
 
-export const updateDictionaryName = ({ old_name, new_name }) => async dispatch => {
+export const updateDictionaryName = ({
+  old_name,
+  new_name
+}) => async dispatch => {
   const user_id = getUserId(store.getState());
   dispatch({ type: UPDATE_DICTIONARY_NAME, old_name, new_name });
   const result = await api.updateDictionary({ old_name, new_name, user_id });
+};
+
+export const copyDictionaryAsTemplate = ({
+  dictionary_name
+}) => async dispatch => {
+  AlertIOS.prompt(
+    'Enter new dictionary name',
+    'The selected dictionary will be used as a template for the new dictionary: it will contain all the same phrases in original language.',
+    [
+      {
+        text: 'Cancel',
+        onPress: () => {},
+        style: 'cancel'
+      },
+      {
+        text: 'Copy',
+        onPress: new_dictionary_name => {
+          dispatch({
+            type: COPY_DICTIONARY_AS_TEMPLATE,
+            payload: { dictionary_name, new_dictionary_name }
+          });
+          dispatch({ type: TOGGLE_DICTIONARY_SELECTOR });
+        }
+      }
+    ]
+  );
 };

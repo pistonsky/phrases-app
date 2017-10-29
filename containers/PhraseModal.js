@@ -21,12 +21,15 @@ import { RecButton } from '../components';
 import {
   shouldShowPhraseModal,
   getOpenedPhrase,
-  isPlayAllMode
+  isPlayAllMode,
+  getNextPhrase
 } from '../reducers/selectors';
 import {
   CLOSE_PHRASE_MODAL,
   PLAY_PHRASE,
-  UPDATE_PHRASE
+  UPDATE_PHRASE,
+  UPDATE_PHRASE_KEEP_MODAL_OPEN,
+  OPEN_PHRASE
 } from '../actions/types';
 import { smartFontSize } from '../utils/functions';
 import * as styles from '../styles/phraseModalStyles';
@@ -54,7 +57,8 @@ class PhraseModal extends Component {
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.visible &&
-      (!this.props.visible || this.props.phrase.uri !== nextProps.phrase.uri)
+      (!this.props.visible || this.props.phrase.uri !== nextProps.phrase.uri) &&
+      (nextProps.phrase !== null)
     ) {
       // overwrite only when modal is opened or "play all" is going on
       this.setState({
@@ -62,7 +66,7 @@ class PhraseModal extends Component {
         translated: nextProps.phrase.translated,
         original_editable: false,
         translated_editable: false,
-        audio_modified: false,
+        audio_modified: nextProps.phrase.recorded === false,
         audio: null
       });
     }
@@ -405,7 +409,7 @@ class PhraseModal extends Component {
                     store.dispatch({
                       type: UPDATE_PHRASE,
                       phrase: this.props.phrase,
-                      update: { original, translated },
+                      update: { original, translated, recorded: true },
                       audio_modified: true
                     });
                   } else {
@@ -428,6 +432,47 @@ class PhraseModal extends Component {
                 <Text style={styles.iconLabel}>Done</Text>
               </View>
             </TouchableOpacity>
+            {!this.props.play_all_mode && this.props.next_phrase && (
+              <TouchableOpacity
+                onPress={async () => {
+                  if (this.state.audio_modified && this.state.audio) {
+                    await FileSystem.moveAsync({
+                      from: this.state.audio.getURI(),
+                      to:
+                        FileSystem.documentDirectory +
+                        this.props.phrase.uri +
+                        '.caf'
+                    });
+                    store.dispatch({
+                      type: UPDATE_PHRASE_KEEP_MODAL_OPEN,
+                      phrase: this.props.phrase,
+                      update: { original, translated, recorded: true },
+                      audio_modified: true
+                    });
+                  } else {
+                    store.dispatch({
+                      type: UPDATE_PHRASE_KEEP_MODAL_OPEN,
+                      phrase: this.props.phrase,
+                      update: { original, translated },
+                    });
+                  }
+                  store.dispatch({
+                    type: OPEN_PHRASE,
+                    phrase: this.props.next_phrase
+                  });
+                }}
+              >
+                <View style={styles.cancelContainer}>
+                  <Icon
+                    name="ios-arrow-dropright-circle"
+                    type="ionicon"
+                    size={50}
+                    color={colors.secondary}
+                  />
+                  <Text style={styles.iconLabel}>Next</Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </BlurView>
       </Modal>
@@ -439,6 +484,7 @@ function mapStateToProps(state) {
   return {
     visible: shouldShowPhraseModal(state),
     phrase: getOpenedPhrase(state),
+    next_phrase: getNextPhrase(state),
     play_all_mode: isPlayAllMode(state)
   };
 }

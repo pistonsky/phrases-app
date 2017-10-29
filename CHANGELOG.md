@@ -1,3 +1,8 @@
+## 1.1.0 (October 29, 2017)
+
+* Copy dictionary as a template feature.
+* One-by-one continuous phrase editing feature.
+
 ## 1.0.3 (October 23, 2017)
 
 * Keep original dictionary names when sharing ALL phrases.

@@ -20,13 +20,43 @@ export default class DictionaryListItem extends Component {
   render() {
     const { item } = this.props;
 
+    const styles = {
+      centeredContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }
+    };
+
     return (
       <Swipeout
         style={{ backgroundColor: 'transparent' }}
         autoClose
         right={[
           {
-            text: 'Delete',
+            component: (
+              <View style={styles.centeredContent}>
+                <Icon
+                  name="ios-copy-outline"
+                  type="ionicon"
+                  size={30}
+                  color={colors.white}
+                />
+              </View>
+            ),
+            onPress: () => this.props.onCopy()
+          },
+          {
+            component: (
+              <View style={styles.centeredContent}>
+                <Icon
+                  name="ios-trash-outline"
+                  type="ionicon"
+                  size={30}
+                  color={colors.white}
+                />
+              </View>
+            ),
             backgroundColor: '#f00',
             onPress: () => this.props.onDelete()
           }
