@@ -5,3 +5,4 @@ npm-debug.*
 ios/*
 android/*
 help/*
+utils/config.js
