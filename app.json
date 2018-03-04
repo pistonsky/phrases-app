@@ -26,7 +26,8 @@
       "icon": "./assets/icons/ios.png",
       "supportsTablet": true,
       "publishBundlePath": "ios/phrazes/Supporting/shell-app.bundle",
-      "publishManifestPath": "ios/phrazes/Supporting/shell-app-manifest.json"
+      "publishManifestPath": "ios/phrazes/Supporting/shell-app-manifest.json",
+      "loadJSInBackgroundExperimental": true
     },
     "android": {
       "package": "com.pistonsky.phrazes"
