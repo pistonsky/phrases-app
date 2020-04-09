@@ -1,0 +1,85 @@
+const path = require('path')
+
+module.exports = {
+  extends: 'airbnb',
+  parserOptions: {
+    ecmaFeatures: {
+      classes: true,
+      jsx: true,
+      experimentalObjectRestSpread: true,
+    },
+    ecmaVersion: 2018,
+  },
+  globals: {
+    customFetch: true,
+    logger: true,
+    __DEV__: true,
+  },
+  rules: {
+    'import/no-extraneous-dependencies': 0,
+    'function-paren-newline': 0,
+    'no-plusplus': 0,
+    'import/extensions': 0,
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'max-len': [
+      1,
+      {
+        code: 120,
+        ignoreComments: true,
+      },
+    ],
+    'no-underscore-dangle': 0,
+    'one-var': 0,
+    'no-param-reassign': ['error', { props: false }],
+    'arrow-body-style': 0,
+    'consistent-return': 0,
+    'no-console': 0,
+    'no-use-before-define': 0,
+    'new-cap': 0,
+    'no-restricted-syntax': ['error', 'WithStatement'],
+    'key-spacing': ['error', { mode: 'minimum' }],
+    'no-unused-expressions': 0,
+    'global-require': 0,
+    'no-debugger': 2,
+    'react/jsx-indent': 0,
+    indent: 0,
+    'no-param-reassign': 0,
+    'no-nested-ternary': 0,
+    radix: 0,
+    camelcase: 0,
+    semi: 0,
+    'react/prop-types': 0,
+    'comma-dangle': 0,
+    'no-confusing-arrow': 0,
+    'arrow-parens': 0,
+    'object-curly-newline': 0,
+    'class-methods-use-this': 0,
+    'no-lonely-if': 1,
+    'no-mixed-operators': 0,
+    'no-continue': 0,
+    curly: 0,
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
+  },
+  plugins: ['react', 'react-native', 'jest'],
+  env: {
+    node: true,
+    'jest/globals': true,
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.android.js', '.ios.js'],
+      },
+      webpack: {
+        config: path.join(__dirname, 'webpack.config.js'),
+      },
+    },
+    'import/external-module-folders': [
+      'node_modules',
+    ],
+  },
+}

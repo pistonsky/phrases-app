@@ -1,3 +1,5 @@
+
+
 ## 1.1.0 (October 29, 2017)
 
 * Copy dictionary as a template feature.

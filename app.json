@@ -1,44 +1,4 @@
 {
-  "expo": {
-    "name": "Phrazes",
-    "description": "Learn any language. Phrase by phrase.",
-    "slug": "phrases",
-    "privacy": "unlisted",
-    "sdkVersion": "20.0.0",
-    "version": "1.1.0",
-    "orientation": "portrait",
-    "primaryColor": "#03A9F4",
-    "icon": "./assets/icons/app.png",
-    "loading": {
-      "icon": "./assets/icons/loading.png",
-      "backgroundColor": "#2EB2FF",
-      "hideExponentText": true
-    },
-    "packagerOpts": {
-      "assetExts": [
-        "ttf",
-        "mp4"
-      ]
-    },
-    "ios": {
-      "bundleIdentifier": "com.pistonsky.phrazes",
-      "buildNumber": "1",
-      "icon": "./assets/icons/ios.png",
-      "supportsTablet": true,
-      "publishBundlePath": "ios/phrazes/Supporting/shell-app.bundle",
-      "publishManifestPath": "ios/phrazes/Supporting/shell-app-manifest.json",
-      "loadJSInBackgroundExperimental": true
-    },
-    "android": {
-      "package": "com.pistonsky.phrazes"
-    },
-    "scheme": "phrazesapp",
-    "isDetached": true,
-    "detach": {
-      "scheme": "phrazesapp",
-      "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v1.19.2-sdk20.0.0-71c3afdd-3b31-4722-9657-bbf07ea645d8.tar.gz",
-      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v1.19.1-sdk20.0.0-5b613054-1239-439f-9c3a-0aad67cbe39a.tar.gz"
-    },
-    "facebookScheme": "fb672834932920089"
-  }
+  "name": "phrazes60",
+  "displayName": "phrazes60"
 }
