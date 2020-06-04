@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, NetInfo, AppState, StatusBar } from 'react-native'
-import { AddNewModal, DictionarySelectorModal, PhrasesList, PhraseModal } from 'app/containers'
+import { AddNewModal, DictionarySelectorModal, PhrasesList, PhraseModal, PleaseWaitModal } from 'app/containers'
 import { getUserId } from 'app/reducers/selectors'
 import styles from 'app/styles'
 
@@ -24,6 +24,7 @@ class MainScreen extends Component {
         <PhraseModal />
         <StatusBar barStyle="dark-content" translucent />
         <PhrasesList />
+        <PleaseWaitModal />
       </View>
     )
   }

@@ -40,6 +40,8 @@ export const anyUnsyncedPhrases = state => {
 
 export const shouldShowDictionariesSelectorModal = state => state.ui.show_dictionaries_selector
 export const shouldShowPhraseModal = state => state.ui.show_phrase_modal
+export const shouldShowPleaseWaitModal = state => state.ui.show_please_wait_modal
+export const getPhrase = (state, uri) => state.main.data.find(e => e.uri === uri)
 export const getOpenedPhrase = state => state.ui.opened_phrase
 export const getNextPhrase = state => {
   const openedPhrase = getOpenedPhrase(state)

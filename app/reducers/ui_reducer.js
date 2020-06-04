@@ -10,7 +10,9 @@ import {
   CLOSE_PHRASE_MODAL,
   OPEN_PHRASE,
   UPDATE_PHRASE,
-  PLAY_ALL
+  PLAY_ALL,
+  CANCEL_PLAY_ALL,
+  HIDE_PLEASE_WAIT_MODAL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -18,6 +20,7 @@ const INITIAL_STATE = {
   show_recording_permissions_modal: false,
   show_sync_modal: false,
   show_phrase_modal: false,
+  show_please_wait_modal: false,
   opened_phrase: null,
   play_all_mode: false
 };
@@ -66,7 +69,13 @@ export default function (state = INITIAL_STATE, action) {
       };
 
     case PLAY_ALL:
-      return { ...state, play_all_mode: true };
+      return { ...state, play_all_mode: true, show_please_wait_modal: true };
+
+    case CANCEL_PLAY_ALL:
+      return { ...state, play_all_mode: false, show_please_wait_modal: false };
+
+    case HIDE_PLEASE_WAIT_MODAL:
+      return { ...state, show_please_wait_modal: false };
 
     default:
       return state;

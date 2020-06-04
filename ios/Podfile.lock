@@ -86,6 +86,8 @@ PODS:
     - React
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-track-player (1.1.8):
+    - React
   - React-RCTActionSheet (0.60.5):
     - React-Core (= 0.60.5)
   - React-RCTAnimation (0.60.5):
@@ -137,9 +139,10 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - react-native-blur (from `../node_modules/@react-native-community/blur`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-track-player (from `../node_modules/react-native-track-player`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -150,77 +153,86 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
-  - ReactNativeART (from `../node_modules/@react-native-community/art`)
-  - ReactNativeAudioToolkit (from `../node_modules/@react-native-community/audio-toolkit`)
+  - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
+  - "ReactNativeAudioToolkit (from `../node_modules/@react-native-community/audio-toolkit`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
+SPEC REPOS:
+  trunk:
+    - boost-for-react-native
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - FBSDKShareKit
+
 EXTERNAL SOURCES:
   DoubleConversion:
-    :podspec: ../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec
+    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   Folly:
-    :podspec: ../node_modules/react-native/third-party-podspecs/Folly.podspec
+    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
-    :podspec: ../node_modules/react-native/third-party-podspecs/glog.podspec
+    :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   Permission-Microphone:
-    :path: ../node_modules/react-native-permissions/ios/Microphone.podspec
+    :path: "../node_modules/react-native-permissions/ios/Microphone.podspec"
   React:
-    :path: ../node_modules/react-native/
+    :path: "../node_modules/react-native/"
   React-Core:
-    :path: ../node_modules/react-native/React
+    :path: "../node_modules/react-native/React"
   React-cxxreact:
-    :path: ../node_modules/react-native/ReactCommon/cxxreact
+    :path: "../node_modules/react-native/ReactCommon/cxxreact"
   React-DevSupport:
-    :path: ../node_modules/react-native/React
+    :path: "../node_modules/react-native/React"
   React-jsi:
-    :path: ../node_modules/react-native/ReactCommon/jsi
+    :path: "../node_modules/react-native/ReactCommon/jsi"
   React-jsiexecutor:
-    :path: ../node_modules/react-native/ReactCommon/jsiexecutor
+    :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
-    :path: ../node_modules/react-native/ReactCommon/jsinspector
+    :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-blur:
-    :path: ../node_modules/@react-native-community/blur
+    :path: "../node_modules/@react-native-community/blur"
   react-native-fbsdk:
-    :path: ../node_modules/react-native-fbsdk
+    :path: "../node_modules/react-native-fbsdk"
   react-native-splash-screen:
-    :path: ../node_modules/react-native-splash-screen
+    :path: "../node_modules/react-native-splash-screen"
+  react-native-track-player:
+    :path: "../node_modules/react-native-track-player"
   React-RCTActionSheet:
-    :path: ../node_modules/react-native/Libraries/ActionSheetIOS
+    :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
-    :path: ../node_modules/react-native/Libraries/NativeAnimation
+    :path: "../node_modules/react-native/Libraries/NativeAnimation"
   React-RCTBlob:
-    :path: ../node_modules/react-native/Libraries/Blob
+    :path: "../node_modules/react-native/Libraries/Blob"
   React-RCTImage:
-    :path: ../node_modules/react-native/Libraries/Image
+    :path: "../node_modules/react-native/Libraries/Image"
   React-RCTLinking:
-    :path: ../node_modules/react-native/Libraries/LinkingIOS
+    :path: "../node_modules/react-native/Libraries/LinkingIOS"
   React-RCTNetwork:
-    :path: ../node_modules/react-native/Libraries/Network
+    :path: "../node_modules/react-native/Libraries/Network"
   React-RCTSettings:
-    :path: ../node_modules/react-native/Libraries/Settings
+    :path: "../node_modules/react-native/Libraries/Settings"
   React-RCTText:
-    :path: ../node_modules/react-native/Libraries/Text
+    :path: "../node_modules/react-native/Libraries/Text"
   React-RCTVibration:
-    :path: ../node_modules/react-native/Libraries/Vibration
+    :path: "../node_modules/react-native/Libraries/Vibration"
   React-RCTWebSocket:
-    :path: ../node_modules/react-native/Libraries/WebSocket
+    :path: "../node_modules/react-native/Libraries/WebSocket"
   ReactNativeART:
-    :path: ../node_modules/@react-native-community/art
+    :path: "../node_modules/@react-native-community/art"
   ReactNativeAudioToolkit:
-    :path: ../node_modules/@react-native-community/audio-toolkit
+    :path: "../node_modules/@react-native-community/audio-toolkit"
   RNFS:
-    :path: ../node_modules/react-native-fs
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
-    :path: ../node_modules/react-native-gesture-handler
+    :path: "../node_modules/react-native-gesture-handler"
   RNPermissions:
-    :path: ../node_modules/react-native-permissions
+    :path: "../node_modules/react-native-permissions"
   RNVectorIcons:
-    :path: ../node_modules/react-native-vector-icons
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
-    :path: ../node_modules/react-native/ReactCommon/yoga
+    :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
@@ -241,6 +253,7 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-fbsdk: 1309be490bdf18ae29f4cef836f69194b436d9d7
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-track-player: 6e4e91a246efe7121cdef5a43258659a062499db
   React-RCTActionSheet: b0f1ea83f4bf75fb966eae9bfc47b78c8d3efd90
   React-RCTAnimation: 359ba1b5690b1e87cc173558a78e82d35919333e
   React-RCTBlob: 5e2b55f76e9a1c7ae52b826923502ddc3238df24
@@ -259,6 +272,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411
 
-PODFILE CHECKSUM: 05cec3d2f54bc4789a0e6a97abe8421fbec7add9
+PODFILE CHECKSUM: bebb955993857133645ba00abdda0787fd9eeace
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.9.3

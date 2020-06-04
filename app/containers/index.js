@@ -6,3 +6,4 @@ export { default as NavBar } from './NavBar' // eslint-disable-line import/no-cy
 export { default as DictionarySelector } from './DictionarySelector'
 export { default as DictionarySelectorModal } from './DictionarySelectorModal'
 export { default as PhraseModal } from './PhraseModal'
+export { default as PleaseWaitModal } from './PleaseWaitModal'

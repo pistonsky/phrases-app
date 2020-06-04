@@ -35,7 +35,7 @@ function downloadFile(options) {
   return promise
 }
 
-const cacheAudio = function* cacheAudio(uri) {
+export const cacheAudio = function* cacheAudio(uri) {
   let localUri
   let success = false
   // check if already exists in filesystem
