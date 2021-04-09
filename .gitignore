@@ -60,3 +60,6 @@ buck-out/
 
 # Config that should not be disclosed
 app/utils/config.js
+
+# Sublime Text
+*.sublime-*
