@@ -1,5 +1,4 @@
-import { call, select, take, put } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { call, select, take, put, delay } from 'redux-saga/effects'
 import RNFS from 'react-native-fs'
 import { RNS3 } from 'react-native-aws3'
 
