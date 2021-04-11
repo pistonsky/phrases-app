@@ -63,7 +63,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* phrazes60Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = phrazes60Tests.m; sourceTree = "<group>"; };
 		05732AF302FA42BF89E0522E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* phrazes60.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = phrazes60.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Phrazes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Phrazes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = phrazes60/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = phrazes60/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -158,7 +158,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* phrazes60 */ = {
+		13B07FAE1A68108700A75B9A /* Phrazes */ = {
 			isa = PBXGroup;
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -169,7 +169,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = phrazes60;
+			name = Phrazes;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -196,7 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				F95886772489561D006A38CA /* dummy.swift */,
-				13B07FAE1A68108700A75B9A /* phrazes60 */,
+				13B07FAE1A68108700A75B9A /* Phrazes */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* phrazes60Tests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -213,7 +213,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* phrazes60.app */,
+				13B07F961A680F5B00A75B9A /* Phrazes.app */,
 				00E356EE1AD99517003FC87E /* phrazes60Tests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* phrazes60-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* phrazes60-tvOSTests.xctest */,
@@ -281,9 +281,9 @@
 			productReference = 00E356EE1AD99517003FC87E /* phrazes60Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* phrazes60 */ = {
+		13B07F861A680F5B00A75B9A /* Phrazes */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "phrazes60" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Phrazes" */;
 			buildPhases = (
 				92A1A7C3EC23B5117EC405A5 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -297,9 +297,9 @@
 			);
 			dependencies = (
 			);
-			name = phrazes60;
+			name = Phrazes;
 			productName = phrazes60;
-			productReference = 13B07F961A680F5B00A75B9A /* phrazes60.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Phrazes.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* phrazes60-tvOS */ = {
@@ -385,7 +385,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* phrazes60 */,
+				13B07F861A680F5B00A75B9A /* Phrazes */,
 				00E356ED1AD99517003FC87E /* phrazes60Tests */,
 				2D02E47A1E0B4A5D006451C7 /* phrazes60-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* phrazes60-tvOSTests */,
@@ -691,7 +691,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* phrazes60 */;
+			target = 13B07F861A680F5B00A75B9A /* Phrazes */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
@@ -786,7 +786,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.pistonsky.phrazes;
-				PRODUCT_NAME = phrazes60;
+				PRODUCT_NAME = Phrazes;
 				SWIFT_OBJC_BRIDGING_HEADER = "phrazes60-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -813,7 +813,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.pistonsky.phrazes;
-				PRODUCT_NAME = phrazes60;
+				PRODUCT_NAME = Phrazes;
 				SWIFT_OBJC_BRIDGING_HEADER = "phrazes60-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1043,7 +1043,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "phrazes60" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Phrazes" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
