@@ -6253,9 +6253,9 @@ react-native-safe-area-view@^0.14.1:
   dependencies:
     debounce "^1.2.0"
 
-"react-native-simple-onboarding@https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.4":
+"react-native-simple-onboarding@https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.5":
   version "0.1.3"
-  resolved "https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.4#2d053e2c6a937820771cb58d16bce2f9ba64a250"
+  resolved "https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.5#f41f12d57442ec9e85b208e76701395b5e9ea75c"
   dependencies:
     tinycolor2 "^1.4.1"
 
