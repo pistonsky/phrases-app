@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import Swipeout from 'react-native-swipeout'
 import colors from 'app/styles/colors'
+import I18n from 'app/utils/i18n'
 import ListItemShort from './ListItemShort'
 
 export default class ListItem extends PureComponent {
@@ -12,17 +13,17 @@ export default class ListItem extends PureComponent {
         autoClose
         right={[
           {
-            text: 'Edit',
+            text: I18n.t('Edit'),
             backgroundColor: colors.secondary_dark,
             onPress: () => onEdit(item),
           },
           {
-            text: 'Share',
+            text: I18n.t('Share'),
             backgroundColor: colors.primary_dark,
             onPress: () => onShare(item),
           },
           {
-            text: 'Delete',
+            text: I18n.t('Delete'),
             backgroundColor: '#f00',
             onPress: () => onDelete(item),
           },

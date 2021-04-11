@@ -23,6 +23,7 @@ import {
   OPEN_PHRASE,
 } from 'app/actions/types'
 import * as actions from 'app/actions'
+import I18n from 'app/utils/i18n'
 
 const PhrasesList = props => {
   const { user_id, cache, data, dictionary, data_loading, offline, deletePhrase, refreshPhrases } = props
@@ -49,7 +50,7 @@ const PhrasesList = props => {
           />
         )}
         ItemSeparatorComponent={Separator}
-        ListEmptyComponent={(
+        ListEmptyComponent={
           <View
             style={styles.flatlistEmpty}
             onTouchStart={() => {
@@ -57,9 +58,11 @@ const PhrasesList = props => {
             }}
           >
             {data_loading && <ActivityIndicator size="small" color="#ffffff" />}
-            <Text style={styles.flatlistPlaceholder}>{data_loading ? 'Loading...' : 'Add your first phrazee!'}</Text>
+            <Text style={styles.flatlistPlaceholder}>
+              {data_loading ? `${I18n.t('Loading')}...` : I18n.t('Add your first phrazee!')}
+            </Text>
           </View>
-        )}
+        }
         refreshing={data_loading}
         onRefresh={() => refreshPhrases(user_id)}
         initialNumToRender={15}
@@ -68,12 +71,15 @@ const PhrasesList = props => {
         <Button
           iconRight
           icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}
-          title="SHARE THIS DICTIONARY"
+          title={I18n.t('SHARE THIS DICTIONARY')}
           backgroundColor={colors.secondary}
           onPress={() => store.dispatch({ type: SHARE_DICTIONARY })}
           onLongPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
-              { options: ['Share This Dictionary', 'Share All Phrazes', 'Cancel'], cancelButtonIndex: 2 },
+              {
+                options: [I18n.t('Share This Dictionary'), I18n.t('Share All Phrazes'), I18n.t('Cancel')],
+                cancelButtonIndex: 2,
+              },
               i => i < 2 && store.dispatch({ type: [SHARE_DICTIONARY, SHARE_ALL_PHRASES][i] }),
             )
           }}

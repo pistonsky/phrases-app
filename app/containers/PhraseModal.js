@@ -28,6 +28,7 @@ import { smartFontSize } from 'app/utils/functions'
 import * as styles from 'app/styles/phraseModalStyles'
 import colors from 'app/styles/colors'
 import { store } from 'app/redux'
+import I18n from 'app/utils/i18n'
 
 const { UIManager } = NativeModules
 
@@ -374,7 +375,7 @@ class PhraseModal extends Component {
               <TouchableOpacity onPress={() => store.dispatch({ type: CLOSE_PHRASE_MODAL })}>
                 <View style={styles.cancelContainer}>
                   <Icon name="ios-close-circle" type="ionicon" size={50} color={colors.white} />
-                  <Text style={styles.iconLabel}>Cancel</Text>
+                  <Text style={styles.iconLabel}>{I18n.t('Cancel')}</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -403,7 +404,7 @@ class PhraseModal extends Component {
             >
               <View style={[styles.cancelContainer, { opacity: 1 }]}>
                 <Icon name="ios-checkmark-circle" type="ionicon" size={50} color={colors.secondary} />
-                <Text style={styles.iconLabel}>Done</Text>
+                <Text style={styles.iconLabel}>{I18n.t('Done')}</Text>
               </View>
             </TouchableOpacity>
             {!play_all_mode && next_phrase && (
@@ -432,7 +433,7 @@ class PhraseModal extends Component {
               >
                 <View style={styles.cancelContainer}>
                   <Icon name="ios-arrow-dropright-circle" type="ionicon" size={50} color={colors.secondary} />
-                  <Text style={styles.iconLabel}>Next</Text>
+                  <Text style={styles.iconLabel}>{I18n.t('Next')}</Text>
                 </View>
               </TouchableOpacity>
             )}

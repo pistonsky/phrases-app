@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import colors from 'app/styles/colors'
+import I18n from 'app/utils/i18n'
 
 const OfflineBar = () => {
   return (
@@ -13,7 +14,7 @@ const OfflineBar = () => {
         alignItems: 'center',
       }}
     >
-      <Text style={{ fontSize: 8, color: colors.white }}>OFFLINE MODE</Text>
+      <Text style={{ fontSize: 8, color: colors.white }}>{I18n.t('OFFLINE MODE')}</Text>
     </View>
   )
 }

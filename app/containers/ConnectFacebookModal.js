@@ -9,6 +9,7 @@ import {
   shouldShowConnectFacebookModal,
   facebookConnectInProgress,
 } from 'app/reducers/selectors'
+import I18n from 'app/utils/i18n'
 
 const ConnectFacebookModal = props => {
   const { in_progress, visible, user_id } = props
@@ -18,16 +19,16 @@ const ConnectFacebookModal = props => {
         <View style={styles.modalContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <ActivityIndicator size="small" />
-            <Text style={{ color: '#aaa', fontSize: 12, marginLeft: 10 }}>Logging you in...</Text>
+            <Text style={{ color: '#aaa', fontSize: 12, marginLeft: 10 }}>{`${I18n.t('Logging you in')}...`}</Text>
           </View>
         </View>
       ) : (
         <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Create an Account</Text>
-          <Text style={styles.modalSubtitle}>So that you never loose your nasty phrazes!</Text>
+          <Text style={styles.modalTitle}>{I18n.t('Create an Account')}</Text>
+          <Text style={styles.modalSubtitle}>{I18n.t('So that you never loose your nasty phrazes!')}</Text>
           <SocialIcon
             button
-            title="Login with Facebook"
+            title={I18n.t('Login with Facebook')}
             type="facebook"
             style={{ paddingLeft: 20, paddingRight: 20 }}
             onPress={() => {
@@ -38,7 +39,7 @@ const ConnectFacebookModal = props => {
             onPress={() => {
               props.ignoreConnectFacebook()
             }}
-            title="Not now"
+            title={I18n.t('Not now')}
             color="#888"
           />
         </View>

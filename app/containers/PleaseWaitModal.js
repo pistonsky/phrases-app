@@ -6,6 +6,7 @@ import { BlurView } from '@react-native-community/blur'
 import { CANCEL_PLAY_ALL } from 'app/actions/types'
 import { shouldShowPleaseWaitModal } from 'app/reducers/selectors'
 import { store } from 'app/redux'
+import I18n from 'app/utils/i18n'
 
 const PleaseWaitModal = ({ visible }) => {
   return (
@@ -26,7 +27,7 @@ const PleaseWaitModal = ({ visible }) => {
           <TouchableWithoutFeedback onPress={() => false}>
             <BlurView blurType="dark" blurAmount={100} style={styles.container}>
               <ActivityIndicator size="large" />
-              <Text style={styles.text}>Downloading...</Text>
+              <Text style={styles.text}>{`${I18n.t('Downloading')}...`}</Text>
             </BlurView>
           </TouchableWithoutFeedback>
         </View>

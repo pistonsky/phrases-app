@@ -11,6 +11,7 @@ import { store } from 'app/redux'
 import { ADD_DICTIONARY, SELECT_DICTIONARY, TOGGLE_DICTIONARY_SELECTOR } from 'app/actions/types'
 import { smartFontSize } from 'app/utils/functions'
 import * as actions from 'app/actions'
+import I18n from 'app/utils/i18n'
 
 class DictionarySelectorModal extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class DictionarySelectorModal extends Component {
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ fontSize: 17, color: colors.white }}>Choose</Text>
+              <Text style={{ fontSize: 17, color: colors.white }}>{I18n.t('Choose')}</Text>
               <TouchableOpacity
                 style={{
                   position: 'absolute',
@@ -65,7 +66,7 @@ class DictionarySelectorModal extends Component {
                     color: colors.primary_dark,
                   }}
                 >
-                  Close
+                  {I18n.t('Close')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -118,7 +119,7 @@ class DictionarySelectorModal extends Component {
                   onFocus={() => {
                     setTimeout(() => this.flatlist.scrollToEnd(), 100)
                   }}
-                  placeholder="Add new dictionary..."
+                  placeholder={`${I18n.t('Add new dictionary')}...`}
                   placeholderTextColor="#888"
                 />
               )}

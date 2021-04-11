@@ -4,8 +4,10 @@ module.exports = {
     [
       'module-resolver',
       {
-        root: ['./src'],
-        extensions: ['.js', '.ts', '.tsx', '.ios.js', '.android.js'],
+        alias: {
+          app: './app',
+          assets: './assets',
+        },
       },
     ],
     '@babel/plugin-transform-runtime',

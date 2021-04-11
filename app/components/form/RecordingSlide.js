@@ -8,6 +8,7 @@ import { store } from 'app/redux'
 import { CLOSE_ADD_NEW_MODAL } from 'app/actions/types'
 import styles from 'app/styles'
 import colors from 'app/styles/colors'
+import I18n from 'app/utils/i18n'
 
 const RecordingSlide = props => {
   const {
@@ -26,7 +27,7 @@ const RecordingSlide = props => {
   return (
     <View style={styles.formSlide}>
       <Text style={[styles.formHeader, { marginTop: 20 }]}>
-        {recordingDuration === 0 ? 'Say it!' : recordingDuration.toFixed(2)}
+        {recordingDuration === 0 ? I18n.t('Say it!') : recordingDuration.toFixed(2)}
       </Text>
       <View style={styles.formRecordButtonContainer}>
         {recorded && (
@@ -48,7 +49,8 @@ const RecordingSlide = props => {
             transform: [{ scale: animated.recordButtonScale }],
           }}
           onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}>
+          onTouchEnd={onTouchEnd}
+        >
           {recorded &&
             (isPlaying ? (
               <FontAwesome name="play-circle" size={100} color="red" style={{ backgroundColor: 'transparent' }} />
@@ -60,10 +62,10 @@ const RecordingSlide = props => {
       <View style={{ height: 50, justifyContent: 'center', alignItems: 'center' }}>
         {!recorded ? (
           <Text style={{ fontSize: 30, textAlign: 'center', color: colors.primary_light }}>
-            {recordingDuration > 0 && 'Recording...'}
+            {recordingDuration > 0 && `${I18n.t('Recording')}...`}
           </Text>
         ) : (
-          <Button fontWeight="bold" title="Done!" disabled={!recorded} onPress={onDone} />
+          <Button fontWeight="bold" title={I18n.t('Done!')} disabled={!recorded} onPress={onDone} />
         )}
       </View>
       <View style={{ height: 100 }}>
@@ -74,7 +76,8 @@ const RecordingSlide = props => {
             } else {
               store.dispatch({ type: CLOSE_ADD_NEW_MODAL })
             }
-          }}>
+          }}
+        >
           {recorded ? (
             <View
               style={{
@@ -82,9 +85,10 @@ const RecordingSlide = props => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 marginBottom: 10,
-              }}>
+              }}
+            >
               <Icon name="ios-refresh-circle" type="ionicon" size={40} color={colors.white} />
-              <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>Reset</Text>
+              <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>{I18n.t('Reset')}</Text>
             </View>
           ) : (
             !isRecording && (
@@ -94,9 +98,10 @@ const RecordingSlide = props => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   marginBottom: 10,
-                }}>
+                }}
+              >
                 <Icon name="ios-close-circle" type="ionicon" size={30} color={colors.white} />
-                <Text style={{ color: colors.white, fontSize: 12 }}>Cancel</Text>
+                <Text style={{ color: colors.white, fontSize: 12 }}>{I18n.t('Cancel')}</Text>
               </View>
             )
           )}

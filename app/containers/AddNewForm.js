@@ -116,21 +116,28 @@ class AddNewForm extends Component {
       } else {
         const status = await request(PERMISSIONS.IOS.MICROPHONE)
         if (status === 'granted') {
-          store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED });
-          this._prepareRecording();
+          store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED })
+          this._prepareRecording()
         } else {
-          store.dispatch({ type: RECORDING_PERMISSIONS_DENIED });
+          store.dispatch({ type: RECORDING_PERMISSIONS_DENIED })
         }
       }
     }
   }
 
-  _checkPermissionsAsync() {
-    // see phrazes
+  async _checkPermissionsAsync() {
+    const status = await request(PERMISSIONS.IOS.MICROPHONE)
+    if (status === 'granted') {
+      store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED })
+      this._prepareRecording()
+    } else {
+      store.dispatch({ type: RECORDING_PERMISSIONS_DENIED })
+    }
   }
 
   _startRecording() {
-    if (this.recorder.state === -2) { // DESTROYED
+    if (this.recorder.state === -2) {
+      // DESTROYED
       this.recorder = new Recorder('recording.mp4')
       this.recorder.prepare()
     }
@@ -139,7 +146,7 @@ class AddNewForm extends Component {
       Animated.timing(this.animated.recordButtonScale, {
         toValue: 1.5,
         duration: 200,
-        useNativeDriver: true
+        useNativeDriver: true,
       }).start()
       this._recordingStartTime = new Date()
       this._progressInterval = setInterval(() => {
@@ -154,9 +161,9 @@ class AddNewForm extends Component {
     Animated.timing(this.animated.recordButtonScale, {
       toValue: 1,
       duration: 200,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start()
-    this.recorder.stop((err) => {
+    this.recorder.stop(err => {
       if (!err) {
         this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
         this.Player = new Player('recording.mp4')
@@ -194,17 +201,17 @@ class AddNewForm extends Component {
     this.player.play()
     this._progressInterval = setInterval(() => {
       if (this.player) {
-        let currentProgress = Math.max(0, this.player.currentTime) / this.player.duration;
+        let currentProgress = Math.max(0, this.player.currentTime) / this.player.duration
         if (Number.isNaN(currentProgress)) {
-          currentProgress = 0;
+          currentProgress = 0
         }
-        this.setState({ playbackProgress: currentProgress });
+        this.setState({ playbackProgress: currentProgress })
         if (this.player.isStopped) {
           this.setState({ isPlaying: false })
           clearInterval(this._progressInterval)
         }
       }
-    }, 100);
+    }, 100)
   }
 
   render() {
@@ -286,10 +293,12 @@ class AddNewForm extends Component {
             <TextInput
               value={translatedPhrase}
               autoFocus={currentPage === 1}
-              onChangeText={text => store.dispatch({
+              onChangeText={text =>
+                store.dispatch({
                   type: FORM_TRANSLATED_CHANGED,
                   payload: text,
-                })}
+                })
+              }
               onSubmitEditing={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH * 2,
