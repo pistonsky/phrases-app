@@ -1,8 +1,8 @@
 platform :ios, '10.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'phrazes60' do
-  # Pods for phrazes60
+target 'Phrazes' do
+  # Pods for Phrazes
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'
   pod 'React-DevSupport', :path => '../node_modules/react-native/React'

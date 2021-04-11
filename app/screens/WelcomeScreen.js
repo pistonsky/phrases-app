@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { ConnectFacebookModal } from 'app/containers'
 import * as actions from 'app/actions'
 import { getWelcomeScreens } from 'app/reducers/selectors'
+import I18n from 'app/utils/i18n';
 
 class WelcomeScreen extends Component {
   renderSlides() {
@@ -47,7 +48,7 @@ class WelcomeScreen extends Component {
             fetchDemoPhrases()
           }}
           onLeft={() => loginWithFacebook()}
-          leftText="Login"
+          leftText={I18n.t('Login')}
         />
       </View>
     )

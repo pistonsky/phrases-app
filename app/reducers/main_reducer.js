@@ -27,9 +27,10 @@ import {
 } from 'app/actions/types'
 import colors from 'app/styles/colors'
 import { randomId } from 'app/utils/functions'
+import I18n from 'app/utils/i18n'
 
-const SHARED_DICTIONARY_NAME = 'Added'
-const DEFAULT_DICTIONARY_NAME = 'Phrazes'
+const SHARED_DICTIONARY_NAME = I18n.t('Added')
+const DEFAULT_DICTIONARY_NAME = I18n.t('Phrazes')
 
 const INITIAL_STATE = {
   add_new_modal_shown: false,
@@ -41,18 +42,18 @@ const INITIAL_STATE = {
   guide: [
     {
       head: 'Phrazes',
-      body: 'Learn languages with natives\nphrase by phrase',
+      body: I18n.t('Learn languages with natives\nphrase by phrase'),
       background: colors.primary_dark,
     },
     {
-      head: 'Connect with locals',
-      body: 'Ask them to give you some phrases\nthen record how they pronounce it',
+      head: I18n.t('Connect with locals'),
+      body: I18n.t('Ask them to give you some phrases\nthen record how they pronounce it'),
       // body: 'Say goodbye to dictionaries\nlearn from locals',
       background: colors.secondary_dark,
     },
     {
-      head: 'Share with friends',
-      body: 'Pass on all your handy phrazes\nand discover new ones',
+      head: I18n.t('Share with friends'),
+      body: I18n.t('Pass on all your handy phrazes\nand discover new ones'),
       background: colors.primary,
     },
   ],

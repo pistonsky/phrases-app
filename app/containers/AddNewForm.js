@@ -45,6 +45,7 @@ import * as config from 'app/utils/config'
 import * as api from 'app/api'
 import styles from 'app/styles'
 import colors from 'app/styles/colors'
+import I18n from 'app/utils/i18n'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -251,7 +252,7 @@ class AddNewForm extends Component {
           }}
         >
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.formSlide}>
-            <Text style={styles.formHeader}>Original:</Text>
+            <Text style={styles.formHeader}>{`${I18n.t('Original')}:`}</Text>
             <TextInput
               value={originalPhrase}
               onChangeText={text => store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
@@ -269,7 +270,7 @@ class AddNewForm extends Component {
               }}
             />
             <Button
-              title="Next"
+              title={I18n.t('Next')}
               onPress={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH,
@@ -281,7 +282,7 @@ class AddNewForm extends Component {
           </KeyboardAvoidingView>
 
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.formSlide}>
-            <Text style={styles.formHeader}>Translated:</Text>
+            <Text style={styles.formHeader}>{`${I18n.t('Translated')}:`}</Text>
             <TextInput
               value={translatedPhrase}
               autoFocus={currentPage === 1}
@@ -301,7 +302,7 @@ class AddNewForm extends Component {
               }}
             />
             <Button
-              title="Next"
+              title={I18n.t('Next')}
               onPress={() => {
                 this.scrollView.scrollTo({
                   x: SCREEN_WIDTH * 2,
@@ -371,7 +372,7 @@ class AddNewForm extends Component {
                   fontSize: 12,
                 }}
               >
-                Cancel
+                {I18n.t('Cancel')}
               </Text>
             </View>
           </TouchableOpacity>

@@ -119,6 +119,8 @@ PODS:
     - React
   - RNGestureHandler (1.1.0):
     - React
+  - RNLocalize (2.0.2):
+    - React-Core
   - RNPermissions (2.0.3):
     - React
   - RNVectorIcons (6.6.0):
@@ -157,6 +159,7 @@ DEPENDENCIES:
   - "ReactNativeAudioToolkit (from `../node_modules/@react-native-community/audio-toolkit`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -227,6 +230,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNVectorIcons:
@@ -268,10 +273,11 @@ SPEC CHECKSUMS:
   ReactNativeAudioToolkit: 4506c3df44edce0b3a95dfc80853e5c3ca0360a3
   RNFS: d229ee245fa9685417e6d9367031d670d723547e
   RNGestureHandler: 8a75e1d2f83d73aba148653252953e4bcf363b98
+  RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
   RNPermissions: 9e437a90de84a5402ff689d4da233730b81556c2
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411
 
-PODFILE CHECKSUM: 4de7fcbc46e1e401e10639fb50e0dbc4edb9cde4
+PODFILE CHECKSUM: 96018a42f1954a151dda7c20791653bc7e67d3c2
 
 COCOAPODS: 1.10.1
