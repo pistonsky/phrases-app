@@ -74,7 +74,7 @@ class DictionarySelectorModal extends Component {
                 this.flatlist = item
               }}
               style={styles.flatlist}
-              contentContainerStyle={{ backgroundColor: 'transparent' }}
+              contentContainerStyle={styles.flatListContentContainer}
               data={dictionaries}
               keyExtractor={item => item.name}
               renderItem={({ item, index }) => (

@@ -1,5 +1,7 @@
 import { Dimensions, Platform } from 'react-native'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+
+import { a } from 'app/utils';
 import colors from './colors'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -29,6 +31,11 @@ export const container = {
 export const flatlist = {
   width: '100%',
   flex: 1,
+}
+
+export const flatListContentContainer = {
+  backgroundColor: 'transparent',
+  paddingBottom: a(0, 0, 0, 30, 30),
 }
 
 export const flatlistContent = {
@@ -87,7 +94,8 @@ export const buttonDisabled = {
 
 export const shareButtonContainer = {
   width: SCREEN_WIDTH,
-  backgroundColor: colors.secondary,
+  backgroundColor: colors.primary,
+  paddingBottom: a(0, 0, 0, 30, 30),
 }
 
 export const formRecordButtonContainer = {
