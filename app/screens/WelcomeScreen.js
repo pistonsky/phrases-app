@@ -36,13 +36,16 @@ class WelcomeScreen extends Component {
   }
 
   render() {
-    const { skipWelcomeScreen, loginWithFacebook } = this.props
+    const { skipWelcomeScreen, fetchDemoPhrases, loginWithFacebook } = this.props
     return (
       <View style={{ flex: 1 }}>
         <ConnectFacebookModal />
         <Onboarding
           pages={this.renderSlides()}
-          onEnd={() => skipWelcomeScreen()}
+          onEnd={() => {
+            skipWelcomeScreen()
+            fetchDemoPhrases()
+          }}
           onLeft={() => loginWithFacebook()}
           leftText="Login"
         />

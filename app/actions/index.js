@@ -83,6 +83,15 @@ export const loginWithFacebook = () => async dispatch => {
   }
 }
 
+export const fetchDemoPhrases = () => async dispatch => {
+  try {
+    const { data } = await api.getDemoPhrases()
+    dispatch({ type: DATA_LOADED, phrases: data.phrases })
+  } catch (e) {
+    // not important - user won't get free phrases
+  }
+}
+
 export const ignoreConnectFacebook = () => {
   return {
     type: FACEBOOK_CONNECT_IGNORED,

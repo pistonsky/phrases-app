@@ -25,7 +25,7 @@
     "react-native-permissions": "^2.0.3",
     "react-native-progress": "^4.0.1",
     "react-native-router-flux": "4.1.0-beta.8",
-    "react-native-simple-onboarding": "https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.4",
+    "react-native-simple-onboarding": "https://github.com/pistonsky/react-native-simple-onboarding/tarball/v0.1.5",
     "react-native-splash-screen": "^3.2.0",
     "react-native-swift": "^1.2.3",
     "react-native-swipeout": "^2.3.6",

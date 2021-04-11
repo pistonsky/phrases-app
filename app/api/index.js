@@ -24,6 +24,13 @@ export const getPhrases = async params => {
   return result
 }
 
+export const getDemoPhrases = async () => {
+  // params: { user_id, dictionary }
+  const url = config.BASE_URL + '/demo?'
+  const result = await axios.get(url)
+  return result
+}
+
 export const deletePhrase = async phrase => {
   const query = qs.stringify({ id: phrase.id, uri: phrase.uri })
   const url = config.BASE_URL + '/?' + query
