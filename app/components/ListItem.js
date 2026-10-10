@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import Swipeout from 'react-native-swipeout'
+import Swipeout from './Swipeout'
 import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
 import ListItemShort from './ListItemShort'

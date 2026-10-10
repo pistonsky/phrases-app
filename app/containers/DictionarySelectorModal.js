@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, FlatList, TouchableOpacity, Text, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
+import { BlurView } from '@sbaiahmed1/react-native-blur'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { DictionaryListItem } from 'app/components'
 import { getDictionaries, shouldShowDictionariesSelectorModal, getUserId } from 'app/reducers/selectors'

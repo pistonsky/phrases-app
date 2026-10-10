@@ -1,6 +1,6 @@
 import React from 'react'
 import { Platform } from 'react-native'
-import { Button as BaseButton } from 'react-native-elements'
+import { Button as BaseButton } from '@rneui/base'
 
 import styles from 'app/styles'
 import colors from 'app/styles/colors'

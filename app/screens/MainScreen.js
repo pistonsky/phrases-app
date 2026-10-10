@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, NetInfo, AppState, StatusBar } from 'react-native'
+import { View, StatusBar } from 'react-native'
 import { AddNewModal, DictionarySelectorModal, PhrasesList, PhraseModal, PleaseWaitModal } from 'app/containers'
 import { getUserId } from 'app/reducers/selectors'
 import styles from 'app/styles'

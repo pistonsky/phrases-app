@@ -1,6 +1,6 @@
 import React from 'react'
 import { Platform, View, Text, Image, TouchableOpacity } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Icon } from '@rneui/base'
 
 import { Button } from 'app/components'
 import styles from 'app/styles'
@@ -18,7 +18,7 @@ const NoPermissionsSlide = ({ onCancel, onPress }) => {
       <Button onPress={onPress} title={I18n.t('Enable Microphone')} />
       <TouchableOpacity onPress={onCancel}>
         <View style={{ opacity: 0.7, flexDirection: 'column', alignItems: 'center', marginBottom: 10 }}>
-          <Icon name="ios-close-circle" type="ionicon" size={30} color={colors.white} />
+          <Icon name="close-circle" type="ionicon" size={30} color={colors.white} />
           <Text style={{ color: colors.white, fontSize: 12 }}>{I18n.t('Cancel')}</Text>
         </View>
       </TouchableOpacity>

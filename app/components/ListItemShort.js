@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableHighlight, View, Text } from 'react-native'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome from '@react-native-vector-icons/fontawesome'
 
 const NOT_YET_LOADED_OPACITY = 0.9
 

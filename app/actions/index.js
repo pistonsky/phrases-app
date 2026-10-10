@@ -1,6 +1,6 @@
-import { LoginManager, AccessToken } from 'react-native-fbsdk'
-import { Actions } from 'react-native-router-flux'
-import { Alert, AlertIOS } from 'react-native'
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next'
+import { Alert } from 'react-native'
+import { resetTo } from 'app/navigation'
 import * as api from 'app/api'
 import { getUserId } from 'app/reducers/selectors'
 import {
@@ -27,7 +27,7 @@ const facebookLogin = () => {
 
 export const skipWelcomeScreen = () => async dispatch => {
   dispatch({ type: SKIP_WELCOME_SCREENS }) // this effectively creates a user
-  Actions.main()
+  resetTo('main')
 }
 
 export const connectFacebook = user_id => async dispatch => {
@@ -67,7 +67,7 @@ export const loginWithFacebook = () => async dispatch => {
       const { accessToken } = await AccessToken.getCurrentAccessToken()
       const { status, data } = await api.connectFacebook(accessToken)
       if (status !== 200) throw status
-      Actions.main()
+      resetTo('main')
       dispatch({ type: FACEBOOK_LOGIN, user_id: data.user_id })
       dispatch({ type: DATA_LOADED, phrases: data.phrases })
     } catch (e) {
@@ -144,7 +144,7 @@ export const updateDictionaryName = ({ old_name, new_name }) => async dispatch =
 }
 
 export const copyDictionaryAsTemplate = ({ dictionary_name }) => async dispatch => {
-  AlertIOS.prompt(
+  Alert.prompt(
     'Enter new dictionary name',
     'The selected dictionary will be used as a template for the new dictionary: it will contain all the same phrases in original language.',
     [

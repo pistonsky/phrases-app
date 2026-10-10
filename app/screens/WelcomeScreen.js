@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { View, Image, Dimensions } from 'react-native'
-import Onboarding from 'react-native-simple-onboarding'
 import { connect } from 'react-redux'
-import { ConnectFacebookModal } from 'app/containers'
+import { Onboarding } from 'app/components'
 import * as actions from 'app/actions'
 import { getWelcomeScreens } from 'app/reducers/selectors'
 import I18n from 'app/utils/i18n';
@@ -40,7 +39,6 @@ class WelcomeScreen extends Component {
     const { skipWelcomeScreen, fetchDemoPhrases, loginWithFacebook } = this.props
     return (
       <View style={{ flex: 1 }}>
-        <ConnectFacebookModal />
         <Onboarding
           pages={this.renderSlides()}
           onEnd={() => {

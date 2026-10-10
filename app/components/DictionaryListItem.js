@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableHighlight, Vibration } from 'react-native'
-import Swipeout from 'react-native-swipeout'
-import { Icon } from 'react-native-elements'
+import Swipeout from './Swipeout'
+import { Icon } from '@rneui/base'
 import colors from 'app/styles/colors'
 import { smartFontSize } from 'app/utils/functions'
 
@@ -31,7 +31,7 @@ export default class DictionaryListItem extends Component {
           {
             component: (
               <View style={styles.centeredContent}>
-                <Icon name="ios-copy" type="ionicon" size={24} color={colors.white} />
+                <Icon name="copy" type="ionicon" size={24} color={colors.white} />
               </View>
             ),
             onPress: () => onCopy(),
@@ -39,7 +39,7 @@ export default class DictionaryListItem extends Component {
           {
             component: (
               <View style={styles.centeredContent}>
-                <Icon name="ios-trash" type="ionicon" size={30} color={colors.white} />
+                <Icon name="trash" type="ionicon" size={30} color={colors.white} />
               </View>
             ),
             backgroundColor: '#f00',
@@ -114,7 +114,7 @@ export default class DictionaryListItem extends Component {
             )}
             {item.selected && (
               <Icon
-                name="ios-checkmark"
+                name="checkmark"
                 type="ionicon"
                 size={30}
                 color={colors.white}

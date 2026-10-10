@@ -8,13 +8,12 @@ import {
   Text,
   TextInput,
   LayoutAnimation,
-  NativeModules,
   Image,
 } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
-import RNFS from 'react-native-fs'
-import { Icon } from 'react-native-elements'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { BlurView } from '@sbaiahmed1/react-native-blur'
+import * as RNFS from '@dr.pogodin/react-native-fs'
+import { Icon } from '@rneui/base'
+import FontAwesome from '@react-native-vector-icons/fontawesome'
 import { RecButton } from 'app/components'
 import { shouldShowPhraseModal, getOpenedPhrase, isPlayAllMode, getNextPhrase } from 'app/reducers/selectors'
 import {
@@ -29,10 +28,6 @@ import * as styles from 'app/styles/phraseModalStyles'
 import colors from 'app/styles/colors'
 import { store } from 'app/redux'
 import I18n from 'app/utils/i18n'
-
-const { UIManager } = NativeModules
-
-UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
 
 class PhraseModal extends Component {
   constructor(props) {
@@ -49,7 +44,7 @@ class PhraseModal extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { visible, phrase } = this.props
     if (nextProps.visible && (!visible || phrase.uri !== nextProps.phrase.uri) && nextProps.phrase !== null) {
       // overwrite only when modal is opened or "play all" is going on
@@ -255,7 +250,7 @@ class PhraseModal extends Component {
                           top: 10,
                         }}
                       >
-                        <Icon name="ios-refresh-circle" type="ionicon" size={40} color={colors.white} />
+                        <Icon name="refresh-circle" type="ionicon" size={40} color={colors.white} />
                         <Text style={[styles.iconLabel, { marginTop: -2 }]}>Reset</Text>
                       </View>
                     </TouchableOpacity>
@@ -374,7 +369,7 @@ class PhraseModal extends Component {
             {!play_all_mode && (
               <TouchableOpacity onPress={() => store.dispatch({ type: CLOSE_PHRASE_MODAL })}>
                 <View style={styles.cancelContainer}>
-                  <Icon name="ios-close-circle" type="ionicon" size={50} color={colors.white} />
+                  <Icon name="close-circle" type="ionicon" size={50} color={colors.white} />
                   <Text style={styles.iconLabel}>{I18n.t('Cancel')}</Text>
                 </View>
               </TouchableOpacity>
@@ -403,7 +398,7 @@ class PhraseModal extends Component {
               }}
             >
               <View style={[styles.cancelContainer, { opacity: 1 }]}>
-                <Icon name="ios-checkmark-circle" type="ionicon" size={50} color={colors.secondary} />
+                <Icon name="checkmark-circle" type="ionicon" size={50} color={colors.secondary} />
                 <Text style={styles.iconLabel}>{I18n.t('Done')}</Text>
               </View>
             </TouchableOpacity>
@@ -432,7 +427,7 @@ class PhraseModal extends Component {
                 }}
               >
                 <View style={styles.cancelContainer}>
-                  <Icon name="ios-arrow-dropright-circle" type="ionicon" size={50} color={colors.secondary} />
+                  <Icon name="caret-forward-circle" type="ionicon" size={50} color={colors.secondary} />
                   <Text style={styles.iconLabel}>{I18n.t('Next')}</Text>
                 </View>
               </TouchableOpacity>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, Text, View, Button, ActivityIndicator } from 'react-native'
-import { SocialIcon } from 'react-native-elements'
+import { SocialIcon } from '@rneui/base'
 import styles from 'app/styles'
 import { connectFacebook, ignoreConnectFacebook } from 'app/actions'
 import {

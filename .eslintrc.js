@@ -1,14 +1,11 @@
-const path = require('path')
-
 module.exports = {
   extends: 'airbnb',
   parserOptions: {
     ecmaFeatures: {
-      classes: true,
       jsx: true,
-      experimentalObjectRestSpread: true,
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 2022,
+    sourceType: 'module',
   },
   globals: {
     customFetch: true,
@@ -58,6 +55,10 @@ module.exports = {
     'no-mixed-operators': 0,
     'no-continue': 0,
     curly: 0,
+    // rules added in eslint-config-airbnb 19 that contradict the code base's existing style
+    'react/function-component-definition': 0,
+    'default-param-last': 0,
+    'import/no-import-module-exports': 0,
     'jest/no-disabled-tests': 'warn',
     'jest/no-focused-tests': 'error',
     'jest/no-identical-title': 'error',
@@ -74,12 +75,12 @@ module.exports = {
       node: {
         extensions: ['.js', '.android.js', '.ios.js'],
       },
-      webpack: {
-        config: path.join(__dirname, 'webpack.config.js'),
-      },
+      'babel-module': {},
     },
     'import/external-module-folders': [
       'node_modules',
     ],
+    // only resolvable through its package.json "exports", which eslint-plugin-import doesn't read
+    'import/core-modules': ['@react-native/metro-config'],
   },
 }

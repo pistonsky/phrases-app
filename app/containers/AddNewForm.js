@@ -16,10 +16,10 @@ import {
   Keyboard,
   Button as ReactNativeButton,
 } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Icon } from '@rneui/base'
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'
-import RNFS from 'react-native-fs'
-import { Player, Recorder } from '@react-native-community/audio-toolkit'
+import * as RNFS from '@dr.pogodin/react-native-fs'
+import { createSound } from 'react-native-nitro-sound'
 import axios from 'axios'
 import { TextInput, Button, NoPermissionsSlide, RecordingSlide, FadingView } from 'app/components'
 import {
@@ -48,6 +48,7 @@ import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
+const RECORDING_PATH = `${RNFS.DocumentDirectoryPath}/recording.mp4`
 
 class AddNewForm extends Component {
   constructor(props) {
@@ -69,11 +70,12 @@ class AddNewForm extends Component {
       recordButtonScale: new Animated.Value(1),
     }
     this._handleAppStateChange = this._handleAppStateChange.bind(this)
+    this.sound = createSound()
   }
 
   componentDidMount() {
     const { haveRecordingPermissions, currentPage } = this.props
-    AppState.addEventListener('change', this._handleAppStateChange)
+    this._appStateSubscription = AppState.addEventListener('change', this._handleAppStateChange)
     if (haveRecordingPermissions !== undefined) {
       // undefined means we never asked for mic yet
       this._checkPermissionsAsync()
@@ -90,7 +92,7 @@ class AddNewForm extends Component {
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange)
+    this._appStateSubscription.remove()
   }
 
   _handleAppStateChange(nextAppState) {
@@ -102,8 +104,7 @@ class AddNewForm extends Component {
   }
 
   _prepareRecording() {
-    this.recorder = new Recorder('recording.mp4')
-    this.recorder.prepare()
+    // nothing to prepare: the recorder is set up when recording starts
   }
 
   async _askForPermissions() {
@@ -136,12 +137,7 @@ class AddNewForm extends Component {
   }
 
   _startRecording() {
-    if (this.recorder.state === -2) {
-      // DESTROYED
-      this.recorder = new Recorder('recording.mp4')
-      this.recorder.prepare()
-    }
-    this.recorder.record(() => {
+    const onRecordingStarted = () => {
       this.setState({ isRecording: true })
       Animated.timing(this.animated.recordButtonScale, {
         toValue: 1.5,
@@ -152,7 +148,11 @@ class AddNewForm extends Component {
       this._progressInterval = setInterval(() => {
         this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
       }, 100)
-    })
+    }
+    this.sound
+      .startRecorder(RECORDING_PATH)
+      .catch(e => console.log('startRecorder failed', e))
+      .then(onRecordingStarted)
   }
 
   _stopRecording() {
@@ -163,13 +163,13 @@ class AddNewForm extends Component {
       duration: 200,
       useNativeDriver: true,
     }).start()
-    this.recorder.stop(err => {
-      if (!err) {
+    this.sound.stopRecorder().then(
+      () => {
         this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
-        this.Player = new Player('recording.mp4')
-        this.Player.play()
-      }
-    })
+        this.sound.startPlayer(RECORDING_PATH)
+      },
+      e => console.log('stopRecorder failed', e),
+    )
   }
 
   _resetRecording() {
@@ -181,7 +181,7 @@ class AddNewForm extends Component {
     const uri = Math.random()
       .toString(36)
       .slice(2)
-    await RNFS.moveFile(`${RNFS.DocumentDirectoryPath}/recording.mp4`, `${RNFS.DocumentDirectoryPath}/${uri}.mp4`)
+    await RNFS.moveFile(RECORDING_PATH, `${RNFS.DocumentDirectoryPath}/${uri}.mp4`)
     const phrase = {
       original: originalPhrase,
       translated: translatedPhrase,
@@ -197,21 +197,19 @@ class AddNewForm extends Component {
 
   async _play() {
     this.setState({ isPlaying: true })
-    this.player = new Player('recording.mp4')
-    this.player.play()
-    this._progressInterval = setInterval(() => {
-      if (this.player) {
-        let currentProgress = Math.max(0, this.player.currentTime) / this.player.duration
-        if (Number.isNaN(currentProgress)) {
-          currentProgress = 0
-        }
-        this.setState({ playbackProgress: currentProgress })
-        if (this.player.isStopped) {
-          this.setState({ isPlaying: false })
-          clearInterval(this._progressInterval)
-        }
+    this.sound.addPlayBackListener(({ currentPosition, duration }) => {
+      let currentProgress = Math.max(0, currentPosition) / duration
+      if (Number.isNaN(currentProgress)) {
+        currentProgress = 0
       }
-    }, 100)
+      this.setState({ playbackProgress: currentProgress })
+    })
+    this.sound.addPlaybackEndListener(() => {
+      this.sound.removePlayBackListener()
+      this.sound.removePlaybackEndListener()
+      this.setState({ isPlaying: false, playbackProgress: 0 })
+    })
+    await this.sound.startPlayer(RECORDING_PATH)
   }
 
   render() {
@@ -373,7 +371,7 @@ class AddNewForm extends Component {
                 alignItems: 'center',
               }}
             >
-              <Icon name="ios-close-circle" type="ionicon" size={30} color={colors.white} />
+              <Icon name="close-circle" type="ionicon" size={30} color={colors.white} />
               <Text
                 style={{
                   color: colors.white,

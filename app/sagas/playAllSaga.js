@@ -1,6 +1,6 @@
 import { takeEvery, select, call, put, race, take, cancel, fork } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { Capability, Event } from 'react-native-track-player'
 import {
   PLAY_ALL,
   CANCEL_PLAY_ALL,
@@ -20,12 +20,34 @@ const playAllSaga = function* playAllSaga() {
   yield takeEvery(CANCEL_PLAY_ALL, abortPlayAll)
 }
 
+let playerSetup
+
+// setupPlayer() may only be called once per app run, so share a single promise
+const setupPlayer = () => {
+  if (!playerSetup) {
+    playerSetup = TrackPlayer.setupPlayer()
+      .catch(e => {
+        if (e.code !== 'player_already_initialized') {
+          playerSetup = undefined
+          throw e
+        }
+      })
+      .then(() => TrackPlayer.updateOptions({
+        capabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
+      }))
+  }
+  return playerSetup
+}
+
 const createTrackChangedChannel = () => {
   return eventChannel(emit => {
-    const handler = ({ track, nextTrack }) => {
-      emit(track || nextTrack)
+    const handler = ({ track }) => {
+      // `track` is the newly active track; it's undefined when the queue gets cleared
+      if (track) {
+        emit(track.id)
+      }
     }
-    const eventListener = TrackPlayer.addEventListener('playback-track-changed', handler)
+    const eventListener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, handler)
     const unsubscribe = () => {
       eventListener.remove()
     }
@@ -35,10 +57,10 @@ const createTrackChangedChannel = () => {
 
 const createQueueEndedChannel = () => {
   return eventChannel(emit => {
-    const handler = ({ track }) => {
-      emit(track)
+    const handler = () => {
+      emit(true)
     }
-    const eventListener = TrackPlayer.addEventListener('playback-queue-ended', handler)
+    const eventListener = TrackPlayer.addEventListener(Event.PlaybackQueueEnded, handler)
     const unsubscribe = () => {
       eventListener.remove()
     }
@@ -69,19 +91,10 @@ const playAll = function* playAll() {
     if (playlist.length === 0) {
       const { playlist: initialPlaylist, tracks } = yield call(createRandomizedPlaylist)
       playlist = initialPlaylist
-      TrackPlayer.setupPlayer().then(() => {
-        TrackPlayer.updateOptions({
-          capabilities: [
-            TrackPlayer.CAPABILITY_PLAY,
-            TrackPlayer.CAPABILITY_PAUSE,
-            TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-            TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-          ]
-        })
-        TrackPlayer.add(tracks).then(() => {
-          TrackPlayer.play()
-        })
-      })
+      setupPlayer()
+        .then(() => TrackPlayer.reset()) // start the new random playlist from scratch
+        .then(() => TrackPlayer.add(tracks))
+        .then(() => TrackPlayer.play())
       nextPhraseUri = yield take(nextTrack)
     }
     next = yield select(getPhrase, nextPhraseUri)
@@ -100,11 +113,7 @@ const playAll = function* playAll() {
       nextPhraseUri = nextTrackOutcome
     }
     if (queueEndedOutcome) {
-      nextPhraseUri = queueEndedOutcome
-      next = yield select(getPhrase, nextPhraseUri)
-      if (next) {
-        yield put({ type: OPEN_PHRASE, phrase: next })
-      }
+      // the last phrase stays open while a new random playlist is prepared
       playlist = []
     }
   }

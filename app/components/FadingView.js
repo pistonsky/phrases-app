@@ -9,6 +9,7 @@ const FadingView = props => {
     Animated.timing(_visibility, {
       toValue: props.visible ? 1 : 0,
       duration: 300,
+      useNativeDriver: true,
     }).start()
   })
 
