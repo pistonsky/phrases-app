@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Image, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { Onboarding } from 'app/components'
@@ -6,10 +6,8 @@ import * as actions from 'app/actions'
 import { getWelcomeScreens } from 'app/reducers/selectors'
 import I18n from 'app/utils/i18n';
 
-class WelcomeScreen extends Component<any, any> {
-  [key: string]: any
-  renderSlides() {
-    const { guide } = this.props
+const WelcomeScreen = ({ guide, skipWelcomeScreen, fetchDemoPhrases, loginWithFacebook }) => {
+  const renderSlides = () => {
     // iPhone 6 Plus = 414
     // iPhone 6      = 375
     // iPhone SE     = 320
@@ -36,22 +34,19 @@ class WelcomeScreen extends Component<any, any> {
     ]
   }
 
-  render() {
-    const { skipWelcomeScreen, fetchDemoPhrases, loginWithFacebook } = this.props
-    return (
-      <View style={{ flex: 1 }}>
-        <Onboarding
-          pages={this.renderSlides()}
-          onEnd={() => {
-            skipWelcomeScreen()
-            fetchDemoPhrases()
-          }}
-          onLeft={() => loginWithFacebook()}
-          leftText={I18n.t('Login')}
-        />
-      </View>
-    )
-  }
+  return (
+    <View style={{ flex: 1 }}>
+      <Onboarding
+        pages={renderSlides()}
+        onEnd={() => {
+          skipWelcomeScreen()
+          fetchDemoPhrases()
+        }}
+        onLeft={() => loginWithFacebook()}
+        leftText={I18n.t('Login')}
+      />
+    </View>
+  )
 }
 
 function mapStateToProps(state) {

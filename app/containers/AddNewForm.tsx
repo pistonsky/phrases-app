@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
@@ -54,76 +54,96 @@ const Icon: any = RneIcon
 const SCREEN_WIDTH = Dimensions.get('window').width
 const RECORDING_PATH = `${RNFS.DocumentDirectoryPath}/recording.mp4`
 
-class AddNewForm extends Component<any, any> {
-  [key: string]: any
-  constructor(props) {
-    super(props)
-    this.state = {
-      isRecording: false,
-      isUploading: false,
-      isPlaying: false,
-      recorded: false,
-      uploaded: false,
-      recordingDuration: 0,
-      uploadProgress: 0,
-      playbackProgress: 0,
-      checkingPermissions: false,
-      permissionsStage: 0,
-      appState: AppState.currentState,
-    }
-    this.animated = {
-      recordButtonScale: new Animated.Value(1),
-    }
-    this._handleAppStateChange = this._handleAppStateChange.bind(this)
-    this.sound = createSound()
+const AddNewForm = ({
+  haveRecordingPermissions,
+  originalPhrase,
+  translatedPhrase,
+  currentDictionary,
+  currentPage,
+}) => {
+  const insets = useContext(SafeAreaInsetsContext)
+  const [state, setState] = useState({
+    isRecording: false,
+    isUploading: false,
+    isPlaying: false,
+    recorded: false,
+    uploaded: false,
+    recordingDuration: 0,
+    uploadProgress: 0,
+    playbackProgress: 0,
+    checkingPermissions: false,
+    permissionsStage: 0,
+    appState: AppState.currentState,
+  })
+  const stateRef = useRef(state)
+  stateRef.current = state
+  const animated = useRef({
+    recordButtonScale: new Animated.Value(1),
+  }).current
+  const sound = useRef(createSound()).current
+  const scrollView = useRef<any>(null)
+  const textInput1 = useRef<any>(null)
+  const textInput2 = useRef<any>(null)
+  const progressInterval = useRef<any>(null)
+  const recordingStartTime = useRef<any>(null)
+  const permissionsRef = useRef(haveRecordingPermissions)
+  permissionsRef.current = haveRecordingPermissions
+
+  const patch = update => setState(prev => ({ ...prev, ...update }))
+
+  const prepareRecording = () => {
+    // nothing to prepare: the recorder is set up when recording starts
   }
 
-  componentDidMount() {
-    const { haveRecordingPermissions, currentPage } = this.props
-    this._appStateSubscription = AppState.addEventListener('change', this._handleAppStateChange)
+  const checkPermissionsAsync = async () => {
+    const status = await request(PERMISSIONS.IOS.MICROPHONE)
+    if (status === 'granted') {
+      store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED })
+      prepareRecording()
+    } else {
+      store.dispatch({ type: RECORDING_PERMISSIONS_DENIED })
+    }
+  }
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      const { appState, permissionsStage } = stateRef.current
+      if (appState.match(/inactive|background/) && nextAppState === 'active' && permissionsStage === 1) {
+        checkPermissionsAsync()
+      }
+      patch({ appState: nextAppState })
+    })
     if (haveRecordingPermissions !== undefined) {
       // undefined means we never asked for mic yet
-      this._checkPermissionsAsync()
+      checkPermissionsAsync()
     }
-    this.scrollView.scrollTo({
+    scrollView.current.scrollTo({
       x: SCREEN_WIDTH * currentPage,
       y: 0,
       animated: false,
     })
 
     if (haveRecordingPermissions) {
-      this._prepareRecording()
+      prepareRecording()
     }
-  }
-
-  componentWillUnmount() {
-    this._appStateSubscription.remove()
-  }
-
-  _handleAppStateChange(nextAppState) {
-    const { appState, permissionsStage } = this.state
-    if (appState.match(/inactive|background/) && nextAppState === 'active' && permissionsStage === 1) {
-      this._checkPermissionsAsync()
+    return () => {
+      subscription.remove()
     }
-    this.setState({ appState: nextAppState })
-  }
+    // mount and unmount only, matching the class lifecycle
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  _prepareRecording() {
-    // nothing to prepare: the recorder is set up when recording starts
-  }
-
-  async _askForPermissions() {
-    const { haveRecordingPermissions } = this.props
+  const askForPermissions = async () => {
     if (Platform.OS === 'ios') {
-      if (haveRecordingPermissions !== undefined) {
+      if (permissionsRef.current !== undefined) {
         // consequent permissions request won't work on ios - have to send user to Settings
-        this.setState({ permissionsStage: 1 })
+        patch({ permissionsStage: 1 })
         Linking.openURL('App-prefs:root=Privacy&path=MICROPHONE')
       } else {
         const status = await request(PERMISSIONS.IOS.MICROPHONE)
         if (status === 'granted') {
           store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED })
-          this._prepareRecording()
+          prepareRecording()
         } else {
           store.dispatch({ type: RECORDING_PERMISSIONS_DENIED })
         }
@@ -131,58 +151,47 @@ class AddNewForm extends Component<any, any> {
     }
   }
 
-  async _checkPermissionsAsync() {
-    const status = await request(PERMISSIONS.IOS.MICROPHONE)
-    if (status === 'granted') {
-      store.dispatch({ type: RECORDING_PERMISSIONS_GRANTED })
-      this._prepareRecording()
-    } else {
-      store.dispatch({ type: RECORDING_PERMISSIONS_DENIED })
-    }
-  }
-
-  _startRecording() {
+  const startRecording = () => {
     const onRecordingStarted = () => {
-      this.setState({ isRecording: true })
-      Animated.timing(this.animated.recordButtonScale, {
+      patch({ isRecording: true })
+      Animated.timing(animated.recordButtonScale, {
         toValue: 1.5,
         duration: 200,
         useNativeDriver: true,
       }).start()
-      this._recordingStartTime = new Date()
-      this._progressInterval = setInterval(() => {
-        this.setState({ recordingDuration: (Number(new Date()) - Number(this._recordingStartTime)) / 1000 })
+      recordingStartTime.current = new Date()
+      progressInterval.current = setInterval(() => {
+        patch({ recordingDuration: (Number(new Date()) - Number(recordingStartTime.current)) / 1000 })
       }, 100)
     }
-    this.sound
+    sound
       .startRecorder(RECORDING_PATH)
       .catch(e => console.log('startRecorder failed', e))
       .then(onRecordingStarted)
   }
 
-  _stopRecording() {
-    clearInterval(this._progressInterval)
-    this.setState({ isRecording: false, recorded: true })
-    Animated.timing(this.animated.recordButtonScale, {
+  const stopRecording = () => {
+    clearInterval(progressInterval.current)
+    patch({ isRecording: false, recorded: true })
+    Animated.timing(animated.recordButtonScale, {
       toValue: 1,
       duration: 200,
       useNativeDriver: true,
     }).start()
-    this.sound.stopRecorder().then(
+    sound.stopRecorder().then(
       () => {
-        this.setState({ recordingDuration: (Number(new Date()) - Number(this._recordingStartTime)) / 1000 })
-        this.sound.startPlayer(RECORDING_PATH)
+        patch({ recordingDuration: (Number(new Date()) - Number(recordingStartTime.current)) / 1000 })
+        sound.startPlayer(RECORDING_PATH)
       },
       e => console.log('stopRecorder failed', e),
     )
   }
 
-  _resetRecording() {
-    this.setState({ uploaded: false, recordingDuration: 0, recorded: false })
+  const resetRecording = () => {
+    patch({ uploaded: false, recordingDuration: 0, recorded: false })
   }
 
-  async _submit() {
-    const { originalPhrase, translatedPhrase, currentDictionary } = this.props
+  const submit = async () => {
     const uri = Math.random()
       .toString(36)
       .slice(2)
@@ -200,201 +209,195 @@ class AddNewForm extends Component<any, any> {
     })
   }
 
-  async _play() {
-    this.setState({ isPlaying: true })
-    this.sound.addPlayBackListener(({ currentPosition, duration }) => {
+  const play = async () => {
+    patch({ isPlaying: true })
+    sound.addPlayBackListener(({ currentPosition, duration }) => {
       let currentProgress = Math.max(0, currentPosition) / duration
       if (Number.isNaN(currentProgress)) {
         currentProgress = 0
       }
-      this.setState({ playbackProgress: currentProgress })
+      patch({ playbackProgress: currentProgress })
     })
-    this.sound.addPlaybackEndListener(() => {
-      this.sound.removePlayBackListener()
-      this.sound.removePlaybackEndListener()
-      this.setState({ isPlaying: false, playbackProgress: 0 })
+    sound.addPlaybackEndListener(() => {
+      sound.removePlayBackListener()
+      sound.removePlaybackEndListener()
+      patch({ isPlaying: false, playbackProgress: 0 })
     })
-    await this.sound.startPlayer(RECORDING_PATH)
+    await sound.startPlayer(RECORDING_PATH)
   }
 
-  render() {
-    const { originalPhrase, translatedPhrase, currentPage, haveRecordingPermissions } = this.props
-    const {
-      isRecording,
-      isUploading,
-      isPlaying,
-      recorded,
-      uploaded,
-      recordingDuration,
-      uploadProgress,
-      playbackProgress,
-      checkingPermissions,
-    } = this.state
-    return (
-      <View style={{ flex: 1, backgroundColor: colors.primary }}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          style={{ flex: 1 }}
-          ref={e => {
-            this.scrollView = e
-          }}
-          onScroll={({
-            nativeEvent: {
-              contentOffset: { x },
-            },
-          }) => {
-            const page = Math.ceil(x / SCREEN_WIDTH)
-            store.dispatch({ type: FORM_SCROLL_TO_PAGE, page })
-            if (haveRecordingPermissions === undefined && page === 2) {
-              this._askForPermissions() // ask for recording permissions when user first sees recording page
-            }
-            if (page === 0) {
-              this._textInput1.focus()
-            }
-            if (page === 1) {
-              this._textInput2.focus()
-            }
-            if (page === 2) {
-              Keyboard.dismiss()
-            }
-          }}
-        >
-          <KeyboardAvoidingView {...({ behavior: Platform.OS === 'ios' ? 'padding' : 'height', style: styles.formSlide } as any)}>
-            <Text style={styles.formHeader}>{`${I18n.t('Original')}:`}</Text>
-            <TextInput
-              value={originalPhrase}
-              onChangeText={text => store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
-              autoFocus={currentPage === 0}
-              onSubmitEditing={() => {
-                this.scrollView.scrollTo({
-                  x: SCREEN_WIDTH,
-                  y: 0,
-                  animated: true,
-                })
-                this._textInput2.focus()
-              }}
-              textInputRef={e => {
-                this._textInput1 = e
-              }}
-            />
-            <Button
-              title={I18n.t('Next')}
-              onPress={() => {
-                this.scrollView.scrollTo({
-                  x: SCREEN_WIDTH,
-                  y: 0,
-                  animated: true,
-                })
-              }}
-            />
-          </KeyboardAvoidingView>
+  const {
+    isRecording,
+    isUploading,
+    isPlaying,
+    recorded,
+    uploaded,
+    recordingDuration,
+    uploadProgress,
+    playbackProgress,
+    checkingPermissions,
+  } = state
 
-          <KeyboardAvoidingView {...({ behavior: Platform.OS === 'ios' ? 'padding' : 'height', style: styles.formSlide } as any)}>
-            <Text style={styles.formHeader}>{`${I18n.t('Translated')}:`}</Text>
-            <TextInput
-              value={translatedPhrase}
-              autoFocus={currentPage === 1}
-              onChangeText={text =>
-                store.dispatch({
-                  type: FORM_TRANSLATED_CHANGED,
-                  payload: text,
-                })
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.primary }}>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        style={{ flex: 1 }}
+        ref={scrollView}
+        onScroll={({
+          nativeEvent: {
+            contentOffset: { x },
+          },
+        }) => {
+          const page = Math.ceil(x / SCREEN_WIDTH)
+          store.dispatch({ type: FORM_SCROLL_TO_PAGE, page })
+          if (haveRecordingPermissions === undefined && page === 2) {
+            askForPermissions() // ask for recording permissions when user first sees recording page
+          }
+          if (page === 0) {
+            textInput1.current.focus()
+          }
+          if (page === 1) {
+            textInput2.current.focus()
+          }
+          if (page === 2) {
+            Keyboard.dismiss()
+          }
+        }}
+      >
+        <KeyboardAvoidingView {...({ behavior: Platform.OS === 'ios' ? 'padding' : 'height', style: styles.formSlide } as any)}>
+          <Text style={styles.formHeader}>{`${I18n.t('Original')}:`}</Text>
+          <TextInput
+            value={originalPhrase}
+            onChangeText={text => store.dispatch({ type: FORM_ORIGINAL_CHANGED, payload: text })}
+            autoFocus={currentPage === 0}
+            onSubmitEditing={() => {
+              scrollView.current.scrollTo({
+                x: SCREEN_WIDTH,
+                y: 0,
+                animated: true,
+              })
+              textInput2.current.focus()
+            }}
+            textInputRef={e => {
+              textInput1.current = e
+            }}
+          />
+          <Button
+            title={I18n.t('Next')}
+            onPress={() => {
+              scrollView.current.scrollTo({
+                x: SCREEN_WIDTH,
+                y: 0,
+                animated: true,
+              })
+            }}
+          />
+        </KeyboardAvoidingView>
+
+        <KeyboardAvoidingView {...({ behavior: Platform.OS === 'ios' ? 'padding' : 'height', style: styles.formSlide } as any)}>
+          <Text style={styles.formHeader}>{`${I18n.t('Translated')}:`}</Text>
+          <TextInput
+            value={translatedPhrase}
+            autoFocus={currentPage === 1}
+            onChangeText={text =>
+              store.dispatch({
+                type: FORM_TRANSLATED_CHANGED,
+                payload: text,
+              })
+            }
+            onSubmitEditing={() => {
+              scrollView.current.scrollTo({
+                x: SCREEN_WIDTH * 2,
+                y: 0,
+                animated: true,
+              })
+            }}
+            textInputRef={e => {
+              textInput2.current = e
+            }}
+          />
+          <Button
+            title={I18n.t('Next')}
+            onPress={() => {
+              scrollView.current.scrollTo({
+                x: SCREEN_WIDTH * 2,
+                y: 0,
+                animated: true,
+              })
+            }}
+          />
+        </KeyboardAvoidingView>
+
+        {haveRecordingPermissions === false && !checkingPermissions ? (
+          <NoPermissionsSlide
+            onPress={() => askForPermissions()}
+            onCancel={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
+          />
+        ) : (
+          <RecordingSlide
+            recordingDuration={recordingDuration}
+            isUploading={isUploading}
+            isPlaying={isPlaying}
+            isRecording={isRecording}
+            uploaded={uploaded}
+            recorded={recorded}
+            uploadProgress={uploadProgress}
+            playbackProgress={playbackProgress}
+            animated={animated}
+            onTouchStart={async () => {
+              if (recorded) {
+                play()
+              } else if (isRecording) {
+                stopRecording()
+              } else {
+                startRecording()
               }
-              onSubmitEditing={() => {
-                this.scrollView.scrollTo({
-                  x: SCREEN_WIDTH * 2,
-                  y: 0,
-                  animated: true,
-                })
-              }}
-              textInputRef={e => {
-                this._textInput2 = e
-              }}
-            />
-            <Button
-              title={I18n.t('Next')}
-              onPress={() => {
-                this.scrollView.scrollTo({
-                  x: SCREEN_WIDTH * 2,
-                  y: 0,
-                  animated: true,
-                })
-              }}
-            />
-          </KeyboardAvoidingView>
-
-          {haveRecordingPermissions === false && !checkingPermissions ? (
-            <NoPermissionsSlide
-              onPress={() => this._askForPermissions()}
-              onCancel={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}
-            />
-          ) : (
-            <RecordingSlide
-              recordingDuration={recordingDuration}
-              isUploading={isUploading}
-              isPlaying={isPlaying}
-              isRecording={isRecording}
-              uploaded={uploaded}
-              recorded={recorded}
-              uploadProgress={uploadProgress}
-              playbackProgress={playbackProgress}
-              animated={this.animated}
-              onTouchStart={async () => {
-                if (recorded) {
-                  this._play()
-                } else if (isRecording) {
-                  this._stopRecording()
-                } else {
-                  this._startRecording()
-                }
-              }}
-              onTouchEnd={() => {
-                isRecording && recordingDuration > 0 && this._stopRecording()
-              }}
-              onDone={() => this._submit()}
-              onReset={() => this._resetRecording()}
-            />
-          )}
-        </ScrollView>
-        <FadingView
-          visible={currentPage !== 2}
-          style={{
-            position: 'absolute',
-            top: screenInsets(this.context).top + 20,
-            left: 0,
-            right: 0,
-            height: 50,
-          }}
-        >
-          <TouchableOpacity onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}>
-            <View
+            }}
+            onTouchEnd={() => {
+              isRecording && recordingDuration > 0 && stopRecording()
+            }}
+            onDone={() => submit()}
+            onReset={() => resetRecording()}
+          />
+        )}
+      </ScrollView>
+      <FadingView
+        visible={currentPage !== 2}
+        style={{
+          position: 'absolute',
+          top: screenInsets(insets).top + 20,
+          left: 0,
+          right: 0,
+          height: 50,
+        }}
+      >
+        <TouchableOpacity onPress={() => store.dispatch({ type: CLOSE_ADD_NEW_MODAL })}>
+          <View
+            style={{
+              opacity: 0.5,
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Icon name="close-circle" type="ionicon" size={30} color={colors.white} />
+            <Text
               style={{
-                opacity: 0.5,
-                flexDirection: 'column',
-                alignItems: 'center',
+                color: colors.white,
+                backgroundColor: 'transparent',
+                fontSize: 12,
               }}
             >
-              <Icon name="close-circle" type="ionicon" size={30} color={colors.white} />
-              <Text
-                style={{
-                  color: colors.white,
-                  backgroundColor: 'transparent',
-                  fontSize: 12,
-                }}
-              >
-                {I18n.t('Cancel')}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </FadingView>
-      </View>
-    )
-  }
+              {I18n.t('Cancel')}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </FadingView>
+    </View>
+  )
 }
-
-AddNewForm.contextType = SafeAreaInsetsContext
 
 function mapStateToProps(state) {
   return {

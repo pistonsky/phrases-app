@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import {
   Modal,
@@ -33,43 +33,44 @@ import I18n from 'app/utils/i18n'
 
 const Icon: any = RneIcon
 
-class PhraseModal extends Component<any, any> {
-  [key: string]: any
-  constructor(props) {
-    super(props)
-    this.state = {
-      original_editable: false,
-      original: '',
-      original_modified: false,
-      translated_editable: false,
-      translated: '',
-      translated_modified: false,
-      audio_modified: false,
-      audio: null,
-    }
-  }
+const PhraseModal = ({ visible, play_all_mode, phrase, next_phrase }) => {
+  const [state, setState] = useState<any>({
+    original_editable: false,
+    original: '',
+    original_modified: false,
+    translated_editable: false,
+    translated: '',
+    translated_modified: false,
+    audio_modified: false,
+    audio: null,
+  })
+  const recButton = useRef<any>(null)
+  const previous = useRef<any>(null)
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { visible, phrase } = this.props
-    if (nextProps.visible && (!visible || phrase.uri !== nextProps.phrase.uri) && nextProps.phrase !== null) {
+  useEffect(() => {
+    const prev = previous.current
+    previous.current = { visible, phrase }
+    // componentWillReceiveProps did not run on the first mount
+    if (!prev) return
+    if (visible && (!prev.visible || prev.phrase.uri !== phrase.uri) && phrase !== null) {
       // overwrite only when modal is opened or "play all" is going on
-      this.setState({
-        original: nextProps.phrase.original,
-        translated: nextProps.phrase.translated,
+      setState(current => ({
+        ...current,
+        original: phrase.original,
+        translated: phrase.translated,
         original_editable: false,
         translated_editable: false,
         original_modified: false,
         translated_modified: false,
-        audio_modified: nextProps.phrase.recorded === false,
+        audio_modified: phrase.recorded === false,
         audio: null,
-      })
+      }))
     }
-  }
+  }, [visible, phrase])
 
   // Puts the new recording where the sync saga uploads the phrase's audio from
-  async _saveRecording() {
-    const { phrase } = this.props
-    const { audio } = this.state
+  const saveRecording = async () => {
+    const { audio } = state
     const localUri = `${RNFS.DocumentDirectoryPath}/${phrase.uri}.mp4`
     // moveFile won't replace the old recording
     if (await RNFS.exists(localUri)) {
@@ -80,8 +81,6 @@ class PhraseModal extends Component<any, any> {
     store.dispatch({ type: AUDIO_CACHED, uri: phrase.uri, localUri })
   }
 
-  render() {
-    const { visible, play_all_mode, phrase, next_phrase } = this.props
     const {
       original,
       translated,
@@ -93,7 +92,7 @@ class PhraseModal extends Component<any, any> {
       translated_height,
       audio,
       audio_modified,
-    } = this.state
+    } = state
 
     return (
       <Modal
@@ -137,7 +136,7 @@ class PhraseModal extends Component<any, any> {
                       },
                     }) => {
                       if (original_height !== height) {
-                        this.setState({ original_height: height })
+                        setState(current => ({ ...current, original_height: height }))
                       }
                     }}
                   >
@@ -169,15 +168,15 @@ class PhraseModal extends Component<any, any> {
                   enablesReturnKeyAutomatically
                   value={original}
                   onChangeText={text => {
-                    this.setState({ original: text, original_modified: true })
+                    setState(current => ({ ...current, original: text, original_modified: true }))
                   }}
                   onSubmitEditing={() => {
                     LayoutAnimation.spring()
-                    this.setState({ original_editable: false })
+                    setState(current => ({ ...current, original_editable: false }))
                   }}
                   onBlur={() => {
                     LayoutAnimation.spring()
-                    this.setState({ original_editable: false })
+                    setState(current => ({ ...current, original_editable: false }))
                   }}
                 />
               </View>
@@ -189,7 +188,7 @@ class PhraseModal extends Component<any, any> {
                   onPress={() => {
                     if (!play_all_mode) {
                       LayoutAnimation.spring()
-                      this.setState({ original_editable: true })
+                      setState(current => ({ ...current, original_editable: true }))
                     }
                   }}
                   style={styles.touchable}
@@ -230,10 +229,10 @@ class PhraseModal extends Component<any, any> {
                 {audio_modified ? (
                   <RecButton
                     ref={ref => {
-                      this.recButton = ref
+                      recButton.current = ref
                     }}
                     size={100}
-                    onStopRecording={path => this.setState({ audio: path })}
+                    onStopRecording={path => setState(current => ({ ...current, audio: path }))}
                   />
                 ) : (
                   <TouchableOpacity
@@ -253,12 +252,12 @@ class PhraseModal extends Component<any, any> {
                     <TouchableOpacity
                       onPress={() => {
                         if (audio_modified) {
-                          this.recButton.reset()
+                          recButton.current.reset()
                         }
-                        this.setState({
+                        setState(current => ({ ...current,
                           audio_modified: true,
                           audio: null,
-                        })
+                        }))
                       }}
                     >
                       <View
@@ -307,7 +306,7 @@ class PhraseModal extends Component<any, any> {
                       },
                     }) => {
                       if (translated_height !== height) {
-                        this.setState({ translated_height: height })
+                        setState(current => ({ ...current, translated_height: height }))
                       }
                     }}
                   >
@@ -339,15 +338,15 @@ class PhraseModal extends Component<any, any> {
                   enablesReturnKeyAutomatically
                   value={translated}
                   onChangeText={text => {
-                    this.setState({ translated: text, translated_modified: true })
+                    setState(current => ({ ...current, translated: text, translated_modified: true }))
                   }}
                   onSubmitEditing={() => {
                     LayoutAnimation.spring()
-                    this.setState({ translated_editable: false })
+                    setState(current => ({ ...current, translated_editable: false }))
                   }}
                   onBlur={() => {
                     LayoutAnimation.spring()
-                    this.setState({ translated_editable: false })
+                    setState(current => ({ ...current, translated_editable: false }))
                   }}
                 />
               </View>
@@ -359,7 +358,7 @@ class PhraseModal extends Component<any, any> {
                   onPress={() => {
                     if (!play_all_mode) {
                       LayoutAnimation.spring()
-                      this.setState({ translated_editable: true })
+                      setState(current => ({ ...current, translated_editable: true }))
                     }
                   }}
                   style={styles.touchable}
@@ -398,7 +397,7 @@ class PhraseModal extends Component<any, any> {
                 if (play_all_mode) {
                   store.dispatch({ type: CLOSE_PHRASE_MODAL })
                 } else if (audio_modified && audio) {
-                  await this._saveRecording()
+                  await saveRecording()
                   store.dispatch({
                     type: UPDATE_PHRASE,
                     phrase,
@@ -425,7 +424,7 @@ class PhraseModal extends Component<any, any> {
               <TouchableOpacity
                 onPress={async () => {
                   if (audio_modified && audio) {
-                    await this._saveRecording()
+                    await saveRecording()
                     store.dispatch({
                       type: UPDATE_PHRASE_KEEP_MODAL_OPEN,
                       phrase,
@@ -455,7 +454,6 @@ class PhraseModal extends Component<any, any> {
         </BlurView>
       </Modal>
     )
-  }
 }
 
 function mapStateToProps(state) {

@@ -97,6 +97,7 @@ test("re-records a phrase's audio", async () => {
   const { DATA_LOADED, OPEN_PHRASE } = require('app/actions/types')
   const PhraseModal = require('app/containers/PhraseModal').default
   const RecButton = require('app/components/RecButton').default
+  const { createSound } = require('react-native-nitro-sound')
   // the phrase's old recording is on disk
   RNFS.exists.mockImplementation(path => Promise.resolve(path === '/documents/abc.mp4'))
   const phrase = {
@@ -125,7 +126,7 @@ test("re-records a phrase's audio", async () => {
 
   // hold the record button for a second
   const recButton = tree.root.findByType(RecButton)
-  const { sound } = recButton.instance
+  const sound = createSound.mock.results[createSound.mock.results.length - 1].value
   const [button] = recButton.findAll(node => typeof node.props.onTouchStart === 'function')
   await act(async () => {
     button.props.onTouchStart()
