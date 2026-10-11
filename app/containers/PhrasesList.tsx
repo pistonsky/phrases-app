@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, ActivityIndicator, ActionSheetIOS } from 'react-native'
-import { Button } from '@rneui/base'
+import { Button as RneButton } from '@rneui/base'
+
+const Button: any = RneButton
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ListItem, Separator, OfflineBar } from 'app/components'
 import {

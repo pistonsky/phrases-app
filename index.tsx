@@ -16,4 +16,4 @@ const phrazes = () => (
 
 AppRegistry.registerComponent('phrazes60', () => phrazes)
 
-TrackPlayer.registerPlaybackService(() => require('./audioService.js'))
+TrackPlayer.registerPlaybackService(() => require('./audioService'))

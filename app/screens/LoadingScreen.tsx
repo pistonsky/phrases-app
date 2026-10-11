@@ -14,9 +14,10 @@ const styles = {
     width: 256,
     height: 256,
   },
-}
+} as const
 
-export default class LoaderScreen extends Component {
+export default class LoaderScreen extends Component<any, any> {
+  [key: string]: any
   componentDidMount() {
     store.dispatch({ type: ROUTER_READY })
   }

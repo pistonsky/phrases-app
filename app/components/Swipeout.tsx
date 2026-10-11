@@ -23,7 +23,7 @@ const SwipeoutButton = ({ button, width, height, onPress }) => (
   </TouchableHighlight>
 )
 
-const Swipeout = ({ right = [], autoClose = false, style, children }) => {
+const Swipeout = ({ right = [], autoClose = false, style, children }: any) => {
   const [layout, setLayout] = useState({ width: 0, height: 0 })
   const [isOpen, setIsOpen] = useState(false)
   const [isRevealed, setIsRevealed] = useState(false)
@@ -46,7 +46,7 @@ const Swipeout = ({ right = [], autoClose = false, style, children }) => {
   }
 
   // the pan responder is created once, so it reads the latest values through a ref
-  const latest = useRef({})
+  const latest = useRef<any>({})
   latest.current = { isOpen, buttonsWidth, contentWidth: layout.width, animateTo }
 
   const panResponder = useMemo(() => {

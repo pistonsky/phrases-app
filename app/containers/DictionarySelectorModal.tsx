@@ -14,7 +14,8 @@ import * as actions from 'app/actions'
 import I18n from 'app/utils/i18n'
 import screenInsets from 'app/utils/insets'
 
-class DictionarySelectorModal extends Component {
+class DictionarySelectorModal extends Component<any, any> {
+  [key: string]: any
   constructor(props) {
     super(props)
     this.state = {
@@ -33,6 +34,8 @@ class DictionarySelectorModal extends Component {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}
+          // onKeyboardChange is already used here; it is not part of the RN prop types
+          // @ts-expect-error existing callback kept as-is
           onKeyboardChange={() => {
             this.flatlist.scrollToEnd()
           }}

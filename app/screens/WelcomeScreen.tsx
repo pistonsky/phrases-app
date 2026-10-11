@@ -6,7 +6,8 @@ import * as actions from 'app/actions'
 import { getWelcomeScreens } from 'app/reducers/selectors'
 import I18n from 'app/utils/i18n';
 
-class WelcomeScreen extends Component {
+class WelcomeScreen extends Component<any, any> {
+  [key: string]: any
   renderSlides() {
     const { guide } = this.props
     // iPhone 6 Plus = 414

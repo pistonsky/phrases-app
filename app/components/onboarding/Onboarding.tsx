@@ -8,7 +8,8 @@ import tinycolor from 'tinycolor2';
 import PageData from './PageData';
 import Paginator from './Paginator';
 
-export default class Onboarding extends Component {
+export default class Onboarding extends Component<any, any> {
+  [key: string]: any
   constructor(props) {
     super(props);
 
@@ -91,7 +92,7 @@ export default class Onboarding extends Component {
   }
 }
 
-Onboarding.defaultProps = {
+(Onboarding as any).defaultProps = {
   bottomOverlay: true,
   showSkip: true,
   showNext: true,

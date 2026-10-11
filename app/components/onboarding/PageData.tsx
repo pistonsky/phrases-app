@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-const Page = ({ width, height, children }) => (
+const Page = ({ width, height, children }: any) => (
   <View style={{ width, height }}>
     {children}
   </View>
@@ -60,6 +60,6 @@ const styles = {
   subtitleLight: {
     color: 'rgba(0, 0, 0, 0.7)',
   },
-};
+} as const;
 
 export default PageData;

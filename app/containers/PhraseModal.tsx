@@ -12,7 +12,8 @@ import {
 } from 'react-native'
 import { BlurView } from '@sbaiahmed1/react-native-blur'
 import * as RNFS from '@dr.pogodin/react-native-fs'
-import { Icon } from '@rneui/base'
+import { Icon as RneIcon } from '@rneui/base'
+
 import FontAwesome from '@react-native-vector-icons/fontawesome'
 import { RecButton } from 'app/components'
 import { shouldShowPhraseModal, getOpenedPhrase, isPlayAllMode, getNextPhrase } from 'app/reducers/selectors'
@@ -30,7 +31,10 @@ import colors from 'app/styles/colors'
 import { store } from 'app/redux'
 import I18n from 'app/utils/i18n'
 
-class PhraseModal extends Component {
+const Icon: any = RneIcon
+
+class PhraseModal extends Component<any, any> {
+  [key: string]: any
   constructor(props) {
     super(props)
     this.state = {

@@ -11,7 +11,8 @@ import MainScreen from 'app/screens/MainScreen'
 import { ConnectFacebookModal, NavBar } from 'app/containers'
 import { navigationRef } from 'app/navigation'
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator<any>()
+const Navigator: any = Stack.Navigator
 
 const renderNavBar = () => <NavBar />
 
@@ -20,11 +21,11 @@ const AppRouter = () => (
   <SafeAreaProvider initialMetrics={initialWindowMetrics}>
     <NavigationContainer ref={navigationRef}>
       <View style={{ flex: 1, marginTop: Platform.OS === 'android' ? 20 : 0 }}>
-        <Stack.Navigator initialRouteName="loading" screenOptions={{ headerShown: false, animation: 'none' }}>
+        <Navigator initialRouteName="loading" screenOptions={{ headerShown: false, animation: 'none' }}>
           <Stack.Screen name="loading" component={LoadingScreen} />
           <Stack.Screen name="welcome" component={WelcomeScreen} />
           <Stack.Screen name="main" component={MainScreen} options={{ headerShown: true, header: renderNavBar }} />
-        </Stack.Navigator>
+        </Navigator>
       </View>
       {/* Rendered outside the screens so the account prompt can pop up on top of any of them */}
       <ConnectFacebookModal />

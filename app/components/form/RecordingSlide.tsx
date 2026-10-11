@@ -1,14 +1,18 @@
 import React from 'react'
 import { View, Text, Animated, TouchableOpacity } from 'react-native'
-import { Icon } from '@rneui/base'
+import { Icon as RneIcon } from '@rneui/base'
 import FontAwesome from '@react-native-vector-icons/fontawesome'
-import { Circle as Progress } from 'react-native-progress'
+import { Circle as ProgressCircle } from 'react-native-progress'
+
 import { Button } from 'app/components'
 import { store } from 'app/redux'
 import { CLOSE_ADD_NEW_MODAL } from 'app/actions/types'
 import styles from 'app/styles'
 import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
+
+const Icon: any = RneIcon
+const Progress: any = ProgressCircle
 
 const RecordingSlide = props => {
   const {

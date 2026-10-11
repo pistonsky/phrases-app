@@ -1,12 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Text, TouchableOpacity } from 'react-native'
-import { Icon } from '@rneui/base'
+import { Icon as RneIcon } from '@rneui/base'
+
 import { store } from 'app/redux'
 import { TOGGLE_DICTIONARY_SELECTOR } from 'app/actions/types'
 import colors from 'app/styles/colors'
 import { getCurrentDictionaryName } from 'app/reducers/selectors'
 import { smartFontSize } from 'app/utils/functions'
+
+const Icon: any = RneIcon
 
 const DictionarySelector = props => {
   const { dictionary } = props

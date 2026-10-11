@@ -64,6 +64,6 @@ const styles = {
     backgroundColor: '#eee',
     padding: 10,
   },
-}
+} as const
 
 export default ListItemShort

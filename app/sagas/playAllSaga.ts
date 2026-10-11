@@ -41,13 +41,13 @@ const setupPlayer = () => {
 
 const createTrackChangedChannel = () => {
   return eventChannel(emit => {
-    const handler = ({ track }) => {
+    const handler = ({ track }: { track?: { id?: string } }) => {
       // `track` is the newly active track; it's undefined when the queue gets cleared
       if (track) {
         emit(track.id)
       }
     }
-    const eventListener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, handler)
+    const eventListener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, handler as any)
     const unsubscribe = () => {
       eventListener.remove()
     }

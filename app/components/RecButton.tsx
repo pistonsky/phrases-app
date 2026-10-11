@@ -9,7 +9,8 @@ import { RECORDING_PERMISSIONS_DENIED } from 'app/actions/types';
 // kept apart from the add-new form's recording.mp4 so the two never overwrite each other
 const RECORDING_PATH = `${RNFS.DocumentDirectoryPath}/rerecording.mp4`;
 
-export default class RecButton extends Component {
+export default class RecButton extends Component<any, any> {
+  [key: string]: any
   constructor(props) {
     super(props);
     this.state = {
@@ -75,7 +76,7 @@ export default class RecButton extends Component {
     }
     this._recordingStartTime = new Date();
     this._interval = setInterval(() => {
-      this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 });
+      this.setState({ recordingDuration: (Number(new Date()) - Number(this._recordingStartTime)) / 1000 });
     }, 100);
     this.setState({ isRecording: true });
     Animated.timing(this.animated.recordButtonScale, {

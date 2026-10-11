@@ -21,7 +21,7 @@ import {
 } from 'app/actions/types'
 import { store } from 'app/redux'
 
-const facebookLogin = () => {
+const facebookLogin = (): Promise<any> => {
   return LoginManager.logInWithPermissions(['public_profile', 'email']) // 672834932920089 - App ID
 }
 
@@ -64,7 +64,8 @@ export const loginWithFacebook = () => async dispatch => {
   } else {
     dispatch({ type: FACEBOOK_CONNECT_IN_PROGRESS })
     try {
-      const { accessToken } = await AccessToken.getCurrentAccessToken()
+      const readAccessToken: any = AccessToken.getCurrentAccessToken
+      const { accessToken } = await readAccessToken()
       const { status, data } = await api.connectFacebook(accessToken)
       if (status !== 200) throw status
       resetTo('main')

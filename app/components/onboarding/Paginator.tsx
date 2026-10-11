@@ -78,6 +78,6 @@ const styles = {
     justifyContent: 'flex-end',
     alignItems: 'center',
   }
-};
+} as const;
 
 export default Paginator;

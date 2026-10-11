@@ -16,7 +16,7 @@ import {
   Keyboard,
   Button as ReactNativeButton,
 } from 'react-native'
-import { Icon } from '@rneui/base'
+import { Icon as RneIcon } from '@rneui/base'
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'
 import * as RNFS from '@dr.pogodin/react-native-fs'
 import { createSound } from 'react-native-nitro-sound'
@@ -49,10 +49,13 @@ import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
 import screenInsets from 'app/utils/insets'
 
+const Icon: any = RneIcon
+
 const SCREEN_WIDTH = Dimensions.get('window').width
 const RECORDING_PATH = `${RNFS.DocumentDirectoryPath}/recording.mp4`
 
-class AddNewForm extends Component {
+class AddNewForm extends Component<any, any> {
+  [key: string]: any
   constructor(props) {
     super(props)
     this.state = {
@@ -148,7 +151,7 @@ class AddNewForm extends Component {
       }).start()
       this._recordingStartTime = new Date()
       this._progressInterval = setInterval(() => {
-        this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
+        this.setState({ recordingDuration: (Number(new Date()) - Number(this._recordingStartTime)) / 1000 })
       }, 100)
     }
     this.sound
@@ -167,7 +170,7 @@ class AddNewForm extends Component {
     }).start()
     this.sound.stopRecorder().then(
       () => {
-        this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
+        this.setState({ recordingDuration: (Number(new Date()) - Number(this._recordingStartTime)) / 1000 })
         this.sound.startPlayer(RECORDING_PATH)
       },
       e => console.log('stopRecorder failed', e),
@@ -258,7 +261,7 @@ class AddNewForm extends Component {
             }
           }}
         >
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.formSlide}>
+          <KeyboardAvoidingView {...({ behavior: Platform.OS === 'ios' ? 'padding' : 'height', style: styles.formSlide } as any)}>
             <Text style={styles.formHeader}>{`${I18n.t('Original')}:`}</Text>
             <TextInput
               value={originalPhrase}
@@ -288,7 +291,7 @@ class AddNewForm extends Component {
             />
           </KeyboardAvoidingView>
 
-          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.formSlide}>
+          <KeyboardAvoidingView {...({ behavior: Platform.OS === 'ios' ? 'padding' : 'height', style: styles.formSlide } as any)}>
             <Text style={styles.formHeader}>{`${I18n.t('Translated')}:`}</Text>
             <TextInput
               value={translatedPhrase}

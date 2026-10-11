@@ -17,7 +17,7 @@ module.exports = {
     'function-paren-newline': 0,
     'no-plusplus': 0,
     'import/extensions': 0,
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
     'max-len': [
       1,
       {
@@ -73,7 +73,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.android.js', '.ios.js'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.android.js', '.ios.js'],
       },
       'babel-module': {},
     },

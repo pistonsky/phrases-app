@@ -1,11 +1,14 @@
 import React from 'react'
 import { Platform, View, Text, Image, TouchableOpacity } from 'react-native'
-import { Icon } from '@rneui/base'
+import { Icon as RneIcon } from '@rneui/base'
+
 
 import { Button } from 'app/components'
 import styles from 'app/styles'
 import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
+
+const Icon: any = RneIcon
 
 const NoPermissionsSlide = ({ onCancel, onPress }) => {
   return (

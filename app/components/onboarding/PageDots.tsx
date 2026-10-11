@@ -44,6 +44,6 @@ const styles = {
     height: 6,
     borderRadius: 3,
   },
-};
+} as const;
 
 export default PageDots;

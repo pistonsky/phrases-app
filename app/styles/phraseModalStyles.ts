@@ -9,12 +9,12 @@ export const container = {
   flexDirection: 'column',
   justifyContent: 'space-between',
   alignItems: 'center'
-};
+} as const;
 
 export const topContainer = {
   height: 50,
   width: SCREEN_WIDTH
-};
+} as const;
 
 export const centerContainer = {
   height: 200,
@@ -22,7 +22,7 @@ export const centerContainer = {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center'
-};
+} as const;
 
 export const bottomContainer = {
   height: 100,
@@ -30,7 +30,7 @@ export const bottomContainer = {
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center'
-};
+} as const;
 
 export const originalContainer = {
   width: SCREEN_WIDTH,
@@ -39,7 +39,7 @@ export const originalContainer = {
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative'
-};
+} as const;
 
 export const touchable = {
   position: 'absolute',
@@ -50,14 +50,14 @@ export const touchable = {
   paddingVertical: 20,
   justifyContent: 'center',
   alignItems: 'center'
-};
+} as const;
 
 export const playContainer = {
   height: 140,
   width: SCREEN_WIDTH,
   justifyContent: 'center',
   alignItems: 'center'
-};
+} as const;
 
 export const resetContainer = {
   position: 'absolute',
@@ -68,7 +68,7 @@ export const resetContainer = {
   alignItems: 'center',
   justifyContent: 'center',
   opacity: 0.5
-};
+} as const;
 
 export const cancelContainer = {
   opacity: 0.5,
@@ -76,9 +76,9 @@ export const cancelContainer = {
   alignItems: 'center',
   marginBottom: 10,
   marginHorizontal: 20
-};
+} as const;
 
 export const iconLabel = {
   color: colors.white,
   fontSize: 12
-};
+} as const;

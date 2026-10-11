@@ -4,7 +4,7 @@ import { thunk } from 'redux-thunk'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import reducers from 'app/reducers'
-import actions from 'app/actions'
+import * as actions from 'app/actions'
 import startupSaga from 'app/sagas/startupSaga'
 
 const persistConfig = {
@@ -17,14 +17,7 @@ const persistedReducer = persistReducer(persistConfig, reducers)
 
 const saga = createSagaMiddleware()
 
-const store = createStore(
-  persistedReducer,
-  actions,
-  compose(
-    applyMiddleware(saga),
-    applyMiddleware(thunk),
-  ),
-)
+const store = createStore(persistedReducer, actions as any, compose(applyMiddleware(saga), applyMiddleware(thunk)) as any)
 
 const persistor = persistStore(store)
 

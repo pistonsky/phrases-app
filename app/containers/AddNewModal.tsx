@@ -7,7 +7,8 @@ import { getAddNewModalShown } from 'app/reducers/selectors'
 import { CLOSE_ADD_NEW_MODAL } from 'app/actions/types'
 
 // eslint-disable-next-line react/prefer-stateless-function
-class AddNewModal extends Component {
+class AddNewModal extends Component<any, any> {
+  [key: string]: any
   render() {
     const { shown } = this.props;
     return (

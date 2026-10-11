@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, TouchableHighlight, Vibration } from 'react-native'
 import Swipeout from './Swipeout'
-import { Icon } from '@rneui/base'
+import { Icon as RneIcon } from '@rneui/base'
 import colors from 'app/styles/colors'
 import { smartFontSize } from 'app/utils/functions'
 
-export default class DictionaryListItem extends Component {
+const Icon: any = RneIcon
+
+export default class DictionaryListItem extends Component<any, any> {
+  [key: string]: any
   constructor(props) {
     super(props)
     this.state = { editable: false, text: props.item.name }
@@ -21,7 +24,7 @@ export default class DictionaryListItem extends Component {
         justifyContent: 'center',
         alignItems: 'center',
       },
-    }
+    } as const
 
     return (
       <Swipeout
