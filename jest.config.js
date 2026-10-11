@@ -1,5 +1,6 @@
 module.exports = {
   preset: '@react-native/jest-preset',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   setupFiles: ['<rootDir>/jest/setup.js'],
   // the first test also pays for transforming the app and its dependencies
   testTimeout: 30000,

@@ -1,0 +1,61 @@
+import React from 'react'
+import { View, Image, Dimensions } from 'react-native'
+import { connect } from 'react-redux'
+import { Onboarding } from 'app/components'
+import * as actions from 'app/actions'
+import { getWelcomeScreens } from 'app/reducers/selectors'
+import I18n from 'app/utils/i18n';
+
+const WelcomeScreen = ({ guide, skipWelcomeScreen, fetchDemoPhrases, loginWithFacebook }) => {
+  const renderSlides = () => {
+    // iPhone 6 Plus = 414
+    // iPhone 6      = 375
+    // iPhone SE     = 320
+    const SCREEN_WIDTH = Dimensions.get('window').width
+    const size = (SCREEN_WIDTH / 320) * 200
+    return [
+      ...guide.map((slide, index) => {
+        return {
+          backgroundColor: slide.background,
+          image: (
+            <Image
+              style={{ width: size, height: size }}
+              source={
+                [require('assets/guide_1.png'), require('assets/guide_2.png'), require('assets/guide_3.png')][
+                  index
+                ]
+              }
+            />
+          ),
+          title: slide.head,
+          subtitle: slide.body,
+        }
+      }),
+    ]
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Onboarding
+        pages={renderSlides()}
+        onEnd={() => {
+          skipWelcomeScreen()
+          fetchDemoPhrases()
+        }}
+        onLeft={() => loginWithFacebook()}
+        leftText={I18n.t('Login')}
+      />
+    </View>
+  )
+}
+
+function mapStateToProps(state) {
+  return {
+    guide: getWelcomeScreens(state),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  actions,
+)(WelcomeScreen)
