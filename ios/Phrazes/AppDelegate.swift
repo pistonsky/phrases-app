@@ -7,8 +7,6 @@ import RNBootSplash
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
-
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -26,23 +24,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "phrazes60",
-      in: window,
-      launchOptions: launchOptions
-    )
-
     return true
   }
+}
 
-  func application(
-    _ app: UIApplication,
-    open url: URL,
-    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-  ) -> Bool {
-    return ApplicationDelegate.shared.application(app, open: url, options: options)
+// Apps built with the iOS 27 SDK must adopt the UIScene life cycle, so the window
+// (and React Native in it) is set up per scene rather than in the app delegate
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+
+  func scene(
+    _ scene: UIScene,
+    willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    guard let windowScene = scene as? UIWindowScene,
+          let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+
+    window = UIWindow(windowScene: windowScene)
+
+    appDelegate.reactNativeFactory?.startReactNative(
+      withModuleName: "phrazes60",
+      in: window,
+      launchOptions: nil
+    )
+
+    // a URL that launched the app is only delivered here
+    openURL(connectionOptions.urlContexts.first)
+  }
+
+  // with scenes, URLs (like the Facebook login callback) arrive here instead of application(_:open:options:)
+  func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    openURL(URLContexts.first)
+  }
+
+  private func openURL(_ context: UIOpenURLContext?) {
+    guard let context = context else { return }
+    _ = ApplicationDelegate.shared.application(
+      UIApplication.shared,
+      open: context.url,
+      sourceApplication: context.options.sourceApplication,
+      annotation: context.options.annotation
+    )
   }
 }
 

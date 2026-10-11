@@ -39,5 +39,15 @@ target 'Phrazes' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # resource bundle targets (RNSVGFilters, AsyncStorage_resources) keep their pod's
+    # older deployment target, which Xcode 27 no longer accepts
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |build_config|
+        if build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < min_ios_version_supported.to_f
+          build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
+        end
+      end
+    end
   end
 end
