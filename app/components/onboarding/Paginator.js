@@ -1,7 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { a } from 'app/utils';
+import screenInsets from 'app/utils/insets';
 import PageDots from './PageDots';
 import { SymbolButton, TextButton } from './Buttons';
 
@@ -33,31 +34,33 @@ const DoneButton = ({ isLight, size, ...props }) => (
 );
 
 const BUTTON_SIZE = 40;
-const Paginator = ({ isLight, overlay, showSkip, showNext, showDone, pages, currentPage, onEnd, onNext, onLeft, leftText }) => (
-  <View style={{ ...styles.container, ...(overlay ? styles.containerOverlay : {}) }}>
-    <View style={styles.buttonLeft}>
-      {onLeft ?
-        <LeftButton isLight={isLight} size={BUTTON_SIZE} onPress={onLeft} leftText={leftText} /> :
-        (showSkip && currentPage + 1 !== pages ?
-          <SkipButton isLight={isLight} size={BUTTON_SIZE} onPress={onEnd} /> :
-          null)
-      }
+const Paginator = ({ isLight, overlay, showSkip, showNext, showDone, pages, currentPage, onEnd, onNext, onLeft, leftText }) => {
+  // keeps the buttons clear of the home indicator
+  const { bottom } = screenInsets(useSafeAreaInsets());
+  return (
+    <View style={{ ...styles.container, height: 60 + bottom, paddingBottom: bottom, ...(overlay ? styles.containerOverlay : {}) }}>
+      <View style={styles.buttonLeft}>
+        {onLeft ?
+          <LeftButton isLight={isLight} size={BUTTON_SIZE} onPress={onLeft} leftText={leftText} /> :
+          (showSkip && currentPage + 1 !== pages ?
+            <SkipButton isLight={isLight} size={BUTTON_SIZE} onPress={onEnd} /> :
+            null)
+        }
+      </View>
+      <PageDots isLight={isLight} pages={pages} currentPage={currentPage} />
+      <View style={styles.buttonRight}>
+        {currentPage + 1 === pages ?
+          (showDone ? <DoneButton isLight={isLight} size={BUTTON_SIZE} onPress={onEnd} /> : null) :
+          (showNext ? <NextButton isLight={isLight} size={BUTTON_SIZE} onPress={onNext} /> : null)
+        }
+      </View>
     </View>
-    <PageDots isLight={isLight} pages={pages} currentPage={currentPage} />
-    <View style={styles.buttonRight}>
-      {currentPage + 1 === pages ?
-        (showDone ? <DoneButton isLight={isLight} size={BUTTON_SIZE} onPress={onEnd} /> : null) :
-        (showNext ? <NextButton isLight={isLight} size={BUTTON_SIZE} onPress={onNext} /> : null)
-      }
-    </View>
-  </View>
-);
+  );
+};
 
 const styles = {
   container: {
-    height: a(60, 60, 60, 80, 80),
     paddingHorizontal: 0,
-    paddingBottom: a(0, 0, 0, 20, 20),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -20,6 +20,7 @@ import { Icon } from '@rneui/base'
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'
 import * as RNFS from '@dr.pogodin/react-native-fs'
 import { createSound } from 'react-native-nitro-sound'
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import axios from 'axios'
 import { TextInput, Button, NoPermissionsSlide, RecordingSlide, FadingView } from 'app/components'
 import {
@@ -46,6 +47,7 @@ import * as api from 'app/api'
 import styles from 'app/styles'
 import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
+import screenInsets from 'app/utils/insets'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const RECORDING_PATH = `${RNFS.DocumentDirectoryPath}/recording.mp4`
@@ -357,7 +359,7 @@ class AddNewForm extends Component {
           visible={currentPage !== 2}
           style={{
             position: 'absolute',
-            top: 40,
+            top: screenInsets(this.context).top + 20,
             left: 0,
             right: 0,
             height: 50,
@@ -388,6 +390,8 @@ class AddNewForm extends Component {
     )
   }
 }
+
+AddNewForm.contextType = SafeAreaInsetsContext
 
 function mapStateToProps(state) {
   return {

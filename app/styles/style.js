@@ -1,17 +1,13 @@
 import { Dimensions, Platform } from 'react-native'
-import { ifIphoneX } from 'react-native-iphone-x-helper'
-
-import { a } from 'app/utils';
 import colors from './colors'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
+// NavBar adds the room for the status bar
 export const navBarStyle = {
   backgroundColor: colors.secondary,
-  paddingTop: ifIphoneX(40, 20),
   width: SCREEN_WIDTH,
-  height: ifIphoneX(80, 60),
   justifyContent: 'space-between',
   alignItems: 'center',
   flexDirection: 'row',
@@ -35,7 +31,6 @@ export const flatlist = {
 
 export const flatListContentContainer = {
   backgroundColor: 'transparent',
-  paddingBottom: a(0, 0, 0, 30, 30),
 }
 
 export const flatlistContent = {
@@ -95,7 +90,6 @@ export const buttonDisabled = {
 export const shareButtonContainer = {
   width: SCREEN_WIDTH,
   backgroundColor: colors.primary,
-  paddingBottom: a(0, 0, 0, 30, 30),
 }
 
 export const formRecordButtonContainer = {

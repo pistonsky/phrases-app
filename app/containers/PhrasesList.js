@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, ActivityIndicator, ActionSheetIOS } from 'react-native'
 import { Button } from '@rneui/base'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ListItem, Separator, OfflineBar } from 'app/components'
 import {
   getData,
@@ -24,9 +25,11 @@ import {
 } from 'app/actions/types'
 import * as actions from 'app/actions'
 import I18n from 'app/utils/i18n'
+import screenInsets from 'app/utils/insets'
 
 const PhrasesList = props => {
   const { user_id, cache, data, dictionary, data_loading, offline, deletePhrase, refreshPhrases } = props
+  const { bottom } = screenInsets(useSafeAreaInsets())
   return (
     <View style={styles.flatlist}>
       <FlatList
@@ -67,7 +70,7 @@ const PhrasesList = props => {
         onRefresh={() => refreshPhrases(user_id)}
         initialNumToRender={15}
       />
-      <View style={styles.shareButtonContainer}>
+      <View style={[styles.shareButtonContainer, { paddingBottom: bottom }]}>
         <Button
           iconRight
           icon={{ name: 'share-apple', type: 'evilicon', size: 25 }}

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, FlatList, TouchableOpacity, Text, TextInput, View, KeyboardAvoidingView, Platform } from 'react-native'
 import { BlurView } from '@sbaiahmed1/react-native-blur'
-import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { DictionaryListItem } from 'app/components'
 import { getDictionaries, shouldShowDictionariesSelectorModal, getUserId } from 'app/reducers/selectors'
 import styles from 'app/styles'
@@ -12,6 +12,7 @@ import { ADD_DICTIONARY, SELECT_DICTIONARY, TOGGLE_DICTIONARY_SELECTOR } from 'a
 import { smartFontSize } from 'app/utils/functions'
 import * as actions from 'app/actions'
 import I18n from 'app/utils/i18n'
+import screenInsets from 'app/utils/insets'
 
 class DictionarySelectorModal extends Component {
   constructor(props) {
@@ -24,6 +25,9 @@ class DictionarySelectorModal extends Component {
   render() {
     const { visible, dictionaries, deleteDictionary, copyDictionaryAsTemplate, updateDictionaryName } = this.props
     const { text } = this.state
+    const { top, bottom } = screenInsets(this.context)
+    // the sheet starts 20pt down, so the header only has to make up for a taller status bar
+    const headerPadding = top - 20
     return (
       <Modal animationType="slide" transparent visible={visible}>
         <KeyboardAvoidingView
@@ -37,8 +41,8 @@ class DictionarySelectorModal extends Component {
             <View
               style={{
                 backgroundColor: colors.secondary,
-                height: ifIphoneX(60, 40),
-                paddingTop: ifIphoneX(20, 0),
+                height: headerPadding + 40,
+                paddingTop: headerPadding,
                 width: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -48,7 +52,7 @@ class DictionarySelectorModal extends Component {
               <TouchableOpacity
                 style={{
                   position: 'absolute',
-                  top: ifIphoneX(20, 0),
+                  top: headerPadding,
                   right: 0,
                   height: 40,
                   alignItems: 'center',
@@ -75,7 +79,7 @@ class DictionarySelectorModal extends Component {
                 this.flatlist = item
               }}
               style={styles.flatlist}
-              contentContainerStyle={styles.flatListContentContainer}
+              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: bottom }]}
               data={dictionaries}
               keyExtractor={item => item.name}
               renderItem={({ item, index }) => (
@@ -136,6 +140,8 @@ class DictionarySelectorModal extends Component {
     )
   }
 }
+
+DictionarySelectorModal.contextType = SafeAreaInsetsContext
 
 function mapStateToProps(state) {
   return {
