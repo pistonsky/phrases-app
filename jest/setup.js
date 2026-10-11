@@ -68,6 +68,7 @@ jest.mock('@dr.pogodin/react-native-fs', () => ({
   DocumentDirectoryPath: '/documents',
   exists: jest.fn(() => Promise.resolve(false)),
   moveFile: jest.fn(() => Promise.resolve()),
+  unlink: jest.fn(() => Promise.resolve()),
   downloadFile: jest.fn(() => ({ jobId: 1, promise: Promise.resolve({ statusCode: 200 }) })),
 }))
 

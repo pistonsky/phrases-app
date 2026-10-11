@@ -22,6 +22,7 @@ import {
   UPDATE_PHRASE,
   UPDATE_PHRASE_KEEP_MODAL_OPEN,
   OPEN_PHRASE,
+  AUDIO_CACHED,
 } from 'app/actions/types'
 import { smartFontSize } from 'app/utils/functions'
 import * as styles from 'app/styles/phraseModalStyles'
@@ -59,6 +60,20 @@ class PhraseModal extends Component {
         audio: null,
       })
     }
+  }
+
+  // Puts the new recording where the sync saga uploads the phrase's audio from
+  async _saveRecording() {
+    const { phrase } = this.props
+    const { audio } = this.state
+    const localUri = `${RNFS.DocumentDirectoryPath}/${phrase.uri}.mp4`
+    // moveFile won't replace the old recording
+    if (await RNFS.exists(localUri)) {
+      await RNFS.unlink(localUri)
+    }
+    await RNFS.moveFile(audio, localUri)
+    // the old audio may be cached under another name (older phrases were recorded as .caf)
+    store.dispatch({ type: AUDIO_CACHED, uri: phrase.uri, localUri })
   }
 
   render() {
@@ -214,7 +229,7 @@ class PhraseModal extends Component {
                       this.recButton = ref
                     }}
                     size={100}
-                    onStopRecording={() => this.setState({ audio: this.recButton.recording })}
+                    onStopRecording={path => this.setState({ audio: path })}
                   />
                 ) : (
                   <TouchableOpacity
@@ -379,7 +394,7 @@ class PhraseModal extends Component {
                 if (play_all_mode) {
                   store.dispatch({ type: CLOSE_PHRASE_MODAL })
                 } else if (audio_modified && audio) {
-                  await RNFS.moveFile(audio.getURI(), `${RNFS.DocumentDirectoryPath}/${phrase.uri}.mp4`)
+                  await this._saveRecording()
                   store.dispatch({
                     type: UPDATE_PHRASE,
                     phrase,
@@ -406,7 +421,7 @@ class PhraseModal extends Component {
               <TouchableOpacity
                 onPress={async () => {
                   if (audio_modified && audio) {
-                    await RNFS.moveFile(audio.getURI(), `${RNFS.DocumentDirectoryPath}/${phrase.uri}.mp4`)
+                    await this._saveRecording()
                     store.dispatch({
                       type: UPDATE_PHRASE_KEEP_MODAL_OPEN,
                       phrase,
