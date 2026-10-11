@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Text, TouchableOpacity } from 'react-native'
-import { Icon } from 'react-native-elements'
+import { Icon } from '@rneui/base'
 import { store } from 'app/redux'
 import { TOGGLE_DICTIONARY_SELECTOR } from 'app/actions/types'
 import colors from 'app/styles/colors'

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Animated } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome from '@react-native-vector-icons/fontawesome'
 
 export default class RecButton extends Component {
   constructor(props) {

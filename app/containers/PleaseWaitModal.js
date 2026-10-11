@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal, View, Text, ActivityIndicator, StyleSheet, TouchableWithoutFeedback } from 'react-native'
-import { BlurView } from '@react-native-community/blur'
+import { BlurView } from '@sbaiahmed1/react-native-blur'
 
 import { CANCEL_PLAY_ALL } from 'app/actions/types'
 import { shouldShowPleaseWaitModal } from 'app/reducers/selectors'

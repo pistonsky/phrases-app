@@ -1,5 +1,5 @@
 import { call, select, take, put, delay } from 'redux-saga/effects'
-import RNFS from 'react-native-fs'
+import * as RNFS from '@dr.pogodin/react-native-fs'
 import { RNS3 } from 'react-native-aws3'
 
 import { getUserId, getOffline, anyUnsyncedPhrases, getUnsyncedPhrases } from 'app/reducers/selectors'

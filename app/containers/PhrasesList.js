@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, FlatList, ActivityIndicator, ActionSheetIOS } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button } from '@rneui/base'
 import { ListItem, Separator, OfflineBar } from 'app/components'
 import {
   getData,

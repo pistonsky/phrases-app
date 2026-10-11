@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Animated, TouchableOpacity } from 'react-native'
-import { Icon } from 'react-native-elements'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { Icon } from '@rneui/base'
+import FontAwesome from '@react-native-vector-icons/fontawesome'
 import { Circle as Progress } from 'react-native-progress'
 import { Button } from 'app/components'
 import { store } from 'app/redux'
@@ -87,7 +87,7 @@ const RecordingSlide = props => {
                 marginBottom: 10,
               }}
             >
-              <Icon name="ios-refresh-circle" type="ionicon" size={40} color={colors.white} />
+              <Icon name="refresh-circle" type="ionicon" size={40} color={colors.white} />
               <Text style={{ color: colors.white, fontSize: 12, marginTop: -2 }}>{I18n.t('Reset')}</Text>
             </View>
           ) : (
@@ -100,7 +100,7 @@ const RecordingSlide = props => {
                   marginBottom: 10,
                 }}
               >
-                <Icon name="ios-close-circle" type="ionicon" size={30} color={colors.white} />
+                <Icon name="close-circle" type="ionicon" size={30} color={colors.white} />
                 <Text style={{ color: colors.white, fontSize: 12 }}>{I18n.t('Cancel')}</Text>
               </View>
             )

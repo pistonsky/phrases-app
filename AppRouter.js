@@ -1,26 +1,31 @@
-import React, { Component } from 'react'
-import { Scene, Router, Tabs } from 'react-native-router-flux'
+import React from 'react'
+import { Platform, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import LoadingScreen from 'app/screens/LoadingScreen'
 import WelcomeScreen from 'app/screens/WelcomeScreen'
 import MainScreen from 'app/screens/MainScreen'
 
-import { NavBar } from 'app/containers'
+import { ConnectFacebookModal, NavBar } from 'app/containers'
+import { navigationRef } from 'app/navigation'
 
-import { Platform } from 'react-native'
+const Stack = createNativeStackNavigator()
 
-class AppRouter extends Component { // eslint-disable-line react/prefer-stateless-function
-  render() {
-    return (
-      <Router sceneStyle={{ marginTop: Platform.OS === 'android' ? 20 : 0 }}>
-        <Tabs key="root" hideTabBar>
-          <Scene key="loading" component={LoadingScreen} initial hideNavBar hideTabBar />
-          <Scene key="welcome" component={WelcomeScreen} hideNavBar hideTabBar />
-          <Scene key="main" component={MainScreen} hideTabBar navBar={NavBar} />
-        </Tabs>
-      </Router>
-    )
-  }
-}
+const renderNavBar = () => <NavBar />
+
+const AppRouter = () => (
+  <NavigationContainer ref={navigationRef}>
+    <View style={{ flex: 1, marginTop: Platform.OS === 'android' ? 20 : 0 }}>
+      <Stack.Navigator initialRouteName="loading" screenOptions={{ headerShown: false, animation: 'none' }}>
+        <Stack.Screen name="loading" component={LoadingScreen} />
+        <Stack.Screen name="welcome" component={WelcomeScreen} />
+        <Stack.Screen name="main" component={MainScreen} options={{ headerShown: true, header: renderNavBar }} />
+      </Stack.Navigator>
+    </View>
+    {/* Rendered outside the screens so the account prompt can pop up on top of any of them */}
+    <ConnectFacebookModal />
+  </NavigationContainer>
+)
 
 export default AppRouter

@@ -1,0 +1,6 @@
+export const BASE_URL = 'https://phrazes.test'
+export const BASE_AUDIO_URL = 'https://phrazes.test/audio/'
+export const S3_BUCKET = 'test-bucket'
+export const S3_REGION = 'test-region'
+export const S3_ACCESS_KEY = 'test-access-key'
+export const S3_SECRET_KEY = 'test-secret-key'
