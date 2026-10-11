@@ -4,7 +4,7 @@ import colors from 'app/styles/colors'
 import I18n from 'app/utils/i18n'
 import ListItemShort from './ListItemShort'
 
-export default class ListItem extends PureComponent {
+export default class ListItem extends PureComponent<any, any> {
   render() {
     const { item, loaded, uploaded, onPress, onEdit, onShare, onDelete } = this.props
 

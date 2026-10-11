@@ -9,7 +9,7 @@ import { NavBar } from 'app/containers'
 
 import { Platform } from 'react-native'
 
-class AppRouter extends Component { // eslint-disable-line react/prefer-stateless-function
+class AppRouter extends Component<any, any> { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
       <Router sceneStyle={{ marginTop: Platform.OS === 'android' ? 20 : 0 }}>

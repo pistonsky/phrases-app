@@ -34,7 +34,9 @@ const { UIManager } = NativeModules
 
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
 
-class PhraseModal extends Component {
+class PhraseModal extends Component<any, any> {
+  [key: string]: any
+
   constructor(props) {
     super(props)
     this.state = {

@@ -12,4 +12,14 @@ module.exports = {
     ],
     '@babel/plugin-transform-runtime',
   ],
+  overrides: [
+    {
+      test: /\.ts$/,
+      plugins: [['@babel/plugin-transform-typescript', { isTSX: false }]],
+    },
+    {
+      test: /\.tsx$/,
+      plugins: [['@babel/plugin-transform-typescript', { isTSX: true }]],
+    },
+  ],
 }

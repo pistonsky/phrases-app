@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Animated } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-export default class RecButton extends Component {
+export default class RecButton extends Component<any, any> {
+  [key: string]: any
+
   constructor(props) {
     super(props);
     this.state = {
@@ -145,7 +147,6 @@ export default class RecButton extends Component {
           width: this.props.size,
           height: this.props.size,
           borderRadius: this.props.size / 2,
-          backgroundColor: '#f00',
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: this.state.recorded ? '#fa4' : '#f00',

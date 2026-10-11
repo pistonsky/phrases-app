@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements'
 import colors from 'app/styles/colors'
 import { smartFontSize } from 'app/utils/functions'
 
-export default class DictionaryListItem extends Component {
+export default class DictionaryListItem extends Component<any, any> {
   constructor(props) {
     super(props)
     this.state = { editable: false, text: props.item.name }

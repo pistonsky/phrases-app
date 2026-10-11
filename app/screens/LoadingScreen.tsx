@@ -16,7 +16,7 @@ const styles = {
   },
 }
 
-export default class LoaderScreen extends Component {
+export default class LoaderScreen extends Component<any, any> {
   componentDidMount() {
     store.dispatch({ type: ROUTER_READY })
   }

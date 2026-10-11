@@ -13,7 +13,9 @@ import { smartFontSize } from 'app/utils/functions'
 import * as actions from 'app/actions'
 import I18n from 'app/utils/i18n'
 
-class DictionarySelectorModal extends Component {
+class DictionarySelectorModal extends Component<any, any> {
+  [key: string]: any
+
   constructor(props) {
     super(props)
     this.state = {

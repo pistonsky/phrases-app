@@ -30,7 +30,7 @@ export const skipWelcomeScreen = () => async dispatch => {
   Actions.main()
 }
 
-export const connectFacebook = user_id => async dispatch => {
+export const connectFacebook = (user_id?) => async dispatch => {
   let { type, token } = await facebookLogin()
   console.log('connectFacebook', type, token)
   if (type === 'cancel') {
@@ -166,3 +166,6 @@ export const copyDictionaryAsTemplate = ({ dictionary_name }) => async dispatch 
     ],
   )
 }
+
+const actionsDefault = undefined
+export default actionsDefault

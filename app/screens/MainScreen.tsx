@@ -5,7 +5,7 @@ import { AddNewModal, DictionarySelectorModal, PhrasesList, PhraseModal, PleaseW
 import { getUserId } from 'app/reducers/selectors'
 import styles from 'app/styles'
 
-class MainScreen extends Component {
+class MainScreen extends Component<any, any> {
   componentDidMount() {
     // TODO: handle deeplinks (when somebody shares app)
     // TODO: handle online/offline status

@@ -49,7 +49,9 @@ import I18n from 'app/utils/i18n'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-class AddNewForm extends Component {
+class AddNewForm extends Component<any, any> {
+  [key: string]: any
+
   constructor(props) {
     super(props)
     this.state = {
@@ -150,7 +152,7 @@ class AddNewForm extends Component {
       }).start()
       this._recordingStartTime = new Date()
       this._progressInterval = setInterval(() => {
-        this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
+        this.setState({ recordingDuration: (+new Date() - this._recordingStartTime) / 1000 })
       }, 100)
     })
   }
@@ -165,7 +167,7 @@ class AddNewForm extends Component {
     }).start()
     this.recorder.stop(err => {
       if (!err) {
-        this.setState({ recordingDuration: (new Date() - this._recordingStartTime) / 1000 })
+        this.setState({ recordingDuration: (+new Date() - this._recordingStartTime) / 1000 })
         this.Player = new Player('recording.mp4')
         this.Player.play()
       }
